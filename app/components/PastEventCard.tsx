@@ -1,14 +1,17 @@
 import { useState } from "react";
-import QuickAttendIcon, {
-  CalendarIcon,
-  DocumentIcon,
-  DownloadIcon,
-  LocationIcon,
-  OwnerIcon,
-  StatisticIcon,
-  TimeIcon,
-  DuplicateIcon,
-} from "./QuickAttendIcon";
+
+import {
+  ExpandLess,
+  ExpandMore,
+  CalendarMonth,
+  WatchLater,
+  LocationOn,
+  Person,
+  SaveAlt,
+  TrendingUp,
+  Feed,
+  DifferenceOutlined,
+} from "@mui/icons-material";
 import QuickAttendButton from "./QuickAttendButton";
 import LLEPopup from "./LLEPopup";
 
@@ -50,14 +53,11 @@ export default function PastEventCard({
         }}
       >
         <h2 className="title-large-emphasized text-neutral-600">{name}</h2>
-        <QuickAttendIcon
-          iconName="chevron-up"
-          type="outline"
-          size={20}
-          className={`-translate-y-1 cursor-pointer transition-transform duration-300 ${
-            openDetail ? "rotate-0" : "rotate-180"
-          }`}
-        />
+        {openDetail ? (
+          <ExpandLess sx={{ width: 20, height: 20 }} />
+        ) : (
+          <ExpandMore sx={{ width: 20, height: 20 }} />
+        )}
       </div>
 
       {/* Expandable Section */}
@@ -74,15 +74,24 @@ export default function PastEventCard({
         {/* Information */}
         <div className="flex flex-col gap-1 mb-4">
           <div className="flex gap-2">
-            <CalendarIcon />
+            <CalendarMonth
+              sx={{ width: 14, height: 14 }}
+              className="text-primary translate-y-1"
+            />
             <p className="body-medium-primary text-neutral-600">{date}</p>
           </div>
           <div className="flex gap-2">
-            <TimeIcon />
+            <WatchLater
+              sx={{ width: 14, height: 14 }}
+              className="text-primary translate-y-1"
+            />
             <p className="body-medium-primary text-neutral-600">{timeRange}</p>
           </div>
           <div className="flex gap-2">
-            <LocationIcon />
+            <LocationOn
+              sx={{ width: 14, height: 14 }}
+              className="text-primary translate-y-1"
+            />
             <p className="body-medium-primary text-neutral-600">{location}</p>
           </div>
         </div>
@@ -97,7 +106,10 @@ export default function PastEventCard({
 
         {/* Owner */}
         <div className="flex gap-2 mb-4">
-          <OwnerIcon />
+          <Person
+            sx={{ width: 16, height: 16 }}
+            className="text-primary translate-y-1"
+          />
           <p className="body-small-primary text-neutral-600">{owner}</p>
         </div>
 
@@ -114,7 +126,9 @@ export default function PastEventCard({
                   alert(`Go to Statistic Page from Card ${id}`);
                 }}
               >
-                <StatisticIcon type="outline" />
+                <TrendingUp
+                  sx={{ width: 20, height: 20, color: "var(--neutral-white)" }}
+                />
                 <p className="translate-y-1">สถิติการลงทะเบียน</p>
               </QuickAttendButton>
 
@@ -126,7 +140,10 @@ export default function PastEventCard({
                   alert(`Download something from Card ${id}`);
                 }}
               >
-                <DownloadIcon />
+                <SaveAlt
+                  sx={{ width: 20, height: 20 }}
+                  className="text-primary"
+                />
               </QuickAttendButton>
 
               <div className="relative">
@@ -138,7 +155,10 @@ export default function PastEventCard({
                     alert(`Duplicate Card ${id}`);
                   }}
                 >
-                  <DuplicateIcon />
+                  <DifferenceOutlined
+                    sx={{ width: 20, height: 20 }}
+                    className="text-primary"
+                  />
                 </QuickAttendButton>
               </div>
             </div>
@@ -154,7 +174,10 @@ export default function PastEventCard({
                 alert(`Go to Evaulation form from Card ${id}`);
               }}
             >
-              <DocumentIcon />
+              <Feed
+                sx={{ width: 20, height: 20 }}
+                className="text-neutral-white"
+              />
               <p className="translate-y-1">แบบฟอร์มประเมินกิจกรรม</p>
             </QuickAttendButton>
           </div>

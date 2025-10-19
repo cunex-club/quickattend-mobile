@@ -3,15 +3,16 @@
 import { useEffect, useRef, useState } from "react";
 import MyEventCard from "./components/MyEventCard";
 import { HandleEventButton } from "./components/QuickAttendButton";
-import {
-  CompassIcon,
-  RedirectIcon,
-  SortIcon,
-  ArrowUpIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-} from "./components/QuickAttendIcon";
 import PastEventCard from "./components/PastEventCard";
+import {
+  ExploreOutlined,
+  OpenInNew,
+  SwapVert,
+  ArrowUpward,
+  ChevronLeft,
+  ChevronRight,
+} from "@mui/icons-material";
+import LLEPopup from "./components/LLEPopup";
 
 export default function Home() {
   // === Mock Data ===
@@ -28,6 +29,8 @@ export default function Home() {
 
   const [sortOption, setSortOption] = useState<0 | 1 | null>(null);
   const [currentPageNumber, setCurrentPageNumber] = useState<number>(1);
+  const [openLLEPopup, setOpenLLEPopup] = useState(false);
+  const [openSortDropdown, setOpenSortDropdown] = useState(false);
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -54,7 +57,13 @@ export default function Home() {
           <h1 className="headline-small-emphasized text-neutral-600">
             กิจกรรมของฉัน
           </h1>
-          <CompassIcon />
+          <ExploreOutlined
+            sx={{ width: 24, height: 24 }}
+            className="text-primary cursor-pointer"
+            onClick={() => {
+              alert("Go to Discovery Page");
+            }}
+          />
         </div>
 
         {/* Number of Results */}
@@ -64,7 +73,13 @@ export default function Home() {
           </p>
           <div className="flex items-center gap-2">
             <p className="label-large-primary text-neutral-600">ดูทั้งหมด</p>
-            <RedirectIcon />
+            <OpenInNew
+              onClick={() => {
+                setOpenLLEPopup(true);
+              }}
+              sx={{ width: 16, height: 16 }}
+              className="text-primary cursor-pointer -translate-y-1"
+            />
           </div>
         </div>
 
@@ -98,11 +113,41 @@ export default function Home() {
       {/* Past Events */}
       <div className="mb-6">
         {/* Header */}
-        <div className="flex justify-between gap-4 mb-6">
+        <div className="flex justify-between gap-4 mb-6 relative">
           <h1 className="headline-small-emphasized text-neutral-600">
             กิจกรรมที่ผ่านมา
           </h1>
-          <SortIcon setSortOption={setSortOption} />
+          <SwapVert
+            sx={{ width: 32, height: 32 }}
+            className="text-primary cursor-pointer"
+            onClick={() => {
+              setOpenSortDropdown((prev) => !prev);
+            }}
+          />
+          {openSortDropdown && (
+            <div className="w-60 absolute top-full right-0 mt-1 bg-neutral-white rounded-lg shadow-elevation-1 p-2 z-20">
+              <button
+                className="cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-100"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSortOption(0);
+                  setOpenSortDropdown(false);
+                }}
+              >
+                วันที่จัดกิจกรรม : ใหม่สุด - เก่าสุด
+              </button>
+              <button
+                className="cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-100"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSortOption(1);
+                  setOpenSortDropdown(false);
+                }}
+              >
+                วันที่จัดกิจกรรม : เก่าสุด - ใหม่สุด
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Events */}
@@ -136,7 +181,10 @@ export default function Home() {
             }
           }}
         >
-          <ChevronLeftIcon />
+          <ChevronLeft
+            sx={{ width: 16, height: 16 }}
+            className="text-primary -translate-y-[2px]"
+          />
         </button>
 
         {/* Numbers */}
@@ -199,7 +247,10 @@ export default function Home() {
             }
           }}
         >
-          <ChevronRightIcon />
+          <ChevronRight
+            sx={{ width: 16, height: 16 }}
+            className="text-primary -translate-y-[2px]"
+          />
         </button>
       </div>
 
@@ -210,8 +261,10 @@ export default function Home() {
           scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" })
         }
       >
-        <ArrowUpIcon />
+        <ArrowUpward sx={{ width: 24, height: 24 }} className="text-white" />
       </button>
+
+      {openLLEPopup && <LLEPopup setOpenLLEPopup={setOpenLLEPopup} />}
     </div>
   );
 }

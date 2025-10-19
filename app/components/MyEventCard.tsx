@@ -1,13 +1,15 @@
 import { useState } from "react";
-import QuickAttendIcon, {
-  CalendarIcon,
-  LocationIcon,
-  OwnerIcon,
-  ScanIcon,
-  UploadIcon,
-  StatisticIcon,
-  TimeIcon,
-} from "./QuickAttendIcon";
+
+import {
+  CalendarMonth,
+  MoreVert,
+  CropFree,
+  LocationOn,
+  Person,
+  WatchLater,
+  TrendingUp,
+  UploadFile,
+} from "@mui/icons-material";
 import QuickAttendButton from "./QuickAttendButton";
 import LLEPopup from "./LLEPopup";
 
@@ -44,11 +46,9 @@ export default function MyEventCard({
       {/* Header */}
       <div className="flex justify-between items-center gap-4 mb-1">
         <h2 className="title-large-emphasized text-neutral-600">{name}</h2>
-        <QuickAttendIcon
-          iconName="ellipsis-vertical"
-          type="filled"
-          size={20}
-          className="-translate-y-1 cursor-pointer"
+        <MoreVert
+          sx={{ width: 20, height: 20 }}
+          className="cursor-pointer"
           onClick={(e) => {
             e.stopPropagation();
             setOpenLLEPopup(true);
@@ -60,19 +60,28 @@ export default function MyEventCard({
       <div className="flex flex-col gap-1 mb-4">
         {/* Date */}
         <div className="flex gap-2">
-          <CalendarIcon />
+          <CalendarMonth
+            sx={{ width: 14, height: 14 }}
+            className="text-primary translate-y-1"
+          />
           <p className="body-medium-primary text-neutral-600">{date}</p>
         </div>
 
         {/* Time */}
         <div className="flex gap-2">
-          <TimeIcon />
+          <WatchLater
+            sx={{ width: 14, height: 14 }}
+            className="text-primary translate-y-1"
+          />
           <p className="body-medium-primary text-neutral-600">{timeRange}</p>
         </div>
 
         {/* Location */}
         <div className="flex gap-2">
-          <LocationIcon />
+          <LocationOn
+            sx={{ width: 14, height: 14 }}
+            className="text-primary translate-y-1"
+          />
           <p className="body-medium-primary text-neutral-600">{location}</p>
         </div>
       </div>
@@ -87,7 +96,10 @@ export default function MyEventCard({
 
       {/* Owner */}
       <div className="flex gap-2 mb-4">
-        <OwnerIcon />
+        <Person
+          sx={{ width: 16, height: 16 }}
+          className="text-primary translate-y-1"
+        />
         <p className="body-small-primary text-neutral-600">{owner}</p>
       </div>
 
@@ -101,7 +113,10 @@ export default function MyEventCard({
             alert(`Go to Scan from Card ${id}`);
           }}
         >
-          <ScanIcon />
+          <CropFree
+            sx={{ width: 20, height: 20 }}
+            className="text-neutral-white"
+          />
           <p className="translate-y-1">สแกนผู้เข้าร่วมกิจกรรม</p>
         </QuickAttendButton>
 
@@ -112,7 +127,7 @@ export default function MyEventCard({
             e.stopPropagation();
           }}
         >
-          <StatisticIcon type="filled" />
+          <TrendingUp sx={{ width: 20, height: 20 }} />
         </QuickAttendButton>
 
         <div className="relative">
@@ -124,7 +139,10 @@ export default function MyEventCard({
               setOpenShareDropdown((prev) => !prev);
             }}
           >
-            <UploadIcon />
+            <UploadFile
+              sx={{ width: 20, height: 20 }}
+              className="text-primary"
+            />
           </QuickAttendButton>
 
           {openShareDropdown && (
