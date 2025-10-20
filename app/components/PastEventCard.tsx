@@ -114,42 +114,43 @@ export default function PastEventCard({
         </div>
 
         {/* Buttons */}
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 mt-auto">
           {/* First Row */}
           {displayFirstRow && (
-            <div className="flex gap-1 flex-wrap">
+            <div className="flex gap-2 flex-wrap">
               <QuickAttendButton
+                type="text"
                 variant="filled"
-                width={180}
                 onClick={(e) => {
                   e.stopPropagation();
                   alert(`Go to Statistic Page from Card ${id}`);
                 }}
               >
                 <TrendingUp
-                  sx={{ width: 20, height: 20, color: "var(--neutral-white)" }}
+                  sx={{ width: 20, height: 20 }}
+                  className="text-neutral-white"
                 />
                 <p className="translate-y-1">สถิติการลงทะเบียน</p>
               </QuickAttendButton>
 
-              <QuickAttendButton
-                variant="outline"
-                width={45}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  alert(`Download something from Card ${id}`);
-                }}
-              >
-                <SaveAlt
-                  sx={{ width: 20, height: 20 }}
-                  className="text-primary"
-                />
-              </QuickAttendButton>
-
-              <div className="relative">
+              <div className="flex gap-2 flex-1">
                 <QuickAttendButton
+                  type="icon"
                   variant="outline"
-                  width={45}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    alert(`Download something from Card ${id}`);
+                  }}
+                >
+                  <SaveAlt
+                    sx={{ width: 20, height: 20 }}
+                    className="text-primary"
+                  />
+                </QuickAttendButton>
+
+                <QuickAttendButton
+                  type="icon"
+                  variant="outline"
                   onClick={(e) => {
                     e.stopPropagation();
                     alert(`Duplicate Card ${id}`);
@@ -165,10 +166,10 @@ export default function PastEventCard({
           )}
 
           {/* Second Row */}
-          <div className="flex gap-1 flex-wrap">
+          <div className="flex gap-2 flex-wrap">
             <QuickAttendButton
+              type="text"
               variant="filled"
-              width={280}
               onClick={(e) => {
                 e.stopPropagation();
                 alert(`Go to Evaulation form from Card ${id}`);

@@ -27,7 +27,10 @@ export default function RootLayout({
     <html lang="en" className="h-full">
       <body
         className={`${chulaRegularFont.variable} ${chulaBoldFont.variable} antialiased 
-          flex items-center justify-center h-full bg-black`}
+          flex items-center justify-center h-full`}
+        style={{
+          backgroundColor: "var(--neutral-600)",
+        }}
       >
         <div className="w-full max-w-[390px] bg-neutral-white">{children}</div>
       </body>

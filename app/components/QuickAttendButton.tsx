@@ -1,52 +1,33 @@
-import { useState } from "react";
-import LLEPopup from "./LLEPopup";
-
 interface QuickAttendButtonProps {
   variant: "filled" | "outline";
-  width: number;
-  height?: number;
+  type?: "text" | "icon";
   className?: string;
   onClick?: React.MouseEventHandler;
   children: React.ReactNode;
 }
 
-export function HandleEventButton() {
-  const [openLLEPopup, setOpenLLEPopup] = useState(false);
-  return (
-    <>
-      <QuickAttendButton
-        variant="filled"
-        width={110}
-        onClick={() => {
-          setOpenLLEPopup(true);
-        }}
-      >
-        <p className="translate-y-1">จัดการกิจกรรม</p>
-      </QuickAttendButton>
-      {openLLEPopup && <LLEPopup setOpenLLEPopup={setOpenLLEPopup} />}
-    </>
-  );
-}
-
 export default function QuickAttendButton({
   variant,
   className = "",
-  width,
-  height = 36,
+  type = "text",
   onClick,
   children,
 }: QuickAttendButtonProps) {
-  const twColor =
+  const baseColor =
     variant === "filled"
       ? "bg-primary border-primary text-neutral-white"
       : "bg-neutral-white border-primary text-primary";
 
+  const layout =
+    type === "text"
+      ? `min-h-[36px] w-fit max-w-full flex-1`
+      : `min-h-[36px] w-full flex-1`;
+
   return (
     <button
       onClick={onClick}
-      style={{ width, height }}
-      className={`flex items-center justify-center gap-1 cursor-pointer
-        rounded-2xl p-1 border label-large-primary ${twColor} ${className}`}
+      className={`flex items-center justify-center gap-1 rounded-2xl px-3 py-1
+        border cursor-pointer label-large-primary ${baseColor} ${layout} ${className}`}
     >
       {children}
     </button>
