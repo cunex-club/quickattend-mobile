@@ -8,7 +8,8 @@ export default function LLEPopup({ setOpenLLEPopup }: LLEPopupProps) {
   return (
     <div
       className="fixed inset-0 z-100 flex items-center justify-center bg-neutral-black/70"
-      onClick={() => {
+      onClick={(e) => {
+        e.stopPropagation();
         setOpenLLEPopup(false);
       }}
     >
