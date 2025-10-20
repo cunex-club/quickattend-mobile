@@ -7,7 +7,7 @@ interface LLEPopupProps {
 export default function LLEPopup({ setOpenLLEPopup }: LLEPopupProps) {
   return (
     <div
-      className="fixed inset-0 z-10 flex items-center justify-center bg-neutral-black/70"
+      className="fixed inset-0 z-100 flex items-center justify-center bg-neutral-black/70"
       onClick={() => {
         setOpenLLEPopup(false);
       }}
@@ -27,8 +27,8 @@ export default function LLEPopup({ setOpenLLEPopup }: LLEPopupProps) {
         </p>
         <div className="flex justify-center items-center gap-2 flex-wrap">
           <QuickAttendButton
+            type="text"
             variant="outline"
-            width={150}
             onClick={(e) => {
               e.stopPropagation();
               setOpenLLEPopup(false);
@@ -37,8 +37,8 @@ export default function LLEPopup({ setOpenLLEPopup }: LLEPopupProps) {
             <p className="translate-y-1">ยกเลิก</p>
           </QuickAttendButton>
           <QuickAttendButton
+            type="text"
             variant="filled"
-            width={150}
             onClick={(e) => {
               e.stopPropagation();
               alert("Go to LLE!");
