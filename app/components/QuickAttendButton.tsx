@@ -1,6 +1,6 @@
 interface QuickAttendButtonProps {
-  variant: "filled" | "outline";
-  type?: "text" | "icon";
+  variant: 'filled' | 'outline';
+  type?: 'text' | 'icon';
   className?: string;
   onClick?: React.MouseEventHandler;
   children: React.ReactNode;
@@ -8,20 +8,18 @@ interface QuickAttendButtonProps {
 
 export default function QuickAttendButton({
   variant,
-  className = "",
-  type = "text",
+  className = '',
+  type = 'text',
   onClick,
   children,
 }: QuickAttendButtonProps) {
   const baseColor =
-    variant === "filled"
-      ? "bg-primary border-primary text-neutral-white"
-      : "bg-neutral-white border-primary text-primary";
+    variant === 'filled'
+      ? 'bg-primary border-primary text-neutral-white'
+      : 'bg-neutral-white border-primary text-primary';
 
   const layout =
-    type === "text"
-      ? `min-h-[36px] w-fit max-w-full flex-1`
-      : `min-h-[36px] w-full flex-1`;
+    type === 'text' ? `min-h-[36px] w-fit max-w-full flex-1` : `min-h-[36px] w-full flex-1`;
 
   return (
     <button

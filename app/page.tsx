@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useState } from "react";
-import MyEventCard from "./components/MyEventCard";
-import QuickAttendButton from "./components/QuickAttendButton";
-import PastEventCard from "./components/PastEventCard";
+import { useEffect, useRef, useState } from 'react';
+import MyEventCard from './components/MyEventCard';
+import QuickAttendButton from './components/QuickAttendButton';
+import PastEventCard from './components/PastEventCard';
 import {
   ExploreOutlined,
   OpenInNew,
@@ -11,18 +11,18 @@ import {
   ArrowUpward,
   ChevronLeft,
   ChevronRight,
-} from "@mui/icons-material";
-import LLEPopup from "./components/LLEPopup";
+} from '@mui/icons-material';
+import LLEPopup from './components/LLEPopup';
 
 export default function Home() {
   // === Mock Data ===
-  const eventName = "Freshmen night";
-  const eventDate = "3 สิงหาคม 2568";
-  const eventTimeRange = "16:00 - 20:00 น.";
-  const eventLocation = "สนามกีฬาจุฬาลงกรณ์มหาวิทยาลัย";
+  const eventName = 'Freshmen night';
+  const eventDate = '3 สิงหาคม 2568';
+  const eventTimeRange = '16:00 - 20:00 น.';
+  const eventLocation = 'สนามกีฬาจุฬาลงกรณ์มหาวิทยาลัย';
   const eventDescription =
-    "กิจกรรมต้อนรับนิสิตใหม่ CU รุ่น 109 สู่รั้วมหาวิทยาลัย และ กระชับสัมพันธ์ อันดีระหว่างน้องใหม่คณะต่างๆภาย ในงานมีการจัด แสดงดนตรีโดยวงดนตรี อาทิเช่น Landokmai, Dept, Polycat, Tilly Birds, การแสดง พิเศษจาก CUDC และละครนิเทศ จุฬาฯ";
-  const eventOwner = "ผู้จัดการกิจกรรม";
+    'กิจกรรมต้อนรับนิสิตใหม่ CU รุ่น 109 สู่รั้วมหาวิทยาลัย และ กระชับสัมพันธ์ อันดีระหว่างน้องใหม่คณะต่างๆภาย ในงานมีการจัด แสดงดนตรีโดยวงดนตรี อาทิเช่น Landokmai, Dept, Polycat, Tilly Birds, การแสดง พิเศษจาก CUDC และละครนิเทศ จุฬาฯ';
+  const eventOwner = 'ผู้จัดการกิจกรรม';
 
   const maxPageNumber = 10;
   // =================
@@ -40,10 +40,10 @@ export default function Home() {
   useEffect(() => {
     if (sortOption == 0) {
       // Newest - Oldest
-      alert("Sorting from new to old");
+      alert('Sorting from new to old');
     } else if (sortOption == 1) {
       // Oldest - Newest
-      alert("Sorting from old to new");
+      alert('Sorting from old to new');
     }
   }, [sortOption]);
 
@@ -83,7 +83,7 @@ export default function Home() {
             sx={{ width: 24, height: 24 }}
             className="text-primary cursor-pointer"
             onClick={() => {
-              alert("Go to Discovery Page");
+              alert('Go to Discovery Page');
             }}
           />
         </div>
@@ -109,7 +109,7 @@ export default function Home() {
 
         {/* Events */}
         <div className="flex flex-col gap-4 mb-6">
-          {["1", "2", "3"].map((id) => {
+          {['1', '2', '3'].map(id => {
             return (
               <MyEventCard
                 key={id}
@@ -152,14 +152,14 @@ export default function Home() {
               sx={{ width: 32, height: 32 }}
               className="text-primary cursor-pointer"
               onClick={() => {
-                setOpenSortDropdown((prev) => !prev);
+                setOpenSortDropdown(prev => !prev);
               }}
             />
             {openSortDropdown && (
               <div className="w-52 absolute top-full right-0 mt-1 bg-neutral-white rounded-lg shadow-elevation-1 p-2 z-10">
                 <button
                   className="cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-100"
-                  onClick={(e) => {
+                  onClick={e => {
                     e.stopPropagation();
                     setSortOption(0);
                     setOpenSortDropdown(false);
@@ -169,7 +169,7 @@ export default function Home() {
                 </button>
                 <button
                   className="cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-100"
-                  onClick={(e) => {
+                  onClick={e => {
                     e.stopPropagation();
                     setSortOption(1);
                     setOpenSortDropdown(false);
@@ -184,7 +184,7 @@ export default function Home() {
 
         {/* Events */}
         <div className="flex flex-col gap-4">
-          {["1", "2", "3"].map((id) => {
+          {['1', '2', '3'].map(id => {
             return (
               <PastEventCard
                 key={id}
@@ -208,7 +208,7 @@ export default function Home() {
         <button
           className="p-2 w-8 h-8 rounded-full bg-neutral-white border border-neutral-300 cursor-pointer"
           onClick={() => {
-            if (currentPageNumber > 1) setCurrentPageNumber((prev) => prev - 1);
+            if (currentPageNumber > 1) setCurrentPageNumber(prev => prev - 1);
           }}
         >
           <ChevronLeft
@@ -220,43 +220,43 @@ export default function Home() {
         {/* Numbers */}
         <div className="flex items-center gap-1 flex-wrap justify-center">
           {(() => {
-            const pages: (number | "...")[] = [];
+            const pages: (number | '...')[] = [];
 
             if (maxPageNumber <= 5) {
               for (let i = 1; i <= maxPageNumber; i++) pages.push(i);
             } else {
               if (currentPageNumber <= 2) {
-                pages.push(1, 2, 3, "...", maxPageNumber);
+                pages.push(1, 2, 3, '...', maxPageNumber);
               } else if (currentPageNumber >= maxPageNumber - 1) {
                 pages.push(
                   1,
-                  "...",
+                  '...',
                   maxPageNumber - 2,
                   maxPageNumber - 1,
                   maxPageNumber
                 );
               } else {
-                pages.push(1, "...", currentPageNumber, "...", maxPageNumber);
+                pages.push(1, '...', currentPageNumber, '...', maxPageNumber);
               }
             }
 
             return pages.map((page, index) => {
               const isActive = page === currentPageNumber;
-              const isEllipsis = page === "...";
+              const isEllipsis = page === '...';
 
               return (
                 <button
                   key={index}
                   className={`p-2 w-8 h-8 rounded-full bg-neutral-white border label-large-primary ${
                     isEllipsis
-                      ? "border-neutral-300 cursor-default"
+                      ? 'border-neutral-300 cursor-default'
                       : isActive
-                      ? "bg-primary border-primary text-neutral-white cursor-pointer"
-                      : "border-neutral-300 text-neutral-600 cursor-pointer"
+                        ? 'bg-primary border-primary text-neutral-white cursor-pointer'
+                        : 'border-neutral-300 text-neutral-600 cursor-pointer'
                   }`}
                   disabled={isEllipsis}
                   onClick={() =>
-                    typeof page === "number" && setCurrentPageNumber(page)
+                    typeof page === 'number' && setCurrentPageNumber(page)
                   }
                 >
                   {page}
@@ -271,7 +271,7 @@ export default function Home() {
           className="p-2 w-8 h-8 rounded-full bg-neutral-white border border-neutral-300 cursor-pointer"
           onClick={() => {
             if (currentPageNumber < maxPageNumber)
-              setCurrentPageNumber((prev) => prev + 1);
+              setCurrentPageNumber(prev => prev + 1);
           }}
         >
           <ChevronRight
@@ -284,9 +284,9 @@ export default function Home() {
       {/* Go to Top Button */}
       <button
         className={`fixed right-8 bottom-12 p-4 w-14 h-14 rounded-full bg-primary z-50 cursor-pointer ${
-          isInvisibleScrollToTop ? "hidden" : "block"
+          isInvisibleScrollToTop ? 'hidden' : 'block'
         }`}
-        onClick={() => topRef.current?.scrollTo({ top: 0, behavior: "smooth" })}
+        onClick={() => topRef.current?.scrollTo({ top: 0, behavior: 'smooth' })}
       >
         <ArrowUpward sx={{ width: 24, height: 24 }} className="text-white" />
       </button>

@@ -1,4 +1,4 @@
-import QuickAttendButton from "./QuickAttendButton";
+import QuickAttendButton from './QuickAttendButton';
 
 interface LLEPopupProps {
   setOpenLLEPopup: (b: boolean) => void;
@@ -8,14 +8,14 @@ export default function LLEPopup({ setOpenLLEPopup }: LLEPopupProps) {
   return (
     <div
       className="fixed inset-0 z-100 flex items-center justify-center bg-neutral-black/70"
-      onClick={(e) => {
+      onClick={e => {
         e.stopPropagation();
         setOpenLLEPopup(false);
       }}
     >
       <div
         className="relative bg-neutral-white w-[349px] rounded-4xl px-4 py-6"
-        onClick={(e) => {
+        onClick={e => {
           e.stopPropagation();
         }}
       >
@@ -30,7 +30,7 @@ export default function LLEPopup({ setOpenLLEPopup }: LLEPopupProps) {
           <QuickAttendButton
             type="text"
             variant="outline"
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation();
               setOpenLLEPopup(false);
             }}
@@ -40,9 +40,9 @@ export default function LLEPopup({ setOpenLLEPopup }: LLEPopupProps) {
           <QuickAttendButton
             type="text"
             variant="filled"
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation();
-              alert("Go to LLE!");
+              alert('Go to LLE!');
               setOpenLLEPopup(false);
             }}
           >

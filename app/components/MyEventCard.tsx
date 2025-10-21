@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 import {
   CalendarMonth,
@@ -9,9 +9,9 @@ import {
   WatchLater,
   TrendingUp,
   UploadFile,
-} from "@mui/icons-material";
-import QuickAttendButton from "./QuickAttendButton";
-import LLEPopup from "./LLEPopup";
+} from '@mui/icons-material';
+import QuickAttendButton from './QuickAttendButton';
+import LLEPopup from './LLEPopup';
 
 interface MyEventCardProps {
   id: string;
@@ -49,7 +49,7 @@ export default function MyEventCard({
         <MoreVert
           sx={{ width: 20, height: 20 }}
           className="cursor-pointer"
-          onClick={(e) => {
+          onClick={e => {
             e.stopPropagation();
             setOpenLLEPopup(true);
           }}
@@ -109,7 +109,7 @@ export default function MyEventCard({
         <QuickAttendButton
           type="text"
           variant="filled"
-          onClick={(e) => {
+          onClick={e => {
             e.stopPropagation();
             alert(`Go to Scan from Card ${id}`);
           }}
@@ -127,7 +127,7 @@ export default function MyEventCard({
             <QuickAttendButton
               variant="outline"
               type="icon"
-              onClick={(e) => e.stopPropagation()}
+              onClick={e => e.stopPropagation()}
             >
               <TrendingUp sx={{ width: 20, height: 20 }} />
             </QuickAttendButton>
@@ -141,9 +141,9 @@ export default function MyEventCard({
             <QuickAttendButton
               type="icon"
               variant="outline"
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation();
-                setOpenShareDropdown((prev) => !prev);
+                setOpenShareDropdown(prev => !prev);
               }}
             >
               <UploadFile
@@ -157,7 +157,7 @@ export default function MyEventCard({
               <div className="w-30 absolute bottom-full mb-1 right-0 bg-neutral-white rounded-lg shadow-elevation-1 p-2 z-10">
                 <button
                   className="cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-100"
-                  onClick={(e) => {
+                  onClick={e => {
                     e.stopPropagation();
                     alert(`Go to Scan Page for Event ${id}`);
                     setOpenShareDropdown(false);
@@ -167,7 +167,7 @@ export default function MyEventCard({
                 </button>
                 <button
                   className="cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-100"
-                  onClick={(e) => {
+                  onClick={e => {
                     e.stopPropagation();
                     alert(`Go to Dashboard for Event ${id}`);
                     setOpenShareDropdown(false);
