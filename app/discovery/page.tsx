@@ -1,21 +1,15 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import MyEventCard from '../components/MyEventCard';
-import QuickAttendButton from '../components/QuickAttendButton';
-import PastEventCard from '../components/PastEventCard';
+import DiscoveryEventCard from '@/components/DiscoveryEventCard';
 import {
-  ExploreOutlined,
-  OpenInNew,
-  SwapVert,
   ArrowUpward,
   ChevronLeft,
   ChevronRight,
+  SwapVert,
 } from '@mui/icons-material';
-import LLEPopup from '../components/LLEPopup';
-import Link from 'next/link';
+import { useEffect, useRef, useState } from 'react';
 
-export default function Home() {
+export default function Discovery() {
   // === Mock Data ===
   const eventName = 'Freshmen night';
   const eventDate = '3 สิงหาคม 2568';
@@ -23,14 +17,12 @@ export default function Home() {
   const eventLocation = 'สนามกีฬาจุฬาลงกรณ์มหาวิทยาลัย';
   const eventDescription =
     'กิจกรรมต้อนรับนิสิตใหม่ CU รุ่น 109 สู่รั้วมหาวิทยาลัย และ กระชับสัมพันธ์ อันดีระหว่างน้องใหม่คณะต่างๆภาย ในงานมีการจัด แสดงดนตรีโดยวงดนตรี อาทิเช่น Landokmai, Dept, Polycat, Tilly Birds, การแสดง พิเศษจาก CUDC และละครนิเทศ จุฬาฯ';
-  const eventOwner = 'ผู้จัดการกิจกรรม';
 
   const maxPageNumber = 10;
   // =================
 
   const [sortOption, setSortOption] = useState<0 | 1 | null>(null);
   const [currentPageNumber, setCurrentPageNumber] = useState<number>(1);
-  const [openLLEPopup, setOpenLLEPopup] = useState(false);
   const [openSortDropdown, setOpenSortDropdown] = useState(false);
   const [isInvisibleScrollToTop, setInvisibleScrollToTop] = useState(false);
 
@@ -74,79 +66,12 @@ export default function Home() {
       ref={topRef}
       className="w-full h-screen overflow-auto relative flex flex-col px-8 py-12"
     >
-      {/* My Events */}
-      <div className="mb-12">
-        {/* Header */}
-        <div className="flex justify-between gap-4 mb-6">
-          <h1 className="headline-small-emphasized text-neutral-600">
-            กิจกรรมของฉัน
-          </h1>
-          <Link href={'/discovery'}>
-            <ExploreOutlined
-              sx={{ width: 24, height: 24 }}
-              className="text-primary cursor-pointer"
-            />
-          </Link>
-        </div>
-
-        {/* Number of Results */}
-        <div className="flex justify-between items-center gap-4 mb-4">
-          <p className="label-small-primary text-neutral-600">
-            แสดงกิจกรรม 3 จาก 6
-          </p>
-          <div
-            className="flex items-center gap-2 cursor-pointer"
-            onClick={() => {
-              setOpenLLEPopup(true);
-            }}
-          >
-            <p className="label-large-primary text-neutral-600">ดูทั้งหมด</p>
-            <OpenInNew
-              sx={{ width: 16, height: 16 }}
-              className="text-primary -translate-y-1"
-            />
-          </div>
-        </div>
-
-        {/* Events */}
-        <div className="flex flex-col gap-4 mb-6">
-          {['1', '2', '3'].map(id => {
-            return (
-              <MyEventCard
-                key={id}
-                id={id}
-                name={eventName}
-                date={eventDate}
-                timeRange={eventTimeRange}
-                location={eventLocation}
-                description={eventDescription}
-                owner={eventOwner}
-              />
-            );
-          })}
-        </div>
-
-        {/* Button */}
-        <div className="flex flex-col items-center gap-2">
-          <QuickAttendButton
-            variant="filled"
-            type="text"
-            onClick={() => setOpenLLEPopup(true)}
-          >
-            <p className="translate-y-1">จัดการกิจกรรม</p>
-          </QuickAttendButton>
-          <p className="label-small-primary text-neutral-400">
-            เข้าสู่ Backoffice เพื่อจัดการและแก้ไขกิจกรรม
-          </p>
-        </div>
-      </div>
-
-      {/* Past Events */}
+      {/* Events */}
       <div className="mb-6">
         {/* Header */}
         <div className="flex justify-between gap-4 mb-6 relative">
           <h1 className="headline-small-emphasized text-neutral-600">
-            กิจกรรมที่ผ่านมา
+            สำรวจกิจกรรม
           </h1>
           <div className="relative h-fit">
             <SwapVert
@@ -187,7 +112,7 @@ export default function Home() {
         <div className="flex flex-col gap-4">
           {['1', '2', '3'].map(id => {
             return (
-              <PastEventCard
+              <DiscoveryEventCard
                 key={id}
                 id={id}
                 name={eventName}
@@ -195,8 +120,6 @@ export default function Home() {
                 timeRange={eventTimeRange}
                 location={eventLocation}
                 description={eventDescription}
-                owner={eventOwner}
-                displayFirstRow={true}
               />
             );
           })}
@@ -291,8 +214,6 @@ export default function Home() {
       >
         <ArrowUpward sx={{ width: 24, height: 24 }} className="text-white" />
       </button>
-
-      {openLLEPopup && <LLEPopup setOpenLLEPopup={setOpenLLEPopup} />}
     </div>
   );
 }

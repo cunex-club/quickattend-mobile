@@ -42,7 +42,7 @@ export default function PastEventCard({
   return (
     <div
       key={id}
-      className={`w-full bg-neutral-100 rounded-4xl flex flex-col px-4 py-6 cursor-pointer transition-shadow`}
+      className={`w-full h-fit bg-neutral-100 rounded-4xl flex flex-col px-4 py-6 cursor-pointer transition-shadow`}
     >
       {/* Header */}
       <div

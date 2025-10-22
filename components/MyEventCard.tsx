@@ -38,7 +38,7 @@ export default function MyEventCard({
   return (
     <div
       key={id}
-      className="w-full min-h-[412px] bg-neutral-100 rounded-4xl flex flex-col px-4 py-6 cursor-pointer overflow-visible"
+      className="w-full min-h-[326px] h-fit bg-neutral-100 rounded-4xl flex flex-col px-4 py-6 cursor-pointer overflow-visible"
       onClick={() => {
         alert(`Go to Event ${id}`);
       }}
@@ -48,7 +48,7 @@ export default function MyEventCard({
         <h2 className="title-large-emphasized text-neutral-600">{name}</h2>
         <MoreVert
           sx={{ width: 20, height: 20 }}
-          className="cursor-pointer"
+          className="cursor-pointer -translate-y-1"
           onClick={e => {
             e.stopPropagation();
             setOpenLLEPopup(true);
