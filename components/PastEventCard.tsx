@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 import {
   ExpandLess,
@@ -11,9 +11,9 @@ import {
   TrendingUp,
   Feed,
   DifferenceOutlined,
-} from "@mui/icons-material";
-import QuickAttendButton from "./QuickAttendButton";
-import LLEPopup from "./LLEPopup";
+} from '@mui/icons-material';
+import QuickAttendButton from './QuickAttendButton';
+import LLEPopup from './LLEPopup';
 
 interface PastEventCardProps {
   id: string;
@@ -47,9 +47,9 @@ export default function PastEventCard({
       {/* Header */}
       <div
         className="flex justify-between items-center gap-4 mb-1"
-        onClick={(e) => {
+        onClick={e => {
           e.stopPropagation();
-          setOpenDetail((prev) => !prev);
+          setOpenDetail(prev => !prev);
         }}
       >
         <h2 className="title-large-emphasized text-neutral-600">{name}</h2>
@@ -64,8 +64,8 @@ export default function PastEventCard({
       <div
         className={`transition-all duration-300 ease-in-out overflow-hidden ${
           openDetail
-            ? "min-h-[300px] opacity-100 mt-2"
-            : "max-h-0 opacity-0 mt-0"
+            ? 'min-h-[300px] opacity-100 mt-2'
+            : 'max-h-0 opacity-0 mt-0'
         }`}
         onClick={() => {
           alert(`Go to Event ${id}`);
@@ -121,7 +121,7 @@ export default function PastEventCard({
               <QuickAttendButton
                 type="text"
                 variant="filled"
-                onClick={(e) => {
+                onClick={e => {
                   e.stopPropagation();
                   alert(`Go to Statistic Page from Card ${id}`);
                 }}
@@ -137,7 +137,7 @@ export default function PastEventCard({
                 <QuickAttendButton
                   type="icon"
                   variant="outline"
-                  onClick={(e) => {
+                  onClick={e => {
                     e.stopPropagation();
                     alert(`Download something from Card ${id}`);
                   }}
@@ -151,7 +151,7 @@ export default function PastEventCard({
                 <QuickAttendButton
                   type="icon"
                   variant="outline"
-                  onClick={(e) => {
+                  onClick={e => {
                     e.stopPropagation();
                     alert(`Duplicate Card ${id}`);
                   }}
@@ -170,7 +170,7 @@ export default function PastEventCard({
             <QuickAttendButton
               type="text"
               variant="filled"
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation();
                 alert(`Go to Evaulation form from Card ${id}`);
               }}
