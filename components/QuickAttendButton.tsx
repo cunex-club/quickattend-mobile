@@ -19,7 +19,9 @@ export default function QuickAttendButton({
       : 'bg-neutral-white border-primary text-primary';
 
   const layout =
-    type === 'text' ? `min-h-[36px] w-fit max-w-full flex-1` : `min-h-[36px] w-full flex-1`;
+    type === 'text'
+      ? `min-h-[36px] w-fit max-w-full flex-1`
+      : `min-h-[36px] w-full flex-1`;
 
   return (
     <button
