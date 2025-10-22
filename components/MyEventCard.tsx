@@ -79,7 +79,7 @@ export default function MyEventCard({
         {/* Location */}
         <div className="flex gap-2">
           <LocationOn
-            sx={{ width: 14, height: 14 }}
+            sx={{ width: 14, height: 18 }}
             className="text-primary translate-y-1"
           />
           <p className="body-medium-primary text-neutral-600">{location}</p>

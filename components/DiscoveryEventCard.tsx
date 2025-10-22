@@ -1,9 +1,4 @@
-import {
-  CalendarMonth,
-  MoreVert,
-  LocationOn,
-  WatchLater,
-} from '@mui/icons-material';
+import { CalendarMonth, LocationOn, WatchLater } from '@mui/icons-material';
 
 interface DiscoveryEventCardProps {
   id: string;
@@ -33,13 +28,6 @@ export default function DiscoveryEventCard({
       {/* Header */}
       <div className="flex justify-between items-center gap-4 mb-1">
         <h2 className="title-large-emphasized text-neutral-600">{name}</h2>
-        <MoreVert
-          sx={{ width: 20, height: 20 }}
-          className="cursor-pointer -translate-y-1"
-          onClick={e => {
-            e.stopPropagation();
-          }}
-        />
       </div>
 
       {/* Information */}
@@ -65,7 +53,7 @@ export default function DiscoveryEventCard({
         {/* Location */}
         <div className="flex gap-2">
           <LocationOn
-            sx={{ width: 14, height: 14 }}
+            sx={{ width: 14, height: 18 }}
             className="text-primary translate-y-1"
           />
           <p className="body-medium-primary text-neutral-600">{location}</p>
