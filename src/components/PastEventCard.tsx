@@ -14,6 +14,7 @@ import {
 } from "@mui/icons-material";
 import QuickAttendButton from "./QuickAttendButton";
 import LLEPopup from "./LLEPopup";
+import Link from "next/link";
 
 interface PastEventCardProps {
   id: string;
@@ -42,17 +43,20 @@ export default function PastEventCard({
   return (
     <div
       key={id}
-      className={`w-full bg-neutral-100 rounded-4xl flex flex-col px-4 py-6 cursor-pointer transition-shadow`}
+      className={`w-full h-fit bg-neutral-100 rounded-4xl flex flex-col px-4 py-6 cursor-pointer transition-shadow`}
     >
       {/* Header */}
       <div
-        className="flex justify-between items-center gap-4 mb-1"
+        className="flex justify-between items-center gap-4"
         onClick={e => {
           e.stopPropagation();
+          e.preventDefault();
           setOpenDetail(prev => !prev);
         }}
       >
-        <h2 className="title-large-emphasized text-neutral-600">{name}</h2>
+        <h2 className="title-large-emphasized text-neutral-600 translate-y-1">
+          {name}
+        </h2>
         {openDetail ? (
           <ExpandLess sx={{ width: 20, height: 20 }} />
         ) : (
@@ -61,15 +65,13 @@ export default function PastEventCard({
       </div>
 
       {/* Expandable Section */}
-      <div
+      <Link
         className={`transition-all duration-300 ease-in-out overflow-hidden ${
           openDetail
             ? "min-h-[300px] opacity-100 mt-2"
             : "max-h-0 opacity-0 mt-0"
         }`}
-        onClick={() => {
-          alert(`Go to Event ${id}`);
-        }}
+        href={`/${id}`}
       >
         {/* Information */}
         <div className="flex flex-col gap-1 mb-4">
@@ -89,7 +91,7 @@ export default function PastEventCard({
           </div>
           <div className="flex gap-2">
             <LocationOn
-              sx={{ width: 14, height: 14 }}
+              sx={{ width: 14, height: 18 }}
               className="text-primary translate-y-1"
             />
             <p className="body-medium-primary text-neutral-600">{location}</p>
@@ -123,7 +125,8 @@ export default function PastEventCard({
                 variant="filled"
                 onClick={e => {
                   e.stopPropagation();
-                  alert(`Go to Statistic Page from Card ${id}`);
+                  setOpenLLEPopup(true);
+                  e.preventDefault();
                 }}
               >
                 <TrendingUp
@@ -139,7 +142,8 @@ export default function PastEventCard({
                   variant="outline"
                   onClick={e => {
                     e.stopPropagation();
-                    alert(`Download something from Card ${id}`);
+                    setOpenLLEPopup(true);
+                    e.preventDefault();
                   }}
                 >
                   <SaveAlt
@@ -153,7 +157,8 @@ export default function PastEventCard({
                   variant="outline"
                   onClick={e => {
                     e.stopPropagation();
-                    alert(`Duplicate Card ${id}`);
+                    setOpenLLEPopup(true);
+                    e.preventDefault();
                   }}
                 >
                   <DifferenceOutlined
@@ -172,7 +177,8 @@ export default function PastEventCard({
               variant="filled"
               onClick={e => {
                 e.stopPropagation();
-                alert(`Go to Evaulation form from Card ${id}`);
+                setOpenLLEPopup(true);
+                e.preventDefault();
               }}
             >
               <Feed
@@ -183,7 +189,7 @@ export default function PastEventCard({
             </QuickAttendButton>
           </div>
         </div>
-      </div>
+      </Link>
 
       {/* LLE Popup */}
       {openLLEPopup && <LLEPopup setOpenLLEPopup={setOpenLLEPopup} />}
