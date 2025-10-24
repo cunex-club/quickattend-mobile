@@ -82,7 +82,7 @@ export default function Discovery() {
               }}
             />
             {openSortDropdown && (
-              <div className="w-52 absolute top-full right-0 mt-1 bg-neutral-white rounded-lg shadow-elevation-1 p-2 z-10">
+              <div className="absolute top-full right-0 mt-1 bg-neutral-white rounded-lg shadow-elevation-1 px-3 py-2 z-10 min-w-48">
                 <button
                   className="cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-100"
                   onClick={e => {
@@ -137,7 +137,7 @@ export default function Discovery() {
         >
           <ChevronLeft
             sx={{ width: 16, height: 16 }}
-            className="text-primary -translate-y-[2px]"
+            className="text-primary -translate-y-0.5"
           />
         </button>
 
@@ -200,7 +200,7 @@ export default function Discovery() {
         >
           <ChevronRight
             sx={{ width: 16, height: 16 }}
-            className="text-primary -translate-y-[2px]"
+            className="text-primary -translate-y-0.5"
           />
         </button>
       </div>

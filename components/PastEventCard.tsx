@@ -46,13 +46,15 @@ export default function PastEventCard({
     >
       {/* Header */}
       <div
-        className="flex justify-between items-center gap-4 mb-1"
+        className="flex justify-between items-center gap-4"
         onClick={e => {
           e.stopPropagation();
           setOpenDetail(prev => !prev);
         }}
       >
-        <h2 className="title-large-emphasized text-neutral-600">{name}</h2>
+        <h2 className="title-large-emphasized text-neutral-600 translate-y-1">
+          {name}
+        </h2>
         {openDetail ? (
           <ExpandLess sx={{ width: 20, height: 20 }} />
         ) : (
