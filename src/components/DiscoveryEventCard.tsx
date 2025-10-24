@@ -1,5 +1,5 @@
-import { CalendarMonth, LocationOn, WatchLater } from '@mui/icons-material';
-import Link from 'next/link';
+import { CalendarMonth, LocationOn, WatchLater } from "@mui/icons-material";
+import Link from "next/link";
 
 interface DiscoveryEventCardProps {
   id: string;

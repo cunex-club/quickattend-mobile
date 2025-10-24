@@ -12,6 +12,7 @@ import {
 } from "@mui/icons-material";
 import QuickAttendButton from "./QuickAttendButton";
 import LLEPopup from "./LLEPopup";
+import Link from "next/link";
 
 interface MyEventCardProps {
   id: string;
@@ -36,21 +37,20 @@ export default function MyEventCard({
   const [openShareDropdown, setOpenShareDropdown] = useState(false);
 
   return (
-    <div
+    <Link
       key={id}
-      className="w-full min-h-[412px] bg-neutral-100 rounded-4xl flex flex-col px-4 py-6 cursor-pointer overflow-visible"
-      onClick={() => {
-        alert(`Go to Event ${id}`);
-      }}
+      className="w-full min-h-[326px] h-fit bg-neutral-100 rounded-4xl flex flex-col px-4 py-6 cursor-pointer overflow-visible"
+      href={`/${id}`}
     >
       {/* Header */}
       <div className="flex justify-between items-center gap-4 mb-1">
         <h2 className="title-large-emphasized text-neutral-600">{name}</h2>
         <MoreVert
           sx={{ width: 20, height: 20 }}
-          className="cursor-pointer"
+          className="cursor-pointer -translate-y-1"
           onClick={e => {
             e.stopPropagation();
+            e.preventDefault();
             setOpenLLEPopup(true);
           }}
         />
@@ -79,7 +79,7 @@ export default function MyEventCard({
         {/* Location */}
         <div className="flex gap-2">
           <LocationOn
-            sx={{ width: 14, height: 14 }}
+            sx={{ width: 14, height: 18 }}
             className="text-primary translate-y-1"
           />
           <p className="body-medium-primary text-neutral-600">{location}</p>
@@ -111,6 +111,7 @@ export default function MyEventCard({
           variant="filled"
           onClick={e => {
             e.stopPropagation();
+            e.preventDefault();
             alert(`Go to Scan from Card ${id}`);
           }}
         >
@@ -127,7 +128,11 @@ export default function MyEventCard({
             <QuickAttendButton
               variant="outline"
               type="icon"
-              onClick={e => e.stopPropagation()}
+              onClick={e => {
+                e.stopPropagation();
+                e.preventDefault();
+                setOpenLLEPopup(true);
+              }}
             >
               <TrendingUp sx={{ width: 20, height: 20 }} />
             </QuickAttendButton>
@@ -143,6 +148,7 @@ export default function MyEventCard({
               variant="outline"
               onClick={e => {
                 e.stopPropagation();
+                e.preventDefault();
                 setOpenShareDropdown(prev => !prev);
               }}
             >
@@ -159,7 +165,7 @@ export default function MyEventCard({
                   className="cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-100"
                   onClick={e => {
                     e.stopPropagation();
-                    alert(`Go to Scan Page for Event ${id}`);
+                    e.preventDefault();
                     setOpenShareDropdown(false);
                   }}
                 >
@@ -169,7 +175,7 @@ export default function MyEventCard({
                   className="cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-100"
                   onClick={e => {
                     e.stopPropagation();
-                    alert(`Go to Dashboard for Event ${id}`);
+                    e.preventDefault();
                     setOpenShareDropdown(false);
                   }}
                 >
@@ -182,6 +188,6 @@ export default function MyEventCard({
 
         {openLLEPopup && <LLEPopup setOpenLLEPopup={setOpenLLEPopup} />}
       </div>
-    </div>
+    </Link>
   );
 }

@@ -13,6 +13,7 @@ import {
   ChevronRight,
 } from "@mui/icons-material";
 import LLEPopup from "@/components/LLEPopup";
+import Link from "next/link";
 
 export default function Home() {
   // === Mock Data ===
@@ -47,6 +48,7 @@ export default function Home() {
     }
   }, [sortOption]);
 
+  // Check whether users reach the bottom or not
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -79,13 +81,12 @@ export default function Home() {
           <h1 className="headline-small-emphasized text-neutral-600">
             กิจกรรมของฉัน
           </h1>
-          <ExploreOutlined
-            sx={{ width: 24, height: 24 }}
-            className="text-primary cursor-pointer"
-            onClick={() => {
-              alert("Go to Discovery Page");
-            }}
-          />
+          <Link href={"/discovery"}>
+            <ExploreOutlined
+              sx={{ width: 24, height: 24 }}
+              className="text-primary cursor-pointer"
+            />
+          </Link>
         </div>
 
         {/* Number of Results */}
@@ -94,7 +95,7 @@ export default function Home() {
             แสดงกิจกรรม 3 จาก 6
           </p>
           <div
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 cursor-pointer"
             onClick={() => {
               setOpenLLEPopup(true);
             }}
@@ -102,7 +103,7 @@ export default function Home() {
             <p className="label-large-primary text-neutral-600">ดูทั้งหมด</p>
             <OpenInNew
               sx={{ width: 16, height: 16 }}
-              className="text-primary cursor-pointer -translate-y-1"
+              className="text-primary -translate-y-1"
             />
           </div>
         </div>
@@ -150,17 +151,18 @@ export default function Home() {
           <div className="relative h-fit">
             <SwapVert
               sx={{ width: 32, height: 32 }}
-              className="text-primary cursor-pointer"
+              className="text-primary cursor-pointer -translate-y-1"
               onClick={() => {
                 setOpenSortDropdown(prev => !prev);
               }}
             />
             {openSortDropdown && (
-              <div className="w-52 absolute top-full right-0 mt-1 bg-neutral-white rounded-lg shadow-elevation-1 p-2 z-10">
+              <div className="absolute top-full right-0 mt-1 bg-neutral-white rounded-lg shadow-elevation-1 px-3 py-2 z-10 min-w-48">
                 <button
                   className="cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-100"
                   onClick={e => {
                     e.stopPropagation();
+                    e.preventDefault();
                     setSortOption(0);
                     setOpenSortDropdown(false);
                   }}
@@ -171,6 +173,7 @@ export default function Home() {
                   className="cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-100"
                   onClick={e => {
                     e.stopPropagation();
+                    e.preventDefault();
                     setSortOption(1);
                     setOpenSortDropdown(false);
                   }}

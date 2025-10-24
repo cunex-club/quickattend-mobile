@@ -10,6 +10,7 @@ export default function LLEPopup({ setOpenLLEPopup }: LLEPopupProps) {
       className="fixed inset-0 z-100 flex items-center justify-center bg-neutral-black/70"
       onClick={e => {
         e.stopPropagation();
+        e.preventDefault();
         setOpenLLEPopup(false);
       }}
     >
@@ -17,6 +18,7 @@ export default function LLEPopup({ setOpenLLEPopup }: LLEPopupProps) {
         className="relative bg-neutral-white w-[349px] rounded-4xl px-4 py-6"
         onClick={e => {
           e.stopPropagation();
+          e.preventDefault();
         }}
       >
         <h3 className="headline-small-emphasized mb-4 text-center">
@@ -32,6 +34,7 @@ export default function LLEPopup({ setOpenLLEPopup }: LLEPopupProps) {
             variant="outline"
             onClick={e => {
               e.stopPropagation();
+              e.preventDefault();
               setOpenLLEPopup(false);
             }}
           >
@@ -42,7 +45,7 @@ export default function LLEPopup({ setOpenLLEPopup }: LLEPopupProps) {
             variant="filled"
             onClick={e => {
               e.stopPropagation();
-              alert("Go to LLE!");
+              e.preventDefault();
               setOpenLLEPopup(false);
             }}
           >
