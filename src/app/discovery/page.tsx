@@ -34,10 +34,10 @@ export default function Discovery() {
 
   // When there's a change in sort option
   useEffect(() => {
-    if (sortOption == 0) {
+    if (sortOption === 0) {
       // Newest - Oldest
       alert("Sorting from new to old");
-    } else if (sortOption == 1) {
+    } else if (sortOption === 1) {
       // Oldest - Newest
       alert("Sorting from old to new");
     }

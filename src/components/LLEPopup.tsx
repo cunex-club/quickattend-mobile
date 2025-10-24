@@ -25,8 +25,8 @@ export default function LLEPopup({ setOpenLLEPopup }: LLEPopupProps) {
           แจ้งเตือน
         </h3>
         <p className="label-large-primary mb-6 text-center">
-          บริการที่เลือกจะนำท่านไปสู่เว็บไซต์ของผู้ให้บริการที่อยู่ภาย
-          นอกแอปพลิเคชัน ท่านยืนยันจะใช้บริการต่อหรือไม่
+          บริการที่เลือกจะนำท่านไปสู่เว็บไซต์ของผู้ให้บริการที่อยู่ภายนอกแอปพลิเคชัน
+          ท่านยืนยันจะใช้บริการต่อหรือไม่
         </p>
         <div className="flex justify-center items-center gap-2 flex-wrap">
           <QuickAttendButton

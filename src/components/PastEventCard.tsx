@@ -125,6 +125,7 @@ export default function PastEventCard({
                 variant="filled"
                 onClick={e => {
                   e.stopPropagation();
+                  setOpenLLEPopup(true);
                   e.preventDefault();
                 }}
               >
@@ -141,6 +142,7 @@ export default function PastEventCard({
                   variant="outline"
                   onClick={e => {
                     e.stopPropagation();
+                    setOpenLLEPopup(true);
                     e.preventDefault();
                   }}
                 >
@@ -155,6 +157,7 @@ export default function PastEventCard({
                   variant="outline"
                   onClick={e => {
                     e.stopPropagation();
+                    setOpenLLEPopup(true);
                     e.preventDefault();
                   }}
                 >
@@ -174,6 +177,7 @@ export default function PastEventCard({
               variant="filled"
               onClick={e => {
                 e.stopPropagation();
+                setOpenLLEPopup(true);
                 e.preventDefault();
               }}
             >
