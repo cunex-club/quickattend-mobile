@@ -14,7 +14,7 @@ const chulaRegularFont = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Quick Project",
+  title: "QuickAttend",
   description: "",
 };
 

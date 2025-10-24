@@ -10,7 +10,7 @@ Linear Link: [link]
 
 <!--- What types of changes does your code introduce? Put an `x` in all the boxes that apply: -->
 
-- [ ] Code quality improvement to exisiting code or addition of tests
+- [ ] Code quality improvement to existing code or addition of tests
 - [ ] Bug fix (non-breaking change which fixes an issue)
 - [ ] New feature (non-breaking change which adds functionality)
 - [ ] Breaking change (fix or feature that would cause existing functionality to change)
