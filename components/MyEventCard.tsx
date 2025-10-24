@@ -12,6 +12,7 @@ import {
 } from '@mui/icons-material';
 import QuickAttendButton from './QuickAttendButton';
 import LLEPopup from './LLEPopup';
+import Link from 'next/link';
 
 interface MyEventCardProps {
   id: string;
@@ -36,12 +37,10 @@ export default function MyEventCard({
   const [openShareDropdown, setOpenShareDropdown] = useState(false);
 
   return (
-    <div
+    <Link
       key={id}
       className="w-full min-h-[326px] h-fit bg-neutral-100 rounded-4xl flex flex-col px-4 py-6 cursor-pointer overflow-visible"
-      onClick={() => {
-        alert(`Go to Event ${id}`);
-      }}
+      href={`/${id}`}
     >
       {/* Header */}
       <div className="flex justify-between items-center gap-4 mb-1">
@@ -127,7 +126,10 @@ export default function MyEventCard({
             <QuickAttendButton
               variant="outline"
               type="icon"
-              onClick={e => e.stopPropagation()}
+              onClick={e => {
+                e.stopPropagation();
+                setOpenLLEPopup(true);
+              }}
             >
               <TrendingUp sx={{ width: 20, height: 20 }} />
             </QuickAttendButton>
@@ -182,6 +184,6 @@ export default function MyEventCard({
 
         {openLLEPopup && <LLEPopup setOpenLLEPopup={setOpenLLEPopup} />}
       </div>
-    </div>
+    </Link>
   );
 }

@@ -5,8 +5,11 @@ import {
   ArrowUpward,
   ChevronLeft,
   ChevronRight,
+  ChevronRightOutlined,
+  HomeOutlined,
   SwapVert,
 } from '@mui/icons-material';
+import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 
 export default function Discovery() {
@@ -64,8 +67,20 @@ export default function Discovery() {
   return (
     <div
       ref={topRef}
-      className="w-full h-screen overflow-auto relative flex flex-col px-8 py-12"
+      className="w-full h-screen overflow-auto relative flex flex-col px-8 pt-8 pb-12"
     >
+      {/* Breadcrumb */}
+      <div className="flex gap-1 mb-6 items-center">
+        <Link className="flex gap-1 items-center" href="/">
+          <HomeOutlined fontSize="small" className="text-primary" />
+          <p className="body-small-primary text-neutral-500">หน้าหลัก</p>
+        </Link>
+        <ChevronRightOutlined fontSize="small" className="text-primary" />
+        <Link className="flex gap-1 items-center" href="/discovery">
+          <p className="body-small-primary text-neutral-500">สำรวจกิจกรรม</p>
+        </Link>
+      </div>
+
       {/* Events */}
       <div className="mb-6">
         {/* Header */}

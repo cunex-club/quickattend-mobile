@@ -32,7 +32,9 @@ export default function RootLayout({
           backgroundColor: 'var(--neutral-600)',
         }}
       >
-        <div className="w-full max-w-[390px] bg-neutral-white">{children}</div>
+        <div className="w-full max-w-[390px] min-h-screen bg-neutral-white">
+          {children}
+        </div>
       </body>
     </html>
   );

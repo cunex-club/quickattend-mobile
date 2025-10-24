@@ -14,6 +14,7 @@ import {
 } from '@mui/icons-material';
 import QuickAttendButton from './QuickAttendButton';
 import LLEPopup from './LLEPopup';
+import Link from 'next/link';
 
 interface PastEventCardProps {
   id: string;
@@ -63,15 +64,13 @@ export default function PastEventCard({
       </div>
 
       {/* Expandable Section */}
-      <div
+      <Link
         className={`transition-all duration-300 ease-in-out overflow-hidden ${
           openDetail
             ? 'min-h-[300px] opacity-100 mt-2'
             : 'max-h-0 opacity-0 mt-0'
         }`}
-        onClick={() => {
-          alert(`Go to Event ${id}`);
-        }}
+        href={`/${id}`}
       >
         {/* Information */}
         <div className="flex flex-col gap-1 mb-4">
@@ -185,7 +184,7 @@ export default function PastEventCard({
             </QuickAttendButton>
           </div>
         </div>
-      </div>
+      </Link>
 
       {/* LLE Popup */}
       {openLLEPopup && <LLEPopup setOpenLLEPopup={setOpenLLEPopup} />}

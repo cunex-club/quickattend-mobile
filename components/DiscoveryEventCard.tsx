@@ -1,4 +1,5 @@
 import { CalendarMonth, LocationOn, WatchLater } from '@mui/icons-material';
+import Link from 'next/link';
 
 interface DiscoveryEventCardProps {
   id: string;
@@ -18,12 +19,10 @@ export default function DiscoveryEventCard({
   description,
 }: DiscoveryEventCardProps) {
   return (
-    <div
+    <Link
       key={id}
       className="w-full min-h-[326px] h-fit bg-neutral-100 rounded-4xl flex flex-col px-4 py-6 cursor-pointer overflow-visible"
-      onClick={() => {
-        alert(`Go to Event ${id}`);
-      }}
+      href={`/discovery/${id}`}
     >
       {/* Header */}
       <div className="flex justify-between items-center gap-4 mb-1">
@@ -67,6 +66,6 @@ export default function DiscoveryEventCard({
         </h2>
         <p className="body-small-primary text-neutral-600">{description}</p>
       </div>
-    </div>
+    </Link>
   );
 }
