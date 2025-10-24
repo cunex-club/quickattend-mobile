@@ -1,0 +1,53 @@
+name: 🐞 Bug report
+description: Report an issue found during testing or development
+title: "[BUG] <short description>"
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please provide clear details so we can reproduce the issue.
+  - type: input
+    id: summary
+    attributes:
+      label: Summary
+      description: Short description of the issue
+      placeholder: Example — "Login button not working on mobile"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Describe the steps that led to the issue
+      placeholder: |
+        1. Go to the login page
+        2. Enter credentials
+        3. Click “Login”
+        4. Observe no response
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      placeholder: What should have happened?
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      placeholder: What actually happened?
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: |
+        - OS: macOS / Windows / Linux
+        - Browser or App version:
+        - Branch:
+  - type: textarea
+    id: logs
+    attributes:
+      label: Screenshots / Logs
+      description: Attach screenshots, console logs, or error messages if available.
+      render: shell
