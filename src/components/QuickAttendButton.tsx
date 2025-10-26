@@ -20,7 +20,7 @@ export default function QuickAttendButton({
 
   const layout =
     type === "text"
-      ? `min-h-[36px] w-fit max-w-full flex-1`
+      ? `min-h-[36px] min-w-fit max-w-full flex-1`
       : `min-h-[36px] w-full flex-1`;
 
   return (

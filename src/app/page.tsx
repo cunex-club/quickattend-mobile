@@ -15,6 +15,7 @@ import {
 import LLEPopup from "@/components/LLEPopup";
 import Link from "next/link";
 import {
+  displayButtonsFirstRowPastEvents,
   eventDate,
   eventDescription,
   eventLocation,
@@ -22,7 +23,7 @@ import {
   eventOwner,
   eventTimeRange,
   maxPageNumber,
-} from "@/mock/event";
+} from "@/utils/const";
 
 export default function Home() {
   const [sortOption, setSortOption] = useState<0 | 1 | null>(null);
@@ -195,7 +196,7 @@ export default function Home() {
                 location={eventLocation}
                 description={eventDescription}
                 owner={eventOwner}
-                displayFirstRow={true}
+                displayFirstRow={displayButtonsFirstRowPastEvents}
               />
             );
           })}

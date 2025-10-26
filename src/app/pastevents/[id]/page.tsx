@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  displayButtonsFirstRowPastEvents,
   eventDate,
   eventDescription,
   eventLocation,
@@ -8,7 +9,7 @@ import {
   eventOwner,
   eventSchedules,
   eventTimeRange,
-} from "@/mock/event";
+} from "@/utils/const";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Fragment, useEffect, useRef, useState } from "react";
@@ -17,14 +18,21 @@ import {
   ArrowUpward,
   CalendarMonth,
   ChevronRightOutlined,
+  DifferenceOutlined,
+  Feed,
   HomeOutlined,
   LocationOn,
+  SaveAlt,
+  TrendingUp,
   WatchLater,
 } from "@mui/icons-material";
+import QuickAttendButton from "@/components/QuickAttendButton";
+import LLEPopup from "@/components/LLEPopup";
 
-function LandingEventDetail() {
+function PastEventDetail() {
   const { id } = useParams();
   const [isInvisibleScrollToTop, setInvisibleScrollToTop] = useState(false);
+  const [openLLEPopup, setOpenLLEPopup] = useState(false);
 
   const topRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -142,6 +150,81 @@ function LandingEventDetail() {
         <p className="body-medium-primary text-neutral-600">{eventOwner}</p>
       </div>
 
+      {/* Buttons */}
+      <div className="flex flex-col gap-2">
+        {/* First Row */}
+        {displayButtonsFirstRowPastEvents && (
+          <div className="flex gap-2 flex-wrap items-center">
+            <QuickAttendButton
+              type="text"
+              variant="filled"
+              onClick={e => {
+                e.stopPropagation();
+                setOpenLLEPopup(true);
+                e.preventDefault();
+              }}
+            >
+              <TrendingUp
+                sx={{ width: 20, height: 20 }}
+                className="text-neutral-white"
+              />
+              <p className="translate-y-1">สถิติการลงทะเบียน</p>
+            </QuickAttendButton>
+
+            <div className="flex gap-2 flex-1">
+              <QuickAttendButton
+                type="icon"
+                variant="outline"
+                onClick={e => {
+                  e.stopPropagation();
+                  setOpenLLEPopup(true);
+                  e.preventDefault();
+                }}
+              >
+                <SaveAlt
+                  sx={{ width: 20, height: 20 }}
+                  className="text-primary"
+                />
+              </QuickAttendButton>
+
+              <QuickAttendButton
+                type="icon"
+                variant="outline"
+                onClick={e => {
+                  e.stopPropagation();
+                  setOpenLLEPopup(true);
+                  e.preventDefault();
+                }}
+              >
+                <DifferenceOutlined
+                  sx={{ width: 20, height: 20 }}
+                  className="text-primary"
+                />
+              </QuickAttendButton>
+            </div>
+          </div>
+        )}
+
+        {/* Second Row */}
+        <div className="flex gap-2 flex-wrap items-center">
+          <QuickAttendButton
+            type="text"
+            variant="filled"
+            onClick={e => {
+              e.stopPropagation();
+              setOpenLLEPopup(true);
+              e.preventDefault();
+            }}
+          >
+            <Feed
+              sx={{ width: 20, height: 20 }}
+              className="text-neutral-white"
+            />
+            <p className="translate-y-1">แบบฟอร์มประเมินกิจกรรม</p>
+          </QuickAttendButton>
+        </div>
+      </div>
+
       {/* Go to Top Button */}
       <button
         className={`fixed right-8 bottom-12 p-4 w-14 h-14 rounded-full bg-primary z-50 cursor-pointer ${
@@ -151,8 +234,10 @@ function LandingEventDetail() {
       >
         <ArrowUpward sx={{ width: 24, height: 24 }} className="text-white" />
       </button>
+
+      {openLLEPopup && <LLEPopup setOpenLLEPopup={setOpenLLEPopup} />}
     </div>
   );
 }
 
-export default LandingEventDetail;
+export default PastEventDetail;

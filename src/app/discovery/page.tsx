@@ -8,7 +8,7 @@ import {
   eventName,
   eventTimeRange,
   maxPageNumber,
-} from "@/mock/event";
+} from "@/utils/const";
 import {
   ArrowUpward,
   ChevronLeft,
