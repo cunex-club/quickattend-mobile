@@ -71,7 +71,7 @@ export default function PastEventCard({
             ? "min-h-[300px] opacity-100 mt-2"
             : "max-h-0 opacity-0 mt-0"
         }`}
-        href={`/${id}`}
+        href={`/pastevents/${id}`}
       >
         {/* Information */}
         <div className="flex flex-col gap-1 mb-4">

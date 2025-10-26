@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  displayButtonsFirstRowPastEvents,
   eventDate,
   eventDescription,
   eventLocation,
@@ -17,15 +18,24 @@ import {
   ArrowUpward,
   CalendarMonth,
   ChevronRightOutlined,
+  CropFree,
+  DifferenceOutlined,
+  Feed,
   HomeOutlined,
   LocationOn,
+  SaveAlt,
+  TrendingUp,
+  UploadFile,
   WatchLater,
 } from "@mui/icons-material";
-import Image from "next/image";
+import QuickAttendButton from "@/components/QuickAttendButton";
+import LLEPopup from "@/components/LLEPopup";
 
-function DiscoveryEventDetail() {
+function MyEventDetail() {
   const { id } = useParams();
   const [isInvisibleScrollToTop, setInvisibleScrollToTop] = useState(false);
+  const [openLLEPopup, setOpenLLEPopup] = useState(false);
+  const [openShareDropdown, setOpenShareDropdown] = useState(false);
 
   const topRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -63,11 +73,7 @@ function DiscoveryEventDetail() {
           <p className="body-small-primary text-neutral-500">หน้าหลัก</p>
         </Link>
         <ChevronRightOutlined fontSize="small" className="text-primary" />
-        <Link className="flex gap-1 items-center" href="/discovery">
-          <p className="body-small-primary text-neutral-500">สำรวจกิจกรรม</p>
-        </Link>
-        <ChevronRightOutlined fontSize="small" className="text-primary" />
-        <Link className="flex gap-1 items-center" href={`/discovery/${id}`}>
+        <Link className="flex gap-1 items-center" href={`/${id}`}>
           <p className="body-small-primary text-neutral-500">{eventName}</p>
         </Link>
       </div>
@@ -147,10 +153,90 @@ function DiscoveryEventDetail() {
         <p className="body-medium-primary text-neutral-600">{eventOwner}</p>
       </div>
 
-      {/* Event Map */}
-      <div className="flex flex-col gap-2">
-        <h2 className="title-large-emphasized text-neutral-600">ดูแผนที่</h2>
-        <Image src={"/mock/map.png"} alt="mock map" width={350} height={180} />
+      {/* Buttons */}
+      <div className="flex flex-wrap gap-2">
+        {/* Scan Button */}
+        <QuickAttendButton
+          type="text"
+          variant="filled"
+          onClick={e => {
+            e.stopPropagation();
+            e.preventDefault();
+            alert(`Go to Scan from Card ${id}`);
+          }}
+        >
+          <CropFree
+            sx={{ width: 20, height: 20 }}
+            className="text-neutral-white"
+          />
+          <p className="translate-y-1">สแกนผู้เข้าร่วมกิจกรรม</p>
+        </QuickAttendButton>
+
+        <div className="flex gap-2 flex-1 items-center">
+          {/* Stats Button */}
+          <div className="relative flex-1">
+            <QuickAttendButton
+              variant="outline"
+              type="icon"
+              onClick={e => {
+                e.stopPropagation();
+                e.preventDefault();
+                setOpenLLEPopup(true);
+              }}
+            >
+              <TrendingUp sx={{ width: 20, height: 20 }} />
+            </QuickAttendButton>
+
+            {/* Dummy Box */}
+            <div className="w-30 hidden absolute bottom-full mb-1 left-1/2 -translate-x-1/2 bg-neutral-white rounded-lg shadow-elevation-1 p-2 z-10"></div>
+          </div>
+
+          {/* Share Button */}
+          <div className="relative flex-1">
+            <QuickAttendButton
+              type="icon"
+              variant="outline"
+              onClick={e => {
+                e.stopPropagation();
+                e.preventDefault();
+                setOpenShareDropdown(prev => !prev);
+              }}
+            >
+              <UploadFile
+                sx={{ width: 20, height: 20 }}
+                className="text-primary"
+              />
+            </QuickAttendButton>
+
+            {/* Share Dropdown */}
+            {openShareDropdown && (
+              <div className="w-30 absolute bottom-full mb-1 right-0 bg-neutral-white rounded-lg shadow-elevation-1 p-2 z-10">
+                <button
+                  className="cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-100"
+                  onClick={e => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    setOpenShareDropdown(false);
+                  }}
+                >
+                  ตัวสแกน QR
+                </button>
+                <button
+                  className="cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-100"
+                  onClick={e => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    setOpenShareDropdown(false);
+                  }}
+                >
+                  แดชบอร์ด
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {openLLEPopup && <LLEPopup setOpenLLEPopup={setOpenLLEPopup} />}
       </div>
 
       {/* Go to Top Button */}
@@ -162,8 +248,10 @@ function DiscoveryEventDetail() {
       >
         <ArrowUpward sx={{ width: 24, height: 24 }} className="text-white" />
       </button>
+
+      {openLLEPopup && <LLEPopup setOpenLLEPopup={setOpenLLEPopup} />}
     </div>
   );
 }
 
-export default DiscoveryEventDetail;
+export default MyEventDetail;

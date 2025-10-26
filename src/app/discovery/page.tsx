@@ -2,6 +2,14 @@
 
 import DiscoveryEventCard from "@/components/DiscoveryEventCard";
 import {
+  eventDate,
+  eventDescription,
+  eventLocation,
+  eventName,
+  eventTimeRange,
+  maxPageNumber,
+} from "@/utils/const";
+import {
   ArrowUpward,
   ChevronLeft,
   ChevronRight,
@@ -13,17 +21,6 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 export default function Discovery() {
-  // === Mock Data ===
-  const eventName = "Freshmen night";
-  const eventDate = "3 สิงหาคม 2568";
-  const eventTimeRange = "16:00 - 20:00 น.";
-  const eventLocation = "สนามกีฬาจุฬาลงกรณ์มหาวิทยาลัย";
-  const eventDescription =
-    "กิจกรรมต้อนรับนิสิตใหม่ CU รุ่น 109 สู่รั้วมหาวิทยาลัย และ กระชับสัมพันธ์ อันดีระหว่างน้องใหม่คณะต่างๆภาย ในงานมีการจัด แสดงดนตรีโดยวงดนตรี อาทิเช่น Landokmai, Dept, Polycat, Tilly Birds, การแสดง พิเศษจาก CUDC และละครนิเทศ จุฬาฯ";
-
-  const maxPageNumber = 10;
-  // =================
-
   const [sortOption, setSortOption] = useState<0 | 1 | null>(null);
   const [currentPageNumber, setCurrentPageNumber] = useState<number>(1);
   const [openSortDropdown, setOpenSortDropdown] = useState(false);
@@ -70,7 +67,7 @@ export default function Discovery() {
       className="w-full h-screen overflow-auto relative flex flex-col px-8 pt-8 pb-12"
     >
       {/* Breadcrumb */}
-      <div className="flex gap-1 mb-6 items-center">
+      <div className="flex gap-1 mb-6 items-center flex-wrap">
         <Link className="flex gap-1 items-center" href="/">
           <HomeOutlined fontSize="small" className="text-primary" />
           <p className="body-small-primary text-neutral-500">หน้าหลัก</p>

@@ -1,10 +1,17 @@
+import { defaultLLEPopupDescription } from "@/utils/const";
 import QuickAttendButton from "./QuickAttendButton";
 
 interface LLEPopupProps {
   setOpenLLEPopup: (b: boolean) => void;
+  tohref?: string;
+  description?: string;
 }
 
-export default function LLEPopup({ setOpenLLEPopup }: LLEPopupProps) {
+export default function LLEPopup({
+  setOpenLLEPopup,
+  tohref,
+  description = defaultLLEPopupDescription,
+}: LLEPopupProps) {
   return (
     <div
       className="fixed inset-0 z-100 flex items-center justify-center bg-neutral-black/70"
@@ -24,10 +31,7 @@ export default function LLEPopup({ setOpenLLEPopup }: LLEPopupProps) {
         <h3 className="headline-small-emphasized mb-4 text-center">
           แจ้งเตือน
         </h3>
-        <p className="label-large-primary mb-6 text-center">
-          บริการที่เลือกจะนำท่านไปสู่เว็บไซต์ของผู้ให้บริการที่อยู่ภายนอกแอปพลิเคชัน
-          ท่านยืนยันจะใช้บริการต่อหรือไม่
-        </p>
+        <p className="label-large-primary mb-6 text-center">{description}</p>
         <div className="flex justify-center items-center gap-2 flex-wrap">
           <QuickAttendButton
             type="text"
@@ -46,6 +50,9 @@ export default function LLEPopup({ setOpenLLEPopup }: LLEPopupProps) {
             onClick={e => {
               e.stopPropagation();
               e.preventDefault();
+              if (tohref) {
+                window.location.href = tohref;
+              }
               setOpenLLEPopup(false);
             }}
           >

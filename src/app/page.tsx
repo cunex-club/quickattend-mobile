@@ -14,20 +14,18 @@ import {
 } from "@mui/icons-material";
 import LLEPopup from "@/components/LLEPopup";
 import Link from "next/link";
+import {
+  displayButtonsFirstRowPastEvents,
+  eventDate,
+  eventDescription,
+  eventLocation,
+  eventName,
+  eventOwner,
+  eventTimeRange,
+  maxPageNumber,
+} from "@/utils/const";
 
 export default function Home() {
-  // === Mock Data ===
-  const eventName = "Freshmen night";
-  const eventDate = "3 สิงหาคม 2568";
-  const eventTimeRange = "16:00 - 20:00 น.";
-  const eventLocation = "สนามกีฬาจุฬาลงกรณ์มหาวิทยาลัย";
-  const eventDescription =
-    "กิจกรรมต้อนรับนิสิตใหม่ CU รุ่น 109 สู่รั้วมหาวิทยาลัย และ กระชับสัมพันธ์ อันดีระหว่างน้องใหม่คณะต่างๆภาย ในงานมีการจัด แสดงดนตรีโดยวงดนตรี อาทิเช่น Landokmai, Dept, Polycat, Tilly Birds, การแสดง พิเศษจาก CUDC และละครนิเทศ จุฬาฯ";
-  const eventOwner = "ผู้จัดการกิจกรรม";
-
-  const maxPageNumber = 10;
-  // =================
-
   const [sortOption, setSortOption] = useState<0 | 1 | null>(null);
   const [currentPageNumber, setCurrentPageNumber] = useState<number>(1);
   const [openLLEPopup, setOpenLLEPopup] = useState(false);
@@ -198,7 +196,7 @@ export default function Home() {
                 location={eventLocation}
                 description={eventDescription}
                 owner={eventOwner}
-                displayFirstRow={true}
+                displayFirstRow={displayButtonsFirstRowPastEvents}
               />
             );
           })}
