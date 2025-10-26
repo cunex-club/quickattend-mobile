@@ -1,14 +1,25 @@
 "use client";
 
-import { eventName } from "@/mock/event";
+import {
+  eventDate,
+  eventDescription,
+  eventLocation,
+  eventName,
+  eventOwner,
+  eventSchedules,
+  eventTimeRange,
+} from "@/mock/event";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 
 import {
   ArrowUpward,
+  CalendarMonth,
   ChevronRightOutlined,
   HomeOutlined,
+  LocationOn,
+  WatchLater,
 } from "@mui/icons-material";
 
 function DiscoveryEventDetail() {
@@ -45,7 +56,7 @@ function DiscoveryEventDetail() {
       className="w-full h-screen overflow-auto relative flex flex-col px-8 pt-8 pb-12"
     >
       {/* Breadcrumb */}
-      <div className="flex gap-1 mb-6 items-center">
+      <div className="flex gap-1 mb-6 items-center flex-wrap">
         <Link className="flex gap-1 items-center" href="/">
           <HomeOutlined fontSize="small" className="text-primary" />
           <p className="body-small-primary text-neutral-500">หน้าหลัก</p>
@@ -58,6 +69,81 @@ function DiscoveryEventDetail() {
         <Link className="flex gap-1 items-center" href={`/discovery/${id}`}>
           <p className="body-small-primary text-neutral-500">{eventName}</p>
         </Link>
+      </div>
+
+      {/* Event Name */}
+      <h1 className="headline-large-emphasized text-neutral-600 mb-4">
+        {eventName}
+      </h1>
+
+      {/* Event Information */}
+      <div className="flex flex-col gap-1 mb-6">
+        {/* Date */}
+        <div className="flex gap-2">
+          <CalendarMonth
+            sx={{ width: 14, height: 14 }}
+            className="text-primary translate-y-1"
+          />
+          <p className="body-medium-primary text-neutral-600">{eventDate}</p>
+        </div>
+
+        {/* Time */}
+        <div className="flex gap-2">
+          <WatchLater
+            sx={{ width: 14, height: 14 }}
+            className="text-primary translate-y-1"
+          />
+          <p className="body-medium-primary text-neutral-600">
+            {eventTimeRange}
+          </p>
+        </div>
+
+        {/* Location */}
+        <div className="flex gap-2">
+          <LocationOn
+            sx={{ width: 14, height: 18 }}
+            className="text-primary translate-y-1"
+          />
+          <p className="body-medium-primary text-neutral-600">
+            {eventLocation}
+          </p>
+        </div>
+      </div>
+
+      {/* Event Description */}
+      <div className="flex flex-col mb-6 gap-2">
+        <h2 className="title-large-emphasized text-neutral-600">
+          รายละเอียดกิจกรรม
+        </h2>
+        <p className="body-medium-primary text-neutral-600">
+          {eventDescription}
+        </p>
+      </div>
+
+      {/* Event Schedule */}
+      <div className="flex flex-col mb-6 gap-2">
+        <h2 className="title-large-emphasized text-neutral-600">
+          กำหนดการกิจกรรม
+        </h2>
+
+        <div className="grid grid-cols-2 gap-x-2 gap-y-1">
+          {eventSchedules.map((e, i) => (
+            <Fragment key={i}>
+              <p className="body-medium-primary text-neutral-600">{e[0]}</p>
+              <p className="body-medium-primary text-neutral-600 text-right">
+                {e[1]}
+              </p>
+            </Fragment>
+          ))}
+        </div>
+      </div>
+
+      {/* Event Owner */}
+      <div className="flex flex-col mb-6 gap-2">
+        <h2 className="title-large-emphasized text-neutral-600">
+          ผู้จัดกิจกรรม
+        </h2>
+        <p className="body-medium-primary text-neutral-600">{eventOwner}</p>
       </div>
 
       {/* Go to Top Button */}

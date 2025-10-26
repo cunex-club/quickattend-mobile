@@ -67,7 +67,7 @@ export default function Discovery() {
       className="w-full h-screen overflow-auto relative flex flex-col px-8 pt-8 pb-12"
     >
       {/* Breadcrumb */}
-      <div className="flex gap-1 mb-6 items-center">
+      <div className="flex gap-1 mb-6 items-center flex-wrap">
         <Link className="flex gap-1 items-center" href="/">
           <HomeOutlined fontSize="small" className="text-primary" />
           <p className="body-small-primary text-neutral-500">หน้าหลัก</p>
