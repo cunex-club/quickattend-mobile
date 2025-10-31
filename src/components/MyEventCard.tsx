@@ -39,8 +39,8 @@ export default function MyEventCard({
   return (
     <Link
       key={id}
-      className="w-full min-h-[326px] h-fit bg-neutral-100 rounded-4xl flex flex-col px-4 py-6 cursor-pointer overflow-visible"
-      href={`/${id}`}
+      className="w-full min-h-30 h-fit bg-neutral-100 rounded-4xl flex flex-col px-4 py-6 cursor-pointer overflow-visible"
+      href={`/myevents/${id}`}
     >
       {/* Header */}
       <div className="flex justify-between items-center gap-4 mb-1">
@@ -104,7 +104,7 @@ export default function MyEventCard({
       </div>
 
       {/* Buttons */}
-      <div className="flex flex-wrap gap-2 mt-auto items-center">
+      <div className="flex flex-wrap gap-2 mt-auto">
         {/* Scan Button */}
         <QuickAttendButton
           type="text"

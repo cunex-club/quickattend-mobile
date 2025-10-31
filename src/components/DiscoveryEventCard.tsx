@@ -21,7 +21,7 @@ export default function DiscoveryEventCard({
   return (
     <Link
       key={id}
-      className="w-full min-h-[326px] h-fit bg-neutral-100 rounded-4xl flex flex-col px-4 py-6 cursor-pointer overflow-visible"
+      className="w-full min-h-20 h-fit bg-neutral-100 rounded-4xl flex flex-col px-4 py-6 cursor-pointer overflow-visible"
       href={`/discovery/${id}`}
     >
       {/* Header */}
