@@ -13,6 +13,7 @@ import {
 import QuickAttendButton from "./QuickAttendButton";
 import LLEPopup from "./LLEPopup";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface MyEventCardProps {
   id: string;
@@ -33,6 +34,7 @@ export default function MyEventCard({
   description,
   owner,
 }: MyEventCardProps) {
+  const router = useRouter();
   const [openLLEPopup, setOpenLLEPopup] = useState(false);
   const [openShareDropdown, setOpenShareDropdown] = useState(false);
 
@@ -112,7 +114,7 @@ export default function MyEventCard({
           onClick={e => {
             e.stopPropagation();
             e.preventDefault();
-            alert(`Go to Scan from Card ${id}`);
+            router.push(`/scan/${id}`);
           }}
         >
           <CropFree
@@ -162,17 +164,18 @@ export default function MyEventCard({
             {openShareDropdown && (
               <div className="w-30 absolute bottom-full mb-1 right-0 bg-neutral-white rounded-lg shadow-elevation-1 p-2 z-10">
                 <button
-                  className="cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-100"
+                  className="cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-300"
                   onClick={e => {
                     e.stopPropagation();
                     e.preventDefault();
                     setOpenShareDropdown(false);
+                    router.push(`/scan/${id}`);
                   }}
                 >
                   ตัวสแกน QR
                 </button>
                 <button
-                  className="cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-100"
+                  className="cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-300"
                   onClick={e => {
                     e.stopPropagation();
                     e.preventDefault();

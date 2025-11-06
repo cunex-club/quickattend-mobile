@@ -11,7 +11,7 @@ import {
   eventTimeRange,
 } from "@/utils/const";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Fragment, useEffect, useRef, useState } from "react";
 
 import {
@@ -33,6 +33,7 @@ import LLEPopup from "@/components/LLEPopup";
 
 function MyEventDetail() {
   const { id } = useParams();
+  const router = useRouter();
   const [isInvisibleScrollToTop, setInvisibleScrollToTop] = useState(false);
   const [openLLEPopup, setOpenLLEPopup] = useState(false);
   const [openShareDropdown, setOpenShareDropdown] = useState(false);
@@ -162,7 +163,7 @@ function MyEventDetail() {
           onClick={e => {
             e.stopPropagation();
             e.preventDefault();
-            alert(`Go to Scan from Card ${id}`);
+            router.push(`/scan/${id}`);
           }}
         >
           <CropFree
@@ -212,17 +213,18 @@ function MyEventDetail() {
             {openShareDropdown && (
               <div className="w-30 absolute bottom-full mb-1 right-0 bg-neutral-white rounded-lg shadow-elevation-1 p-2 z-10">
                 <button
-                  className="cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-100"
+                  className="cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-300"
                   onClick={e => {
                     e.stopPropagation();
                     e.preventDefault();
+                    router.push(`/scan/${id}`);
                     setOpenShareDropdown(false);
                   }}
                 >
                   ตัวสแกน QR
                 </button>
                 <button
-                  className="cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-100"
+                  className="cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-300"
                   onClick={e => {
                     e.stopPropagation();
                     e.preventDefault();
