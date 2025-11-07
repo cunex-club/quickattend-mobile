@@ -3,9 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Html5Qrcode } from "html5-qrcode";
-import { Bolt, ErrorOutline, Link, Person } from "@mui/icons-material";
+import { Bolt, Link, Person } from "@mui/icons-material";
 import { eventName, scanTimeOutMs } from "@/utils/const";
 import QuickAttendButton from "@/components/QuickAttendButton";
+import ErrorPopup from "@/components/ErrorPopup";
 
 const ScanPage = () => {
   const router = useRouter();
@@ -168,46 +169,16 @@ const ScanPage = () => {
       </div>
 
       {showTimeoutPopup && (
-        <div
-          className="fixed inset-0 z-100 flex items-center justify-center bg-neutral-black/70"
-          onClick={e => {
-            e.stopPropagation();
+        <ErrorPopup
+          name={"timeout"}
+          errorMessage={`ข้อมูล QR ไม่ถูกต้อง<br/>กรุณาตรวจสอบและลองใหม่อีกครั้ง`}
+          onNext={e => {
             e.preventDefault();
+            e.stopPropagation();
+            setShowTimeoutPopup(false);
+            startTimeout();
           }}
-        >
-          <div
-            className="relative bg-neutral-white w-[349px] rounded-4xl px-4 py-6"
-            onClick={e => {
-              e.stopPropagation();
-              e.preventDefault();
-            }}
-          >
-            <div className="w-full h-fit flex justify-center">
-              <ErrorOutline
-                className="text-primary mb-4"
-                style={{ fontSize: "40px" }}
-              />
-            </div>
-            <p className="label-large-primary mb-6 text-center">
-              ข้อมูล QR ไม่ถูกต้อง <br />
-              กรุณาตรวจสอบและลองใหม่อีกครั้ง
-            </p>
-            <div className="flex justify-center items-center gap-2 flex-wrap">
-              <QuickAttendButton
-                type="text"
-                variant="filled"
-                onClick={e => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                  setShowTimeoutPopup(false);
-                  startTimeout();
-                }}
-              >
-                <p className="translate-y-1">ตกลง</p>
-              </QuickAttendButton>
-            </div>
-          </div>
-        </div>
+        />
       )}
     </>
   );
