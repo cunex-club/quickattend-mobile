@@ -6,6 +6,7 @@ import { Html5Qrcode } from "html5-qrcode";
 import {
   Bolt,
   Business,
+  CancelRounded,
   CheckCircle,
   Link,
   Person,
@@ -79,7 +80,8 @@ const ScanPage = () => {
     //
     // =========================================
 
-    setResult("registered");
+    // Just for demo purpose
+    setResult("fail");
   };
 
   // Show Scanning Result
@@ -344,9 +346,9 @@ const ScanPage = () => {
                   alert(`บันทึกข้อมูลเรียบร้อย หมายเหตุ: ${note}`);
                   e.preventDefault();
                   e.stopPropagation();
-                  stopCamera();
                   setShowSuccessScanPopup(false);
-                  router.back();
+                  startTimeout();
+                  setResult(null);
                 }}
               >
                 <p className="translate-y-1">ตกลง</p>
@@ -441,9 +443,63 @@ const ScanPage = () => {
                   alert(`บันทึกข้อมูลเรียบร้อย หมายเหตุ: ${note}`);
                   e.preventDefault();
                   e.stopPropagation();
-                  stopCamera();
                   setShowSuccessScanPopup(false);
-                  router.back();
+                  startTimeout();
+                  setResult(null);
+                }}
+              >
+                <p className="translate-y-1">ตกลง</p>
+              </QuickAttendButton>
+            </div>
+          </div>
+        </PopupLayout>
+      )}
+
+      {showFailScanPopup && (
+        <PopupLayout className="relative bg-neutral-white w-[349px] rounded-4xl">
+          {/* Header */}
+          <div className="w-full h-fit p-6 bg-error rounded-t-4xl flex justify-center items-center mb-6">
+            <CancelRounded
+              className="text-white"
+              sx={{ width: 40, height: 40 }}
+            />
+            <p className="ml-2 headline-large-emphasized text-white translate-y-1.5">
+              ลงทะเบียนไม่สำเร็จ
+            </p>
+          </div>
+
+          {/* Content */}
+          <div className="flex flex-col px-4 pt-2 pb-6">
+            {/* Information */}
+            <div className="flex flex-col gap-2 mb-8">
+              <p className="title-large-primary text-center">
+                ไม่ได้อยู่ในรายชื่อผู้มีสิทธิ์ลงทะเบียนเข้าร่วมกิจกรรม
+              </p>
+            </div>
+
+            {/* Note */}
+            <form className="flex flex-col gap-2 mb-6">
+              <p className="title-medium-emphasized">หมายเหตุ</p>
+              <input
+                className="w-full h-11 border border-neutral-400 focus:outline-none rounded-md px-3"
+                value={note}
+                placeholder="กรอกข้อมูลเพิ่มเติม (ถ้ามี)"
+                onChange={e => setNote(e.target.value)}
+              />
+            </form>
+
+            {/* Buttons */}
+            <div className="flex justify-center items-center gap-2 flex-wrap">
+              <QuickAttendButton
+                type="text"
+                variant="filled"
+                onClick={e => {
+                  alert(`บันทึกข้อมูลเรียบร้อย หมายเหตุ: ${note}`);
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setShowFailScanPopup(false);
+                  startTimeout();
+                  setResult(null);
                 }}
               >
                 <p className="translate-y-1">ตกลง</p>
