@@ -1,6 +1,6 @@
 "use client";
 
-import DiscoveryEventCard from "@/components/DiscoveryEventCard";
+import DiscoveryEventCard from "@/components/card/DiscoveryEventCard";
 import {
   eventDate,
   eventDescription,

@@ -12,8 +12,8 @@ import {
   Feed,
   DifferenceOutlined,
 } from "@mui/icons-material";
-import QuickAttendButton from "./QuickAttendButton";
-import LLEPopup from "./LLEPopup";
+import QuickAttendButton from "../QuickAttendButton";
+import LLEPopup from "../popup/LLEPopup";
 import Link from "next/link";
 
 interface PastEventCardProps {

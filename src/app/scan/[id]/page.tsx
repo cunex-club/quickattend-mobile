@@ -1,15 +1,17 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { Html5Qrcode } from "html5-qrcode";
 import { Bolt, Link, Person } from "@mui/icons-material";
 import { eventName, scanTimeOutMs } from "@/utils/const";
 import QuickAttendButton from "@/components/QuickAttendButton";
-import ErrorPopup from "@/components/ErrorPopup";
+import ErrorPopup from "@/components/popup/ErrorPopup";
 
 const ScanPage = () => {
-  const router = useRouter();
+  const { id } = useParams();
+  // DON'T FORGET TO CHECK WHETHER THIS ID IS REAL EVENT ID OR NOT
+
   const qrRef = useRef<HTMLDivElement>(null);
   const [scanner, setScanner] = useState<Html5Qrcode | null>(null);
   const [isFlashOn, setIsFlashOn] = useState(false);
@@ -31,6 +33,10 @@ const ScanPage = () => {
   const handleTimeout = () => {
     setShowTimeoutPopup(true);
   };
+
+  useEffect(() => {
+    // Todo: ID Validation
+  }, [id]);
 
   useEffect(() => {
     let mounted = true;

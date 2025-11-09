@@ -29,7 +29,7 @@ import {
   WatchLater,
 } from "@mui/icons-material";
 import QuickAttendButton from "@/components/QuickAttendButton";
-import LLEPopup from "@/components/LLEPopup";
+import LLEPopup from "@/components/popup/LLEPopup";
 
 function MyEventDetail() {
   const { id } = useParams();

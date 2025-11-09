@@ -1,5 +1,5 @@
 import { defaultLLEPopupDescription } from "@/utils/const";
-import QuickAttendButton from "./QuickAttendButton";
+import QuickAttendButton from "../QuickAttendButton";
 
 interface LLEPopupProps {
   setOpenLLEPopup: (b: boolean) => void;

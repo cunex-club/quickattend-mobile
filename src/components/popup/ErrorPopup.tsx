@@ -1,5 +1,5 @@
 import { ErrorOutline } from "@mui/icons-material";
-import QuickAttendButton from "./QuickAttendButton";
+import QuickAttendButton from "../QuickAttendButton";
 
 interface ErrorPopupProps {
   name: string;

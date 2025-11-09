@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import MyEventCard from "@/components/MyEventCard";
+import MyEventCard from "@/components/card/MyEventCard";
 import QuickAttendButton from "@/components/QuickAttendButton";
-import PastEventCard from "@/components/PastEventCard";
+import PastEventCard from "@/components/card/PastEventCard";
 import {
   ExploreOutlined,
   OpenInNew,
@@ -12,7 +12,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "@mui/icons-material";
-import LLEPopup from "@/components/LLEPopup";
+import LLEPopup from "@/components/popup/LLEPopup";
 import Link from "next/link";
 import {
   displayButtonsFirstRowPastEvents,
