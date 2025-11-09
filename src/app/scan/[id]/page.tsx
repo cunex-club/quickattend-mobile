@@ -1,20 +1,46 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Html5Qrcode } from "html5-qrcode";
-import { Bolt, Link, Person } from "@mui/icons-material";
-import { eventName, scanTimeOutMs } from "@/utils/const";
+import {
+  Bolt,
+  Business,
+  CheckCircle,
+  Link,
+  Person,
+  WatchLater,
+} from "@mui/icons-material";
+import {
+  eventName,
+  scannedName,
+  scannedID,
+  scanTimeOutMs,
+  scannedFaculty,
+} from "@/utils/const";
 import QuickAttendButton from "@/components/QuickAttendButton";
 import ErrorPopup from "@/components/popup/ErrorPopup";
+import PopupLayout from "@/layout/popup";
+import { formatDateToTime } from "@/utils/function";
 
 const ScanPage = () => {
   const { id } = useParams();
+  const router = useRouter();
   // DON'T FORGET TO CHECK WHETHER THIS ID IS REAL EVENT ID OR NOT
 
   const qrRef = useRef<HTMLDivElement>(null);
   const [scanner, setScanner] = useState<Html5Qrcode | null>(null);
   const [isFlashOn, setIsFlashOn] = useState(false);
+  const [result, setResult] = useState<
+    "success" | "registered" | "fail" | null
+  >(null);
+
+  const [showSuccessScanPopup, setShowSuccessScanPopup] = useState(false);
+  const [showRegisteredScanPopup, setShowRegisteredScanPopup] = useState(false);
+  const [showFailScanPopup, setShowFailScanPopup] = useState(false);
+  const [timeStamp, setTimeStamp] = useState("");
+  const [note, setNote] = useState("");
+
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [showTimeoutPopup, setShowTimeoutPopup] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -28,7 +54,39 @@ const ScanPage = () => {
     if (scanner) scanner.stop().catch(() => {});
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     alert(`code=${encodeURIComponent(code)}`);
+    const now = new Date();
+    setTimeStamp(formatDateToTime(now));
+    setNote("");
+
+    // =========================================
+    // TODO: Send Code to backend for validation
+    //
+    //
+    // =========================================
+
+    setResult("success");
   };
+
+  // Show Scanning Result
+  useEffect(() => {
+    if (result === "success") {
+      setShowSuccessScanPopup(true);
+      setShowRegisteredScanPopup(false);
+      setShowFailScanPopup(false);
+    } else if (result === "registered") {
+      setShowSuccessScanPopup(false);
+      setShowRegisteredScanPopup(true);
+      setShowFailScanPopup(false);
+    } else if (result === "fail") {
+      setShowSuccessScanPopup(false);
+      setShowRegisteredScanPopup(false);
+      setShowFailScanPopup(true);
+    } else {
+      setShowSuccessScanPopup(false);
+      setShowRegisteredScanPopup(false);
+      setShowFailScanPopup(false);
+    }
+  }, [result]);
 
   const handleTimeout = () => {
     setShowTimeoutPopup(true);
@@ -176,7 +234,6 @@ const ScanPage = () => {
 
       {showTimeoutPopup && (
         <ErrorPopup
-          name={"timeout"}
           errorMessage={`ข้อมูล QR ไม่ถูกต้อง<br/>กรุณาตรวจสอบและลองใหม่อีกครั้ง`}
           onNext={e => {
             e.preventDefault();
@@ -185,6 +242,99 @@ const ScanPage = () => {
             startTimeout();
           }}
         />
+      )}
+
+      {showSuccessScanPopup && (
+        <PopupLayout className="relative bg-neutral-white w-[349px] rounded-4xl">
+          {/* Header */}
+          <div className="w-full h-fit p-6 bg-success rounded-t-4xl flex justify-center items-center mb-6">
+            <CheckCircle className="w-10 h-10 text-white" />
+            <p className="ml-2 headline-large-emphasized text-white translate-y-1">
+              ลงทะเบียนสำเร็จ
+            </p>
+          </div>
+
+          {/* Image */}
+          <img
+            src="/mock/scan_placeholder.png"
+            alt="Scan Placeholder"
+            className="mx-auto mb-4"
+          />
+
+          {/* Content */}
+          <div className="flex flex-col px-4 py-6">
+            {/* Information */}
+            <div className="flex flex-col gap-2 mb-8">
+              <p className="title-medium-emphasized">
+                รายละเอียดผู้ลงทะเบียนเข้างาน
+              </p>
+
+              {/* Name */}
+              <div className="flex gap-2">
+                <Person
+                  className="text-primary"
+                  sx={{ width: 16, height: 16 }}
+                />
+                <div className="flex flex-col -translate-y-1">
+                  <p className="body-medium-primary">{scannedName}</p>
+                  <p className="body-medium-primary">
+                    รหัสประจำตัว {scannedID}
+                  </p>
+                </div>
+              </div>
+
+              {/* Faculty */}
+              <div className="flex gap-2">
+                <Business
+                  className="text-primary"
+                  sx={{ width: 16, height: 16 }}
+                />
+                <p className="body-medium-primary -translate-y-1">
+                  {scannedFaculty}
+                </p>
+              </div>
+
+              {/* Time */}
+              <div className="flex gap-2">
+                <WatchLater
+                  className="text-primary"
+                  sx={{ width: 16, height: 16 }}
+                />
+                <p className="body-medium-primary -translate-y-1">
+                  ลงทะเบียนสำเร็จ: {timeStamp} น.
+                </p>
+              </div>
+            </div>
+
+            {/* Note */}
+            <form className="flex flex-col gap-2 mb-6">
+              <p className="title-medium-emphasized">หมายเหตุ</p>
+              <input
+                className="w-full h-11 border border-neutral-400 focus:outline-none rounded-md px-3"
+                value={note}
+                placeholder="กรอกข้อมูลเพิ่มเติม (ถ้ามี)"
+                onChange={e => setNote(e.target.value)}
+              />
+            </form>
+
+            {/* Buttons */}
+            <div className="flex justify-center items-center gap-2 flex-wrap">
+              <QuickAttendButton
+                type="text"
+                variant="filled"
+                onClick={e => {
+                  alert(`บันทึกข้อมูลเรียบร้อย หมายเหตุ: ${note}`);
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setShowSuccessScanPopup(false);
+                  router.back();
+                }}
+              >
+                <p className="translate-y-1">ตกลง</p>
+              </QuickAttendButton>
+            </div>
+          </div>
+        </PopupLayout>
       )}
     </>
   );

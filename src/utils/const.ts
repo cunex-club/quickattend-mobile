@@ -21,3 +21,7 @@ export const defaultLLEPopupDescription =
   "บริการที่เลือกจะนำท่านไปสู่เว็บไซต์ของผู้ให้บริการที่อยู่ภายนอกแอปพลิเคชัน\nท่านยืนยันจะใช้บริการต่อหรือไม่";
 
 export const scanTimeOutMs = 10000;
+
+export const scannedName = "นายสมชาย ใจดี";
+export const scannedID = "6501234567";
+export const scannedFaculty = "วิศวกรรมศาสตร์";

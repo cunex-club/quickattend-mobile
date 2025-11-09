@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  displayButtonsFirstRowPastEvents,
   eventDate,
   eventDescription,
   eventLocation,
@@ -19,11 +18,8 @@ import {
   CalendarMonth,
   ChevronRightOutlined,
   CropFree,
-  DifferenceOutlined,
-  Feed,
   HomeOutlined,
   LocationOn,
-  SaveAlt,
   TrendingUp,
   UploadFile,
   WatchLater,
