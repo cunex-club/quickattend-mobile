@@ -9,6 +9,7 @@ import {
   CheckCircle,
   Link,
   Person,
+  ReplayCircleFilled,
   WatchLater,
 } from "@mui/icons-material";
 import {
@@ -50,9 +51,23 @@ const ScanPage = () => {
     timeoutRef.current = setTimeout(handleTimeout, scanTimeOutMs);
   };
 
+  const stopCamera = () => {
+    if (scanner) {
+      scanner.stop().catch(() => {});
+      setScanner(null);
+    }
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+      setStream(null);
+    }
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+  };
+
   const handleScanned = (code: string) => {
-    if (scanner) scanner.stop().catch(() => {});
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    stopCamera();
+
     alert(`code=${encodeURIComponent(code)}`);
     const now = new Date();
     setTimeStamp(formatDateToTime(now));
@@ -64,7 +79,7 @@ const ScanPage = () => {
     //
     // =========================================
 
-    setResult("success");
+    setResult("registered");
   };
 
   // Show Scanning Result
@@ -194,8 +209,8 @@ const ScanPage = () => {
 
         {/* Bottom */}
         <div className="w-full h-10 absolute bottom-6 left-0 right-0 px-6 flex justify-between gap-4 items-center z-10 flex-wrap">
-          <div className="w-full max-w-[100px] h-full bg-neutral-white rounded-full px-4 py-2 flex justify-center items-center gap-2">
-            <Person className="w-6 h-6 text-primary" />
+          <div className="w-full max-w-[100px] h-full bg-neutral-white rounded-full px-4 py-2 flex justify-center items-center gap-1">
+            <Person className="text-primary" sx={{ width: 20, height: 20 }} />
             <p className="label-large-primary text-black translate-y-1">
               Staff
             </p>
@@ -248,8 +263,11 @@ const ScanPage = () => {
         <PopupLayout className="relative bg-neutral-white w-[349px] rounded-4xl">
           {/* Header */}
           <div className="w-full h-fit p-6 bg-success rounded-t-4xl flex justify-center items-center mb-6">
-            <CheckCircle className="w-10 h-10 text-white" />
-            <p className="ml-2 headline-large-emphasized text-white translate-y-1">
+            <CheckCircle
+              className="text-white"
+              sx={{ width: 40, height: 40 }}
+            />
+            <p className="ml-2 headline-large-emphasized text-white translate-y-1.5">
               ลงทะเบียนสำเร็จ
             </p>
           </div>
@@ -326,6 +344,104 @@ const ScanPage = () => {
                   alert(`บันทึกข้อมูลเรียบร้อย หมายเหตุ: ${note}`);
                   e.preventDefault();
                   e.stopPropagation();
+                  stopCamera();
+                  setShowSuccessScanPopup(false);
+                  router.back();
+                }}
+              >
+                <p className="translate-y-1">ตกลง</p>
+              </QuickAttendButton>
+            </div>
+          </div>
+        </PopupLayout>
+      )}
+
+      {showRegisteredScanPopup && (
+        <PopupLayout className="relative bg-neutral-white w-[349px] rounded-4xl">
+          {/* Header */}
+          <div className="w-full h-fit p-6 bg-warning rounded-t-4xl flex justify-center items-center mb-6">
+            <ReplayCircleFilled
+              className="text-white"
+              sx={{ width: 40, height: 40 }}
+            />
+            <p className="ml-2 headline-large-emphasized text-white translate-y-1.5">
+              ลงทะเบียนแล้ว
+            </p>
+          </div>
+
+          {/* Image */}
+          <img
+            src="/mock/scan_placeholder.png"
+            alt="Scan Placeholder"
+            className="mx-auto mb-4"
+          />
+
+          {/* Content */}
+          <div className="flex flex-col px-4 py-6">
+            {/* Information */}
+            <div className="flex flex-col gap-2 mb-8">
+              <p className="title-medium-emphasized">
+                รายละเอียดผู้ลงทะเบียนเข้างาน
+              </p>
+
+              {/* Name */}
+              <div className="flex gap-2">
+                <Person
+                  className="text-primary"
+                  sx={{ width: 16, height: 16 }}
+                />
+                <div className="flex flex-col -translate-y-1">
+                  <p className="body-medium-primary">{scannedName}</p>
+                  <p className="body-medium-primary">
+                    รหัสประจำตัว {scannedID}
+                  </p>
+                </div>
+              </div>
+
+              {/* Faculty */}
+              <div className="flex gap-2">
+                <Business
+                  className="text-primary"
+                  sx={{ width: 16, height: 16 }}
+                />
+                <p className="body-medium-primary -translate-y-1">
+                  {scannedFaculty}
+                </p>
+              </div>
+
+              {/* Time */}
+              <div className="flex gap-2">
+                <WatchLater
+                  className="text-primary"
+                  sx={{ width: 16, height: 16 }}
+                />
+                <p className="body-medium-primary -translate-y-1">
+                  ลงทะเบียนสำเร็จ: {timeStamp} น.
+                </p>
+              </div>
+            </div>
+
+            {/* Note */}
+            <form className="flex flex-col gap-2 mb-6">
+              <p className="title-medium-emphasized">หมายเหตุ</p>
+              <input
+                className="w-full h-11 border border-neutral-400 focus:outline-none rounded-md px-3"
+                value={note}
+                placeholder="กรอกข้อมูลเพิ่มเติม (ถ้ามี)"
+                onChange={e => setNote(e.target.value)}
+              />
+            </form>
+
+            {/* Buttons */}
+            <div className="flex justify-center items-center gap-2 flex-wrap">
+              <QuickAttendButton
+                type="text"
+                variant="filled"
+                onClick={e => {
+                  alert(`บันทึกข้อมูลเรียบร้อย หมายเหตุ: ${note}`);
+                  e.preventDefault();
+                  e.stopPropagation();
+                  stopCamera();
                   setShowSuccessScanPopup(false);
                   router.back();
                 }}
