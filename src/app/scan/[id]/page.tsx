@@ -48,7 +48,7 @@ const ScanPage = () => {
   const [isToggleRole, setToggleRole] = useState(false);
   const [showCopyPopup, setShowCopyPopup] = useState(false);
   const [scannerSize, setScannerSize] = useState(50);
-
+  const [showCamera, setShowCamera] = useState(true);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [showTimeoutPopup, setShowTimeoutPopup] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -73,9 +73,10 @@ const ScanPage = () => {
   };
 
   const handleScanned = (code: string) => {
+    setShowCamera(false);
     stopCamera();
+    // alert(`code=${encodeURIComponent(code)}`);
 
-    alert(`code=${encodeURIComponent(code)}`);
     const now = new Date();
     setTimeStamp(formatDateToTime(now));
     setNote("");
@@ -120,12 +121,12 @@ const ScanPage = () => {
         width <= 280
           ? 120
           : width <= 400
-            ? 200
+            ? 180
             : width <= 480 || width >= 640
-              ? 300
+              ? 240
               : width <= 600
-                ? 400
-                : 480
+                ? 300
+                : 360
       );
     };
 
@@ -210,25 +211,27 @@ const ScanPage = () => {
       <div className="w-full min-w-60 h-screen overflow-auto relative flex flex-col px-8 pt-8 pb-12 bg-white">
         {/* Scanner */}
         <div className="relative w-full h-full bg-neutral-500 rounded-2xl mb-8">
-          <div
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 justify-center items-center overflow-hidden rounded-2xl border-primary"
-            style={{ width: scannerSize, height: scannerSize }}
-          >
-            {/* Camera */}
+          {showCamera && (
             <div
-              ref={qrRef}
-              id="qr-reader"
-              className="absolute inset-0 w-full h-full"
-            />
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 justify-center items-center overflow-hidden rounded-2xl border-primary"
+              style={{ width: scannerSize, height: scannerSize }}
+            >
+              {/* Camera */}
+              <div
+                ref={qrRef}
+                id="qr-reader"
+                className="absolute inset-0 w-full h-full"
+              />
 
-            {/* Border */}
-            <div className="absolute inset-0 pointer-events-none border-none z-10">
-              <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-primary rounded-tl-2xl"></div>
-              <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-primary rounded-tr-2xl"></div>
-              <div className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-primary rounded-bl-2xl"></div>
-              <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-primary rounded-br-2xl"></div>
+              {/* Border */}
+              <div className="absolute inset-0 pointer-events-none border-none z-10">
+                <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-primary rounded-tl-2xl"></div>
+                <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-primary rounded-tr-2xl"></div>
+                <div className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-primary rounded-bl-2xl"></div>
+                <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-primary rounded-br-2xl"></div>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Buttons */}
           <div className="absolute w-full flex justify-center gap-4 bottom-4 px-4 flex-wrap">
@@ -422,10 +425,10 @@ const ScanPage = () => {
                 type="text"
                 variant="filled"
                 onClick={e => {
-                  alert(`บันทึกข้อมูลเรียบร้อย หมายเหตุ: ${note}`);
                   e.preventDefault();
                   e.stopPropagation();
                   setShowSuccessScanPopup(false);
+                  setShowCamera(true);
                   startTimeout();
                   setResult(null);
                 }}
@@ -519,10 +522,10 @@ const ScanPage = () => {
                 type="text"
                 variant="filled"
                 onClick={e => {
-                  alert(`บันทึกข้อมูลเรียบร้อย หมายเหตุ: ${note}`);
                   e.preventDefault();
                   e.stopPropagation();
                   setShowSuccessScanPopup(false);
+                  setShowCamera(true);
                   startTimeout();
                   setResult(null);
                 }}
@@ -573,10 +576,10 @@ const ScanPage = () => {
                 type="text"
                 variant="filled"
                 onClick={e => {
-                  alert(`บันทึกข้อมูลเรียบร้อย หมายเหตุ: ${note}`);
                   e.preventDefault();
                   e.stopPropagation();
                   setShowFailScanPopup(false);
+                  setShowCamera(true);
                   startTimeout();
                   setResult(null);
                 }}
