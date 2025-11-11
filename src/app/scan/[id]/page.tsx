@@ -8,6 +8,8 @@ import {
   Business,
   CancelRounded,
   CheckCircle,
+  ExpandMore,
+  Home,
   Link,
   Person,
   ReplayCircleFilled,
@@ -19,6 +21,7 @@ import {
   scannedID,
   scanTimeOutMs,
   scannedFaculty,
+  eventRole,
 } from "@/utils/const";
 import QuickAttendButton from "@/components/QuickAttendButton";
 import ErrorPopup from "@/components/popup/ErrorPopup";
@@ -42,6 +45,9 @@ const ScanPage = () => {
   const [showFailScanPopup, setShowFailScanPopup] = useState(false);
   const [timeStamp, setTimeStamp] = useState("");
   const [note, setNote] = useState("");
+  const [isToggleRole, setToggleRole] = useState(false);
+  const [showCopyPopup, setShowCopyPopup] = useState(false);
+  const [scannerSize, setScannerSize] = useState(50);
 
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [showTimeoutPopup, setShowTimeoutPopup] = useState(false);
@@ -105,6 +111,30 @@ const ScanPage = () => {
     }
   }, [result]);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const updateSize = () => {
+      const width = window.innerWidth;
+      setScannerSize(
+        width <= 280
+          ? 120
+          : width <= 400
+            ? 200
+            : width <= 480 || width >= 640
+              ? 300
+              : width <= 600
+                ? 400
+                : 480
+      );
+    };
+
+    window.addEventListener("resize", updateSize);
+    updateSize();
+
+    return () => window.removeEventListener("resize", updateSize);
+  }, []);
+
   const handleTimeout = () => {
     setShowTimeoutPopup(true);
   };
@@ -135,7 +165,7 @@ const ScanPage = () => {
             { facingMode: "environment" },
             {
               fps: 20,
-              qrbox: 200,
+              qrbox: { width: scannerSize, height: scannerSize },
             },
             decodedText => {
               if (mounted) handleScanned(decodedText);
@@ -156,7 +186,7 @@ const ScanPage = () => {
       if (stream) stream.getTracks().forEach(t => t.stop());
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-  }, []);
+  }, [scannerSize]);
 
   const toggleFlash = async () => {
     if (!stream) return;
@@ -177,21 +207,13 @@ const ScanPage = () => {
 
   return (
     <>
-      <div className="w-full h-screen overflow-auto relative flex flex-col px-8 pt-8 pb-12 bg-neutral-500">
-        {/* Event Name */}
-        <div
-          className="max-w-full min-h-9 bg-neutral-white cursor-pointer rounded-full px-4 py-2 flex justify-between items-center gap-2"
-          onClick={() => {
-            navigator.clipboard.writeText(eventName);
-          }}
-        >
-          <p className="title-small-primary translate-y-1">{eventName}</p>
-          <Link className="w-4 h-4 text-primary" />
-        </div>
-
+      <div className="w-full min-w-60 h-screen overflow-auto relative flex flex-col px-8 pt-8 pb-12 bg-white">
         {/* Scanner */}
-        <div className="flex-1 flex items-center justify-center -translate-y-8">
-          <div className="relative w-[200px] h-[200px] overflow-hidden rounded-2xl border-primary">
+        <div className="relative w-full h-full bg-neutral-500 rounded-2xl mb-8">
+          <div
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 justify-center items-center overflow-hidden rounded-2xl border-primary"
+            style={{ width: scannerSize, height: scannerSize }}
+          >
             {/* Camera */}
             <div
               ref={qrRef}
@@ -201,43 +223,80 @@ const ScanPage = () => {
 
             {/* Border */}
             <div className="absolute inset-0 pointer-events-none border-none z-10">
-              <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-primary rounded-tl-2xl" />
-              <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-primary rounded-tr-2xl" />
-              <div className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-primary rounded-bl-2xl" />
-              <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-primary rounded-br-2xl" />
+              <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-primary rounded-tl-2xl"></div>
+              <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-primary rounded-tr-2xl"></div>
+              <div className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-primary rounded-bl-2xl"></div>
+              <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-primary rounded-br-2xl"></div>
+            </div>
+          </div>
+
+          {/* Buttons */}
+          <div className="absolute w-full flex justify-center gap-4 bottom-4 px-4 flex-wrap">
+            <div className="w-fit h-fit">
+              <QuickAttendButton
+                variant="outline"
+                type="icon"
+                onClick={() => {
+                  router.back();
+                }}
+                className="w-full h-full rounded-full border-none"
+              >
+                <Home className="w-6 h-6" />
+              </QuickAttendButton>
+            </div>
+
+            <div className="w-fit h-fit">
+              <QuickAttendButton
+                variant="outline"
+                type="icon"
+                onClick={() => {
+                  navigator.clipboard.writeText(eventName);
+                  setShowCopyPopup(true);
+                  setTimeout(() => setShowCopyPopup(false), 2000);
+                }}
+                className="w-full h-full rounded-full border-none"
+              >
+                <Link className="w-6 h-6" />
+              </QuickAttendButton>
+            </div>
+
+            <div className="w-fit h-fit">
+              <QuickAttendButton
+                variant="outline"
+                type="icon"
+                onClick={toggleFlash}
+                className="w-full h-full rounded-full border-none"
+              >
+                <Bolt className="w-6 h-6" />
+              </QuickAttendButton>
             </div>
           </div>
         </div>
 
         {/* Bottom */}
-        <div className="w-full h-10 absolute bottom-6 left-0 right-0 px-6 flex justify-between gap-4 items-center z-10 flex-wrap">
-          <div className="w-full max-w-[100px] h-full bg-neutral-white rounded-full px-4 py-2 flex justify-center items-center gap-1">
-            <Person className="text-primary" sx={{ width: 20, height: 20 }} />
-            <p className="label-large-primary text-black translate-y-1">
-              Staff
-            </p>
+        <div className="w-full px-6 flex flex-col justify-center items-center gap-1 z-10 flex-wrap">
+          <div className="flex gap-2 items-center">
+            <p className="title-large-emphasized translate-y-1">{eventName}</p>
+            <ExpandMore
+              sx={{ width: 24, height: 24 }}
+              className={`cursor-pointer text-primary transition-transform duration-300 ${
+                isToggleRole ? "rotate-180" : ""
+              }`}
+              onClick={() => setToggleRole(prev => !prev)}
+            />
           </div>
 
-          <QuickAttendButton
-            variant="outline"
-            type="icon"
-            onClick={toggleFlash}
-            className="w-full max-w-10 h-full rounded-full border-none"
+          <div
+            className={`relative flex gap-2 items-center justify-center overflow-hidden ${
+              isToggleRole ? "opacity-0" : "opacity-100"
+            }`}
           >
-            <Bolt className="w-6 h-6" />
-          </QuickAttendButton>
+            <Person sx={{ width: 24, height: 24 }} className="text-primary" />
+            <p className="label-large-emphasized translate-y-1">{eventRole}</p>
+          </div>
         </div>
 
         <style jsx global>{`
-          @keyframes scanline {
-            0% {
-              transform: translateY(0);
-            }
-            100% {
-              transform: translateY(200px);
-            }
-          }
-
           #qr-reader video {
             position: absolute !important;
             top: 0 !important;
@@ -245,6 +304,26 @@ const ScanPage = () => {
             width: 100% !important;
             height: 100% !important;
             object-fit: cover !important;
+          }
+
+          @keyframes fadeInOut {
+            0% {
+              opacity: 0;
+              transform: translateY(10px);
+            }
+            10%,
+            90% {
+              opacity: 1;
+              transform: translateY(0);
+            }
+            100% {
+              opacity: 0;
+              transform: translateY(-10px);
+            }
+          }
+
+          .animate-fade-in-out {
+            animation: fadeInOut 2s ease-in-out forwards;
           }
         `}</style>
       </div>
@@ -507,6 +586,12 @@ const ScanPage = () => {
             </div>
           </div>
         </PopupLayout>
+      )}
+
+      {showCopyPopup && (
+        <div className="fixed top-24 left-1/2 -translate-x-1/2 bg-primary text-white px-4 py-2 rounded-full shadow-lg animate-fade-in-out z-50">
+          <p className="label-large-primary translate-y-1">คัดลอกสำเร็จแล้ว</p>
+        </div>
       )}
     </>
   );
