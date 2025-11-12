@@ -233,8 +233,6 @@ function MyEventDetail() {
             )}
           </div>
         </div>
-
-        {openLLEPopup && <LLEPopup setOpenLLEPopup={setOpenLLEPopup} />}
       </div>
 
       {/* Go to Top Button */}
