@@ -5,7 +5,6 @@ import {
   ReplayCircleFilled,
   WatchLater,
 } from "@mui/icons-material";
-import { useState } from "react";
 import QuickAttendButton from "../QuickAttendButton";
 
 interface RegisteredScanPopupProps {
@@ -13,6 +12,8 @@ interface RegisteredScanPopupProps {
   studentName: string;
   studentFaculty: string;
   timeStamp: string;
+  note: string;
+  setNote: (s: string) => void;
   handleSubmit: (e: React.MouseEvent<Element, MouseEvent>) => void;
 }
 
@@ -21,10 +22,10 @@ function RegisteredScanPopup({
   studentName,
   studentFaculty,
   timeStamp,
+  note,
+  setNote,
   handleSubmit,
 }: RegisteredScanPopupProps) {
-  const [note, setNote] = useState("");
-
   return (
     <PopupLayout className="relative bg-neutral-white w-[349px] rounded-4xl">
       {/* Header */}

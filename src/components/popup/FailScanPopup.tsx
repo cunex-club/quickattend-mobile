@@ -1,20 +1,14 @@
 import PopupLayout from "@/layout/popup";
-import {
-  Business,
-  CancelRounded,
-  Person,
-  WatchLater,
-} from "@mui/icons-material";
-import { useState } from "react";
+import { CancelRounded } from "@mui/icons-material";
 import QuickAttendButton from "../QuickAttendButton";
 
 interface FailScanPopupProps {
+  note: string;
+  setNote: (s: string) => void;
   handleSubmit: (e: React.MouseEvent<Element, MouseEvent>) => void;
 }
 
-function FailScanPopup({ handleSubmit }: FailScanPopupProps) {
-  const [note, setNote] = useState("");
-
+function FailScanPopup({ note, setNote, handleSubmit }: FailScanPopupProps) {
   return (
     <PopupLayout className="relative bg-neutral-white w-[349px] rounded-4xl">
       {/* Header */}

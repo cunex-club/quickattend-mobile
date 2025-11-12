@@ -37,7 +37,7 @@ function MyEventDetail() {
   const [event, setEvent] = useState<EventInterface | null>(null);
 
   useEffect(() => {
-    const targetEvent = allEvents.filter(e => e.id == id)[0] ?? null;
+    const targetEvent = allEvents.filter(e => e.id === id)[0] ?? null;
     if (!targetEvent) {
       return;
     }

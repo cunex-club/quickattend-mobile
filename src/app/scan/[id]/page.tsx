@@ -54,6 +54,7 @@ const ScanPage = () => {
   const [scannerSize, setScannerSize] = useState(50);
   const [showCamera, setShowCamera] = useState(true);
   const [stream, setStream] = useState<MediaStream | null>(null);
+  const [note, setNote] = useState("");
   const [showTimeoutPopup, setShowTimeoutPopup] = useState(false);
 
   const [isToggleEvents, setToggleEvents] = useState(false);
@@ -62,7 +63,7 @@ const ScanPage = () => {
   >(null);
 
   useEffect(() => {
-    const targetEvent = allEvents.filter(e => e.id == id)[0] ?? null;
+    const targetEvent = allEvents.filter(e => e.id === id)[0] ?? null;
     if (!targetEvent) {
       return;
     }
@@ -114,6 +115,8 @@ const ScanPage = () => {
     e.preventDefault();
     e.stopPropagation();
     setShowCamera(true);
+    alert(`Success - Your Note: ${note}`);
+    setNote("");
     restartCamera();
   };
 
@@ -124,6 +127,8 @@ const ScanPage = () => {
     e.preventDefault();
     e.stopPropagation();
     setShowCamera(true);
+    alert(`Registered - Your Note: ${note}`);
+    setNote("");
     restartCamera();
   };
 
@@ -132,6 +137,8 @@ const ScanPage = () => {
     e.preventDefault();
     e.stopPropagation();
     setShowCamera(true);
+    alert(`Fail - Your Note: ${note}`);
+    setNote("");
     restartCamera();
   };
 
@@ -402,6 +409,8 @@ const ScanPage = () => {
           studentName={scannedName}
           studentFaculty={scannedFaculty}
           timeStamp={timeStamp}
+          note={note}
+          setNote={setNote}
           handleSubmit={handleSubmitSuccessScan}
         />
       )}
@@ -412,12 +421,18 @@ const ScanPage = () => {
           studentName={scannedName}
           studentFaculty={scannedFaculty}
           timeStamp={timeStamp}
+          note={note}
+          setNote={setNote}
           handleSubmit={handleSubmitRegisteredScan}
         />
       )}
 
       {showFailScanPopup && (
-        <FailScanPopup handleSubmit={handleSubmitFailScan} />
+        <FailScanPopup
+          note={note}
+          setNote={setNote}
+          handleSubmit={handleSubmitFailScan}
+        />
       )}
 
       {showCopyPopup && (

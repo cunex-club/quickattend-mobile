@@ -1,6 +1,5 @@
 import PopupLayout from "@/layout/popup";
 import { Business, CheckCircle, Person, WatchLater } from "@mui/icons-material";
-import { useState } from "react";
 import QuickAttendButton from "../QuickAttendButton";
 
 interface SuccessScanPopupProps {
@@ -8,6 +7,8 @@ interface SuccessScanPopupProps {
   studentName: string;
   studentFaculty: string;
   timeStamp: string;
+  note: string;
+  setNote: (s: string) => void;
   handleSubmit: (e: React.MouseEvent<Element, MouseEvent>) => void;
 }
 
@@ -16,10 +17,10 @@ function SuccessScanPopup({
   studentName,
   studentFaculty,
   timeStamp,
+  note,
+  setNote,
   handleSubmit,
 }: SuccessScanPopupProps) {
-  const [note, setNote] = useState("");
-
   return (
     <PopupLayout className="relative bg-neutral-white w-[349px] rounded-4xl">
       {/* Header */}
