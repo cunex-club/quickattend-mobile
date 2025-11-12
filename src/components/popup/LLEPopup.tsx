@@ -8,7 +8,7 @@ interface LLEPopupProps {
   description?: string;
 }
 
-export default function LLEPopup({
+function LLEPopup({
   setOpenLLEPopup,
   tohref,
   description = defaultLLEPopupDescription,
@@ -47,3 +47,5 @@ export default function LLEPopup({
     </PopupLayout>
   );
 }
+
+export default LLEPopup;

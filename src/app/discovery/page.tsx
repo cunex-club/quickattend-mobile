@@ -5,10 +5,11 @@ import {
   eventDate,
   eventDescription,
   eventLocation,
-  eventName,
   eventTimeRange,
   maxPageNumber,
+  discoveryEvents,
 } from "@/utils/const";
+import { EventInterface } from "@/utils/interface";
 import {
   ArrowUpward,
   ChevronLeft,
@@ -25,9 +26,14 @@ export default function Discovery() {
   const [currentPageNumber, setCurrentPageNumber] = useState<number>(1);
   const [openSortDropdown, setOpenSortDropdown] = useState(false);
   const [isInvisibleScrollToTop, setInvisibleScrollToTop] = useState(false);
+  const [events, setEvents] = useState<EventInterface[]>([]);
 
   const topRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setEvents(discoveryEvents);
+  }, []);
 
   // When there's a change in sort option
   useEffect(() => {
@@ -124,12 +130,12 @@ export default function Discovery() {
 
         {/* Events */}
         <div className="flex flex-col gap-4">
-          {["1", "2", "3"].map(id => {
+          {events.map(event => {
             return (
               <DiscoveryEventCard
-                key={id}
-                id={id}
-                name={eventName}
+                key={event.id}
+                id={event.id}
+                name={event.name}
                 date={eventDate}
                 timeRange={eventTimeRange}
                 location={eventLocation}

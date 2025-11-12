@@ -1,4 +1,26 @@
-export const eventName = "Freshmen night";
+import { EventInterface } from "./interface";
+
+export const allEvents: EventInterface[] = [
+  { id: "1", name: "Freshmen night" },
+  { id: "2", name: "Drink Fresh" },
+  { id: "3", name: "Movie Talks" },
+  { id: "4", name: "Olivia Dean’s Listening Party" },
+  { id: "5", name: "Freshmen Day" },
+  { id: "6", name: "Eat Fresh" },
+  { id: "7", name: "Movie Chat" },
+  { id: "8", name: "Olivia Dean’s Reading Party" },
+  { id: "9", name: "Senior Day" },
+  { id: "10", name: "Breath Fresh" },
+];
+
+export const myCurrentEvents: EventInterface[] = allEvents.slice(0, 4);
+
+export const myPastEvents: EventInterface[] = allEvents.slice(4, 8);
+
+export const discoveryEvents: EventInterface[] = allEvents
+  .slice(0, 4)
+  .concat(allEvents.slice(8, 10));
+
 export const eventDate = "3 สิงหาคม 2568";
 export const eventTimeRange = "16:00 - 20:00 น.";
 export const eventLocation = "สนามกีฬาจุฬาลงกรณ์มหาวิทยาลัย";

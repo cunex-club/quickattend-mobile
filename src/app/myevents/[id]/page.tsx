@@ -4,10 +4,10 @@ import {
   eventDate,
   eventDescription,
   eventLocation,
-  eventName,
   eventOwner,
   eventSchedules,
   eventTimeRange,
+  allEvents,
 } from "@/utils/const";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -26,6 +26,7 @@ import {
 } from "@mui/icons-material";
 import QuickAttendButton from "@/components/QuickAttendButton";
 import LLEPopup from "@/components/popup/LLEPopup";
+import { EventInterface } from "@/utils/interface";
 
 function MyEventDetail() {
   const { id } = useParams();
@@ -33,6 +34,15 @@ function MyEventDetail() {
   const [isInvisibleScrollToTop, setInvisibleScrollToTop] = useState(false);
   const [openLLEPopup, setOpenLLEPopup] = useState(false);
   const [openShareDropdown, setOpenShareDropdown] = useState(false);
+  const [event, setEvent] = useState<EventInterface | null>(null);
+
+  useEffect(() => {
+    const targetEvent = allEvents.filter(e => e.id == id)[0] ?? null;
+    if (!targetEvent) {
+      return;
+    }
+    setEvent(targetEvent);
+  }, [id]);
 
   const topRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -71,13 +81,13 @@ function MyEventDetail() {
         </Link>
         <ChevronRightOutlined fontSize="small" className="text-primary" />
         <Link className="flex gap-1 items-center" href={`/${id}`}>
-          <p className="body-small-primary text-neutral-500">{eventName}</p>
+          <p className="body-small-primary text-neutral-500">{event?.name}</p>
         </Link>
       </div>
 
       {/* Event Name */}
       <h1 className="headline-large-emphasized text-neutral-600 mb-4">
-        {eventName}
+        {event?.name}
       </h1>
 
       {/* Event Information */}

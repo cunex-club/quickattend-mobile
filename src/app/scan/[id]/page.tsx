@@ -3,30 +3,23 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Html5Qrcode } from "html5-qrcode";
+import { Bolt, ExpandMore, Home, Link, Person } from "@mui/icons-material";
 import {
-  Bolt,
-  Business,
-  CancelRounded,
-  CheckCircle,
-  ExpandMore,
-  Home,
-  Link,
-  Person,
-  ReplayCircleFilled,
-  WatchLater,
-} from "@mui/icons-material";
-import {
-  eventName,
   scannedName,
   scannedID,
   scanTimeOutMs,
   scannedFaculty,
   eventRole,
+  myCurrentEvents,
+  allEvents,
 } from "@/utils/const";
 import QuickAttendButton from "@/components/QuickAttendButton";
 import ErrorPopup from "@/components/popup/ErrorPopup";
-import PopupLayout from "@/layout/popup";
 import { formatDateToTime } from "@/utils/function";
+import SuccessScanPopup from "@/components/popup/SuccessScanPopup";
+import RegisteredScanPopup from "@/components/popup/RegisteredScanPopup";
+import FailScanPopup from "@/components/popup/FailScanPopup";
+import { EventInterface } from "@/utils/interface";
 
 const ScanPage = () => {
   const { id } = useParams();
@@ -39,6 +32,7 @@ const ScanPage = () => {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // States
+  const [event, setEvent] = useState<EventInterface | null>(null);
   const [scanner, setScanner] = useState<Html5Qrcode | null>(null);
   const [isFlashOn, setIsFlashOn] = useState(false);
   const [result, setResult] = useState<
@@ -48,13 +42,25 @@ const ScanPage = () => {
   const [showRegisteredScanPopup, setShowRegisteredScanPopup] = useState(false);
   const [showFailScanPopup, setShowFailScanPopup] = useState(false);
   const [timeStamp, setTimeStamp] = useState("");
-  const [note, setNote] = useState("");
-  const [isToggleRole, setToggleRole] = useState(false);
   const [showCopyPopup, setShowCopyPopup] = useState(false);
   const [scannerSize, setScannerSize] = useState(50);
   const [showCamera, setShowCamera] = useState(true);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [showTimeoutPopup, setShowTimeoutPopup] = useState(false);
+
+  const [isToggleEvents, setToggleEvents] = useState(false);
+  const [myOtherFiveEvents, setMyOtherFiveEvents] = useState<
+    EventInterface[] | null
+  >(null);
+
+  useEffect(() => {
+    const targetEvent = allEvents.filter(e => e.id == id)[0] ?? null;
+    if (!targetEvent) {
+      return;
+    }
+    setEvent(targetEvent);
+    setMyOtherFiveEvents(myCurrentEvents.filter(e => e.id != id).slice(0, 5));
+  }, []);
 
   // Timeout logic
   const startTimeout = () => {
@@ -86,11 +92,39 @@ const ScanPage = () => {
 
     const now = new Date();
     setTimeStamp(formatDateToTime(now));
-    setNote("");
+
     // TODO: Send Code to backend for validation
 
-    // Demo purpose
-    setResult("fail");
+    console.log(code);
+    setResult("success");
+  };
+
+  // Handling sending notes in Success Popup
+  const handleSubmitSuccessScan = (
+    e: React.MouseEvent<Element, MouseEvent>
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setShowCamera(true);
+    restartCamera();
+  };
+
+  // Handling sending notes in Registered Popup
+  const handleSubmitRegisteredScan = (
+    e: React.MouseEvent<Element, MouseEvent>
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setShowCamera(true);
+    restartCamera();
+  };
+
+  // Handling sending notes in Fail Popup
+  const handleSubmitFailScan = (e: React.MouseEvent<Element, MouseEvent>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setShowCamera(true);
+    restartCamera();
   };
 
   // Result/Popup control
@@ -135,11 +169,6 @@ const ScanPage = () => {
       window.location.reload();
     }, 100);
   };
-
-  // ID validation placeholder
-  useEffect(() => {
-    // Todo: ID Validation
-  }, [id]);
 
   // Initial camera setup and clean-up
   useEffect(() => {
@@ -240,7 +269,7 @@ const ScanPage = () => {
                 variant="outline"
                 type="icon"
                 onClick={() => {
-                  navigator.clipboard.writeText(eventName);
+                  navigator.clipboard.writeText(event?.name || "");
                   setShowCopyPopup(true);
                   setTimeout(() => setShowCopyPopup(false), 2000);
                 }}
@@ -265,18 +294,40 @@ const ScanPage = () => {
 
         {/* Bottom */}
         <div className="w-full px-6 flex flex-col justify-center items-center gap-1 z-10 flex-wrap">
-          <div className="flex gap-2 items-center">
-            <p className="title-large-emphasized translate-y-1">{eventName}</p>
+          <div className="relative flex gap-2 items-center">
+            <p className="title-large-emphasized translate-y-1">
+              {event?.name}
+            </p>
             <ExpandMore
               sx={{ width: 24, height: 24 }}
-              className={`cursor-pointer text-primary transition-transform duration-300 ${isToggleRole ? "rotate-180" : ""}`}
-              onClick={() => setToggleRole(prev => !prev)}
+              className={`cursor-pointer text-primary transition-transform duration-300 ${isToggleEvents ? "rotate-180" : ""}`}
+              onClick={() => setToggleEvents(prev => !prev)}
             />
+
+            {/* My Event Dropdown */}
+            {isToggleEvents && (
+              <div className="w-30 absolute bottom-full mb-1 right-0 bg-neutral-white rounded-lg shadow-elevation-1 p-2 z-10">
+                {myOtherFiveEvents?.map(event => {
+                  return (
+                    <button
+                      key={event.id}
+                      className="cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-300"
+                      onClick={e => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        setToggleEvents(false);
+                        router.push(`/scan/${event.id}`);
+                      }}
+                    >
+                      {event.name}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
-          <div
-            className={`relative flex gap-2 items-center justify-center overflow-hidden ${isToggleRole ? "opacity-0" : "opacity-100"}`}
-          >
+          <div className="relative flex gap-2 items-center justify-center overflow-hidden">
             <Person sx={{ width: 24, height: 24 }} className="text-primary" />
             <p className="label-large-emphasized translate-y-1">{eventRole}</p>
           </div>
@@ -329,245 +380,27 @@ const ScanPage = () => {
       )}
 
       {showSuccessScanPopup && (
-        <PopupLayout className="relative bg-neutral-white w-[349px] rounded-4xl">
-          {/* Header */}
-          <div className="w-full h-fit p-6 bg-success rounded-t-4xl flex justify-center items-center mb-6">
-            <CheckCircle
-              className="text-white"
-              sx={{ width: 40, height: 40 }}
-            />
-            <p className="ml-2 headline-large-emphasized text-white translate-y-1.5">
-              ลงทะเบียนสำเร็จ
-            </p>
-          </div>
-
-          {/* Image */}
-          <img
-            src="/mock/scan_placeholder.png"
-            alt="Scan Placeholder"
-            className="mx-auto mb-4"
-          />
-
-          {/* Content */}
-          <div className="flex flex-col px-4 py-6">
-            {/* Information */}
-            <div className="flex flex-col gap-2 mb-8">
-              <p className="title-medium-emphasized">
-                รายละเอียดผู้ลงทะเบียนเข้างาน
-              </p>
-
-              {/* Name */}
-              <div className="flex gap-2">
-                <Person
-                  className="text-primary"
-                  sx={{ width: 16, height: 16 }}
-                />
-                <div className="flex flex-col -translate-y-1">
-                  <p className="body-medium-primary">{scannedName}</p>
-                  <p className="body-medium-primary">
-                    รหัสประจำตัว {scannedID}
-                  </p>
-                </div>
-              </div>
-
-              {/* Faculty */}
-              <div className="flex gap-2">
-                <Business
-                  className="text-primary"
-                  sx={{ width: 16, height: 16 }}
-                />
-                <p className="body-medium-primary -translate-y-1">
-                  {scannedFaculty}
-                </p>
-              </div>
-
-              {/* Time */}
-              <div className="flex gap-2">
-                <WatchLater
-                  className="text-primary"
-                  sx={{ width: 16, height: 16 }}
-                />
-                <p className="body-medium-primary -translate-y-1">
-                  ลงทะเบียนสำเร็จ: {timeStamp} น.
-                </p>
-              </div>
-            </div>
-
-            {/* Note */}
-            <form className="flex flex-col gap-2 mb-6">
-              <p className="title-medium-emphasized">หมายเหตุ</p>
-              <input
-                className="w-full h-11 border border-neutral-400 focus:outline-none rounded-md px-3"
-                value={note}
-                placeholder="กรอกข้อมูลเพิ่มเติม (ถ้ามี)"
-                onChange={e => setNote(e.target.value)}
-              />
-            </form>
-
-            {/* Buttons */}
-            <div className="flex justify-center items-center gap-2 flex-wrap">
-              <QuickAttendButton
-                type="text"
-                variant="filled"
-                onClick={e => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setShowCamera(true);
-                  restartCamera();
-                }}
-              >
-                <p className="translate-y-1">ตกลง</p>
-              </QuickAttendButton>
-            </div>
-          </div>
-        </PopupLayout>
+        <SuccessScanPopup
+          studentId={scannedID}
+          studentName={scannedName}
+          studentFaculty={scannedFaculty}
+          timeStamp={timeStamp}
+          handleSubmit={handleSubmitSuccessScan}
+        />
       )}
 
       {showRegisteredScanPopup && (
-        <PopupLayout className="relative bg-neutral-white w-[349px] rounded-4xl">
-          {/* Header */}
-          <div className="w-full h-fit p-6 bg-warning rounded-t-4xl flex justify-center items-center mb-6">
-            <ReplayCircleFilled
-              className="text-white"
-              sx={{ width: 40, height: 40 }}
-            />
-            <p className="ml-2 headline-large-emphasized text-white translate-y-1.5">
-              ลงทะเบียนแล้ว
-            </p>
-          </div>
-
-          {/* Image */}
-          <img
-            src="/mock/scan_placeholder.png"
-            alt="Scan Placeholder"
-            className="mx-auto mb-4"
-          />
-
-          {/* Content */}
-          <div className="flex flex-col px-4 py-6">
-            {/* Information */}
-            <div className="flex flex-col gap-2 mb-8">
-              <p className="title-medium-emphasized">
-                รายละเอียดผู้ลงทะเบียนเข้างาน
-              </p>
-
-              {/* Name */}
-              <div className="flex gap-2">
-                <Person
-                  className="text-primary"
-                  sx={{ width: 16, height: 16 }}
-                />
-                <div className="flex flex-col -translate-y-1">
-                  <p className="body-medium-primary">{scannedName}</p>
-                  <p className="body-medium-primary">
-                    รหัสประจำตัว {scannedID}
-                  </p>
-                </div>
-              </div>
-
-              {/* Faculty */}
-              <div className="flex gap-2">
-                <Business
-                  className="text-primary"
-                  sx={{ width: 16, height: 16 }}
-                />
-                <p className="body-medium-primary -translate-y-1">
-                  {scannedFaculty}
-                </p>
-              </div>
-
-              {/* Time */}
-              <div className="flex gap-2">
-                <WatchLater
-                  className="text-primary"
-                  sx={{ width: 16, height: 16 }}
-                />
-                <p className="body-medium-primary -translate-y-1">
-                  ลงทะเบียนสำเร็จ: {timeStamp} น.
-                </p>
-              </div>
-            </div>
-
-            {/* Note */}
-            <form className="flex flex-col gap-2 mb-6">
-              <p className="title-medium-emphasized">หมายเหตุ</p>
-              <input
-                className="w-full h-11 border border-neutral-400 focus:outline-none rounded-md px-3"
-                value={note}
-                placeholder="กรอกข้อมูลเพิ่มเติม (ถ้ามี)"
-                onChange={e => setNote(e.target.value)}
-              />
-            </form>
-
-            {/* Buttons */}
-            <div className="flex justify-center items-center gap-2 flex-wrap">
-              <QuickAttendButton
-                type="text"
-                variant="filled"
-                onClick={e => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setShowCamera(true);
-                  restartCamera();
-                }}
-              >
-                <p className="translate-y-1">ตกลง</p>
-              </QuickAttendButton>
-            </div>
-          </div>
-        </PopupLayout>
+        <RegisteredScanPopup
+          studentId={scannedID}
+          studentName={scannedName}
+          studentFaculty={scannedFaculty}
+          timeStamp={timeStamp}
+          handleSubmit={handleSubmitRegisteredScan}
+        />
       )}
 
       {showFailScanPopup && (
-        <PopupLayout className="relative bg-neutral-white w-[349px] rounded-4xl">
-          {/* Header */}
-          <div className="w-full h-fit p-6 bg-error rounded-t-4xl flex justify-center items-center mb-6">
-            <CancelRounded
-              className="text-white"
-              sx={{ width: 40, height: 40 }}
-            />
-            <p className="ml-2 headline-large-emphasized text-white translate-y-1.5">
-              ลงทะเบียนไม่สำเร็จ
-            </p>
-          </div>
-
-          {/* Content */}
-          <div className="flex flex-col px-4 pt-2 pb-6">
-            {/* Information */}
-            <div className="flex flex-col gap-2 mb-8">
-              <p className="title-large-primary text-center">
-                ไม่ได้อยู่ในรายชื่อผู้มีสิทธิ์ลงทะเบียนเข้าร่วมกิจกรรม
-              </p>
-            </div>
-
-            {/* Note */}
-            <form className="flex flex-col gap-2 mb-6">
-              <p className="title-medium-emphasized">หมายเหตุ</p>
-              <input
-                className="w-full h-11 border border-neutral-400 focus:outline-none rounded-md px-3"
-                value={note}
-                placeholder="กรอกข้อมูลเพิ่มเติม (ถ้ามี)"
-                onChange={e => setNote(e.target.value)}
-              />
-            </form>
-
-            {/* Buttons */}
-            <div className="flex justify-center items-center gap-2 flex-wrap">
-              <QuickAttendButton
-                type="text"
-                variant="filled"
-                onClick={e => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setShowCamera(true);
-                  restartCamera();
-                }}
-              >
-                <p className="translate-y-1">ตกลง</p>
-              </QuickAttendButton>
-            </div>
-          </div>
-        </PopupLayout>
+        <FailScanPopup handleSubmit={handleSubmitFailScan} />
       )}
 
       {showCopyPopup && (
