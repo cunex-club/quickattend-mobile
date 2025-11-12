@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import MyEventCard from "@/components/MyEventCard";
+import MyEventCard from "@/components/card/MyEventCard";
 import QuickAttendButton from "@/components/QuickAttendButton";
-import PastEventCard from "@/components/PastEventCard";
+import PastEventCard from "@/components/card/PastEventCard";
 import {
   ExploreOutlined,
   OpenInNew,
@@ -12,18 +12,20 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "@mui/icons-material";
-import LLEPopup from "@/components/LLEPopup";
+import LLEPopup from "@/components/popup/LLEPopup";
 import Link from "next/link";
 import {
   displayButtonsFirstRowPastEvents,
   eventDate,
   eventDescription,
   eventLocation,
-  eventName,
   eventOwner,
+  myCurrentEvents,
   eventTimeRange,
   maxPageNumber,
+  myPastEvents,
 } from "@/utils/const";
+import { EventInterface } from "@/utils/interface";
 
 export default function Home() {
   const [sortOption, setSortOption] = useState<0 | 1 | null>(null);
@@ -31,9 +33,16 @@ export default function Home() {
   const [openLLEPopup, setOpenLLEPopup] = useState(false);
   const [openSortDropdown, setOpenSortDropdown] = useState(false);
   const [isInvisibleScrollToTop, setInvisibleScrollToTop] = useState(false);
+  const [currentEvents, setCurrentEvents] = useState<EventInterface[]>([]);
+  const [pastEvents, setPastEvents] = useState<EventInterface[]>([]);
 
   const topRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setCurrentEvents(myCurrentEvents);
+    setPastEvents(myPastEvents);
+  }, []);
 
   // When there's a change in sort option
   useEffect(() => {
@@ -90,7 +99,8 @@ export default function Home() {
         {/* Number of Results */}
         <div className="flex justify-between items-center gap-4 mb-4">
           <p className="label-small-primary text-neutral-600">
-            แสดงกิจกรรม 3 จาก 6
+            แสดงกิจกรรม {Math.min(3, currentEvents.length)} จาก 
+            {currentEvents.length}
           </p>
           <div
             className="flex items-center gap-2 cursor-pointer"
@@ -108,12 +118,12 @@ export default function Home() {
 
         {/* Events */}
         <div className="flex flex-col gap-4 mb-6">
-          {["1", "2", "3"].map(id => {
+          {currentEvents.slice(0, 3).map(event => {
             return (
               <MyEventCard
-                key={id}
-                id={id}
-                name={eventName}
+                key={event.id}
+                id={event.id}
+                name={event.name}
                 date={eventDate}
                 timeRange={eventTimeRange}
                 location={eventLocation}
@@ -185,12 +195,12 @@ export default function Home() {
 
         {/* Events */}
         <div className="flex flex-col gap-4">
-          {["1", "2", "3"].map(id => {
+          {pastEvents.map(event => {
             return (
               <PastEventCard
-                key={id}
-                id={id}
-                name={eventName}
+                key={event.id}
+                id={event.id}
+                name={event.name}
                 date={eventDate}
                 timeRange={eventTimeRange}
                 location={eventLocation}

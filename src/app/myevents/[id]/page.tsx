@@ -1,17 +1,16 @@
 "use client";
 
 import {
-  displayButtonsFirstRowPastEvents,
   eventDate,
   eventDescription,
   eventLocation,
-  eventName,
   eventOwner,
   eventSchedules,
   eventTimeRange,
+  allEvents,
 } from "@/utils/const";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Fragment, useEffect, useRef, useState } from "react";
 
 import {
@@ -19,23 +18,31 @@ import {
   CalendarMonth,
   ChevronRightOutlined,
   CropFree,
-  DifferenceOutlined,
-  Feed,
   HomeOutlined,
   LocationOn,
-  SaveAlt,
   TrendingUp,
   UploadFile,
   WatchLater,
 } from "@mui/icons-material";
 import QuickAttendButton from "@/components/QuickAttendButton";
-import LLEPopup from "@/components/LLEPopup";
+import LLEPopup from "@/components/popup/LLEPopup";
+import { EventInterface } from "@/utils/interface";
 
 function MyEventDetail() {
   const { id } = useParams();
+  const router = useRouter();
   const [isInvisibleScrollToTop, setInvisibleScrollToTop] = useState(false);
   const [openLLEPopup, setOpenLLEPopup] = useState(false);
   const [openShareDropdown, setOpenShareDropdown] = useState(false);
+  const [event, setEvent] = useState<EventInterface | null>(null);
+
+  useEffect(() => {
+    const targetEvent = allEvents.filter(e => e.id === id)[0] ?? null;
+    if (!targetEvent) {
+      return;
+    }
+    setEvent(targetEvent);
+  }, [id]);
 
   const topRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -73,14 +80,16 @@ function MyEventDetail() {
           <p className="body-small-primary text-neutral-500">หน้าหลัก</p>
         </Link>
         <ChevronRightOutlined fontSize="small" className="text-primary" />
-        <Link className="flex gap-1 items-center" href={`/${id}`}>
-          <p className="body-small-primary text-neutral-500">{eventName}</p>
+        <Link className="flex gap-1 items-center" href={`/myevents/${id}`}>
+          <p className="body-small-primary text-neutral-500 truncate max-w-[120px]">
+            {event?.name}
+          </p>
         </Link>
       </div>
 
       {/* Event Name */}
       <h1 className="headline-large-emphasized text-neutral-600 mb-4">
-        {eventName}
+        {event?.name}
       </h1>
 
       {/* Event Information */}
@@ -162,7 +171,7 @@ function MyEventDetail() {
           onClick={e => {
             e.stopPropagation();
             e.preventDefault();
-            alert(`Go to Scan from Card ${id}`);
+            router.push(`/scan/${id}`);
           }}
         >
           <CropFree
@@ -212,17 +221,18 @@ function MyEventDetail() {
             {openShareDropdown && (
               <div className="w-30 absolute bottom-full mb-1 right-0 bg-neutral-white rounded-lg shadow-elevation-1 p-2 z-10">
                 <button
-                  className="cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-100"
+                  className="cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-300"
                   onClick={e => {
                     e.stopPropagation();
                     e.preventDefault();
+                    router.push(`/scan/${id}`);
                     setOpenShareDropdown(false);
                   }}
                 >
                   ตัวสแกน QR
                 </button>
                 <button
-                  className="cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-100"
+                  className="cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-300"
                   onClick={e => {
                     e.stopPropagation();
                     e.preventDefault();
@@ -235,8 +245,6 @@ function MyEventDetail() {
             )}
           </div>
         </div>
-
-        {openLLEPopup && <LLEPopup setOpenLLEPopup={setOpenLLEPopup} />}
       </div>
 
       {/* Go to Top Button */}
