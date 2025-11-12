@@ -4,11 +4,11 @@ export const allEvents: EventInterface[] = [
   { id: "1", name: "Freshmen night" },
   { id: "2", name: "Drink Fresh" },
   { id: "3", name: "Movie Talks" },
-  { id: "4", name: "Olivia Dean’s Listening Party" },
+  { id: "4", name: "Olivia Dean Henderson’s Listening Party" },
   { id: "5", name: "Freshmen Day" },
   { id: "6", name: "Eat Fresh" },
   { id: "7", name: "Movie Chat" },
-  { id: "8", name: "Olivia Dean’s Reading Party" },
+  { id: "8", name: "Olivia Dean Henderson’s Reading Party" },
   { id: "9", name: "Senior Day" },
   { id: "10", name: "Breath Fresh" },
 ];

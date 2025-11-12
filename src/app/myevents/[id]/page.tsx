@@ -80,8 +80,10 @@ function MyEventDetail() {
           <p className="body-small-primary text-neutral-500">หน้าหลัก</p>
         </Link>
         <ChevronRightOutlined fontSize="small" className="text-primary" />
-        <Link className="flex gap-1 items-center" href={`/${id}`}>
-          <p className="body-small-primary text-neutral-500">{event?.name}</p>
+        <Link className="flex gap-1 items-center" href={`/myevents/${id}`}>
+          <p className="body-small-primary text-neutral-500 truncate max-w-[120px]">
+            {event?.name}
+          </p>
         </Link>
       </div>
 

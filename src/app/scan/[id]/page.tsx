@@ -257,7 +257,7 @@ const ScanPage = () => {
               <QuickAttendButton
                 variant="outline"
                 type="icon"
-                onClick={() => router.back()}
+                onClick={() => router.push("/")}
                 className="w-full h-full rounded-full border-none"
               >
                 <Home className="w-6 h-6" />
@@ -295,8 +295,8 @@ const ScanPage = () => {
         {/* Bottom */}
         <div className="w-full px-6 flex flex-col justify-center items-center gap-1 z-10 flex-wrap">
           <div className="relative flex gap-2 items-center">
-            <p className="title-large-emphasized translate-y-1">
-              {event?.name}
+            <p className="title-large-emphasized translate-y-1 truncate max-w-60">
+              {event?.name || "ไม่พบชื่อกิจกรรม"}
             </p>
             <ExpandMore
               sx={{ width: 24, height: 24 }}

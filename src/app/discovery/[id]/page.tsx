@@ -78,7 +78,9 @@ function DiscoveryEventDetail() {
         </Link>
         <ChevronRightOutlined fontSize="small" className="text-primary" />
         <Link className="flex gap-1 items-center" href={`/discovery/${id}`}>
-          <p className="body-small-primary text-neutral-500">{event?.name}</p>
+          <p className="body-small-primary text-neutral-500 truncate max-w-[120px]">
+            {event?.name}
+          </p>
         </Link>
       </div>
 
