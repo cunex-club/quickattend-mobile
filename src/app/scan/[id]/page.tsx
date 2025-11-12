@@ -3,7 +3,15 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Html5Qrcode } from "html5-qrcode";
-import { Bolt, ExpandMore, Home, Link, Person } from "@mui/icons-material";
+import {
+  Bolt,
+  ExpandMore,
+  FlashOff,
+  FlashOn,
+  Home,
+  Link,
+  Person,
+} from "@mui/icons-material";
 import {
   scannedName,
   scannedID,
@@ -252,33 +260,38 @@ const ScanPage = () => {
           )}
 
           {/* Buttons */}
-          <div className="absolute w-full flex justify-center gap-4 bottom-4 px-4 flex-wrap">
-            <div className="w-fit h-fit">
-              <QuickAttendButton
-                variant="outline"
-                type="icon"
-                onClick={() => router.push("/")}
-                className="w-full h-full rounded-full border-none"
-              >
-                <Home className="w-6 h-6" />
-              </QuickAttendButton>
+          <div className="absolute w-full flex justify-between gap-4 bottom-4 px-4 flex-wrap">
+            <div className="flex gap-2">
+              {/* Home */}
+              <div className="w-fit h-fit">
+                <QuickAttendButton
+                  variant="outline"
+                  type="icon"
+                  onClick={() => router.push("/")}
+                  className="w-full h-full rounded-full border-none"
+                >
+                  <Home className="w-6 h-6" />
+                </QuickAttendButton>
+              </div>
+
+              {/* Link */}
+              <div className="w-fit h-fit">
+                <QuickAttendButton
+                  variant="outline"
+                  type="icon"
+                  onClick={() => {
+                    navigator.clipboard.writeText(event?.name || "");
+                    setShowCopyPopup(true);
+                    setTimeout(() => setShowCopyPopup(false), 2000);
+                  }}
+                  className="w-full h-full rounded-full border-none"
+                >
+                  <Link className="w-6 h-6" />
+                </QuickAttendButton>
+              </div>
             </div>
 
-            <div className="w-fit h-fit">
-              <QuickAttendButton
-                variant="outline"
-                type="icon"
-                onClick={() => {
-                  navigator.clipboard.writeText(event?.name || "");
-                  setShowCopyPopup(true);
-                  setTimeout(() => setShowCopyPopup(false), 2000);
-                }}
-                className="w-full h-full rounded-full border-none"
-              >
-                <Link className="w-6 h-6" />
-              </QuickAttendButton>
-            </div>
-
+            {/* Flash */}
             <div className="w-fit h-fit">
               <QuickAttendButton
                 variant="outline"
@@ -286,7 +299,11 @@ const ScanPage = () => {
                 onClick={toggleFlash}
                 className="w-full h-full rounded-full border-none"
               >
-                <Bolt className="w-6 h-6" />
+                {isFlashOn ? (
+                  <FlashOn className="w-6 h-6" />
+                ) : (
+                  <FlashOff className="w-6 h-6" />
+                )}
               </QuickAttendButton>
             </div>
           </div>
