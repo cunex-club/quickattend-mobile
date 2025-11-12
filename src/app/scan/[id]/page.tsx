@@ -31,15 +31,19 @@ import { formatDateToTime } from "@/utils/function";
 const ScanPage = () => {
   const { id } = useParams();
   const router = useRouter();
-  // DON'T FORGET TO CHECK WHETHER THIS ID IS REAL EVENT ID OR NOT
 
+  // Refs
   const qrRef = useRef<HTMLDivElement>(null);
+  const isScanningRef = useRef(false);
+  const isResettingRef = useRef(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // States
   const [scanner, setScanner] = useState<Html5Qrcode | null>(null);
   const [isFlashOn, setIsFlashOn] = useState(false);
   const [result, setResult] = useState<
     "success" | "registered" | "fail" | null
   >(null);
-
   const [showSuccessScanPopup, setShowSuccessScanPopup] = useState(false);
   const [showRegisteredScanPopup, setShowRegisteredScanPopup] = useState(false);
   const [showFailScanPopup, setShowFailScanPopup] = useState(false);
@@ -51,13 +55,14 @@ const ScanPage = () => {
   const [showCamera, setShowCamera] = useState(true);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [showTimeoutPopup, setShowTimeoutPopup] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Timeout logic
   const startTimeout = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(handleTimeout, scanTimeOutMs);
   };
 
+  // Camera control logic
   const stopCamera = () => {
     if (scanner) {
       scanner.stop().catch(() => {});
@@ -72,46 +77,30 @@ const ScanPage = () => {
     }
   };
 
+  // Handling the scanned QR code
   const handleScanned = (code: string) => {
+    if (isResettingRef.current || isScanningRef.current) return;
+    isScanningRef.current = true;
     setShowCamera(false);
     stopCamera();
-    // alert(`code=${encodeURIComponent(code)}`);
 
     const now = new Date();
     setTimeStamp(formatDateToTime(now));
     setNote("");
-
-    // =========================================
     // TODO: Send Code to backend for validation
-    //
-    //
-    // =========================================
 
-    // Just for demo purpose
+    // Demo purpose
     setResult("fail");
   };
 
-  // Show Scanning Result
+  // Result/Popup control
   useEffect(() => {
-    if (result === "success") {
-      setShowSuccessScanPopup(true);
-      setShowRegisteredScanPopup(false);
-      setShowFailScanPopup(false);
-    } else if (result === "registered") {
-      setShowSuccessScanPopup(false);
-      setShowRegisteredScanPopup(true);
-      setShowFailScanPopup(false);
-    } else if (result === "fail") {
-      setShowSuccessScanPopup(false);
-      setShowRegisteredScanPopup(false);
-      setShowFailScanPopup(true);
-    } else {
-      setShowSuccessScanPopup(false);
-      setShowRegisteredScanPopup(false);
-      setShowFailScanPopup(false);
-    }
+    setShowSuccessScanPopup(result === "success");
+    setShowRegisteredScanPopup(result === "registered");
+    setShowFailScanPopup(result === "fail");
   }, [result]);
 
+  // Scanner box size on window resize
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -129,66 +118,66 @@ const ScanPage = () => {
                 : 360
       );
     };
-
     window.addEventListener("resize", updateSize);
     updateSize();
-
     return () => window.removeEventListener("resize", updateSize);
   }, []);
 
+  // Timeout handler
   const handleTimeout = () => {
     setShowTimeoutPopup(true);
   };
 
+  // Restart camera for rescanning
+  const restartCamera = () => {
+    stopCamera();
+    setTimeout(() => {
+      window.location.reload();
+    }, 100);
+  };
+
+  // ID validation placeholder
   useEffect(() => {
     // Todo: ID Validation
   }, [id]);
 
+  // Initial camera setup and clean-up
   useEffect(() => {
     let mounted = true;
-
     const startCamera = async () => {
       try {
         const mediaStream = await navigator.mediaDevices.getUserMedia({
           video: { facingMode: "environment" },
         });
         if (!mounted) return;
-
         setStream(mediaStream);
 
         if (qrRef.current) {
           const html5Qr = new Html5Qrcode(qrRef.current.id, false);
           setScanner(html5Qr);
-
           timeoutRef.current = setTimeout(handleTimeout, scanTimeOutMs);
 
           await html5Qr.start(
             { facingMode: "environment" },
-            {
-              fps: 20,
-              qrbox: { width: scannerSize, height: scannerSize },
-            },
+            { fps: 2, qrbox: { width: scannerSize, height: scannerSize } },
             decodedText => {
-              if (mounted) handleScanned(decodedText);
+              if (isResettingRef.current || isScanningRef.current) return;
+              handleScanned(decodedText);
             },
-            errorMessage => {
-              // console.log("scan error", errorMessage);
-            }
+            errorMessage => {}
           );
         }
       } catch (err: any) {}
     };
-
     startCamera();
-
     return () => {
       mounted = false;
       if (scanner) scanner.stop().catch(() => {});
-      if (stream) stream.getTracks().forEach(t => t.stop());
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      stopCamera();
     };
   }, [scannerSize]);
 
+  // Toggle camera flash
   const toggleFlash = async () => {
     if (!stream) return;
     try {
@@ -239,9 +228,7 @@ const ScanPage = () => {
               <QuickAttendButton
                 variant="outline"
                 type="icon"
-                onClick={() => {
-                  router.back();
-                }}
+                onClick={() => router.back()}
                 className="w-full h-full rounded-full border-none"
               >
                 <Home className="w-6 h-6" />
@@ -282,23 +269,20 @@ const ScanPage = () => {
             <p className="title-large-emphasized translate-y-1">{eventName}</p>
             <ExpandMore
               sx={{ width: 24, height: 24 }}
-              className={`cursor-pointer text-primary transition-transform duration-300 ${
-                isToggleRole ? "rotate-180" : ""
-              }`}
+              className={`cursor-pointer text-primary transition-transform duration-300 ${isToggleRole ? "rotate-180" : ""}`}
               onClick={() => setToggleRole(prev => !prev)}
             />
           </div>
 
           <div
-            className={`relative flex gap-2 items-center justify-center overflow-hidden ${
-              isToggleRole ? "opacity-0" : "opacity-100"
-            }`}
+            className={`relative flex gap-2 items-center justify-center overflow-hidden ${isToggleRole ? "opacity-0" : "opacity-100"}`}
           >
             <Person sx={{ width: 24, height: 24 }} className="text-primary" />
             <p className="label-large-emphasized translate-y-1">{eventRole}</p>
           </div>
         </div>
 
+        {/* Styles */}
         <style jsx global>{`
           #qr-reader video {
             position: absolute !important;
@@ -331,6 +315,7 @@ const ScanPage = () => {
         `}</style>
       </div>
 
+      {/* POPUPS */}
       {showTimeoutPopup && (
         <ErrorPopup
           errorMessage={`ข้อมูล QR ไม่ถูกต้อง<br/>กรุณาตรวจสอบและลองใหม่อีกครั้ง`}
@@ -427,10 +412,8 @@ const ScanPage = () => {
                 onClick={e => {
                   e.preventDefault();
                   e.stopPropagation();
-                  setShowSuccessScanPopup(false);
                   setShowCamera(true);
-                  startTimeout();
-                  setResult(null);
+                  restartCamera();
                 }}
               >
                 <p className="translate-y-1">ตกลง</p>
@@ -524,10 +507,8 @@ const ScanPage = () => {
                 onClick={e => {
                   e.preventDefault();
                   e.stopPropagation();
-                  setShowSuccessScanPopup(false);
                   setShowCamera(true);
-                  startTimeout();
-                  setResult(null);
+                  restartCamera();
                 }}
               >
                 <p className="translate-y-1">ตกลง</p>
@@ -578,10 +559,8 @@ const ScanPage = () => {
                 onClick={e => {
                   e.preventDefault();
                   e.stopPropagation();
-                  setShowFailScanPopup(false);
                   setShowCamera(true);
-                  startTimeout();
-                  setResult(null);
+                  restartCamera();
                 }}
               >
                 <p className="translate-y-1">ตกลง</p>
