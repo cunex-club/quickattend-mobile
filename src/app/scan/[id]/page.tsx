@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Html5Qrcode } from "html5-qrcode";
 import {
-  Bolt,
   ExpandMore,
   FlashOff,
   FlashOn,
@@ -335,7 +334,9 @@ const ScanPage = () => {
                   return (
                     <button
                       key={event.id}
-                      className="cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-300"
+                      className={`text-ellipsis cursor-pointer block w-full body-small-primary text-left 
+                        py-1 text-neutral-600 hover:bg-neutral-300
+                        truncate overflow-hidden whitespace-nowrap`}
                       onClick={e => {
                         e.stopPropagation();
                         e.preventDefault();
