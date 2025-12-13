@@ -165,6 +165,8 @@ function DiscoveryEventDetail() {
         <Image src={"/mock/map.png"} alt="mock map" width={350} height={180} />
       </div>
 
+      <div ref={bottomRef}></div>
+
       {/* Go to Top Button */}
       <button
         className={`fixed right-8 bottom-12 p-4 w-14 h-14 rounded-full bg-primary z-50 cursor-pointer ${
