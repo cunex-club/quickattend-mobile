@@ -14,6 +14,7 @@ import QuickAttendButton from "../QuickAttendButton";
 import LLEPopup from "../popup/LLEPopup";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 interface MyEventCardProps {
   id: string;
@@ -37,6 +38,9 @@ export default function MyEventCard({
   const router = useRouter();
   const [openLLEPopup, setOpenLLEPopup] = useState(false);
   const [openShareDropdown, setOpenShareDropdown] = useState(false);
+
+  const tEvent = useTranslations("event");
+  const tScan = useTranslations("scan");
 
   return (
     <Link
@@ -91,7 +95,7 @@ export default function MyEventCard({
       {/* Description */}
       <div className="flex flex-col mb-4">
         <h2 className="title-medium-emphasized text-neutral-600">
-          รายละเอียดกิจกรรม
+          {tEvent("details")}
         </h2>
         <p className="body-small-primary text-neutral-600">{description}</p>
       </div>
@@ -121,7 +125,7 @@ export default function MyEventCard({
             sx={{ width: 20, height: 20 }}
             className="text-neutral-white"
           />
-          <p className="translate-y-1">สแกนผู้เข้าร่วมกิจกรรม</p>
+          <p className="translate-y-1">{tEvent("scanParticipants")}</p>
         </QuickAttendButton>
 
         <div className="flex gap-2 flex-1 items-center">
@@ -172,7 +176,7 @@ export default function MyEventCard({
                     router.push(`/scan/${id}`);
                   }}
                 >
-                  ตัวสแกน QR
+                  {tScan("scannerQR")}
                 </button>
                 <button
                   className="cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-300"
@@ -182,7 +186,7 @@ export default function MyEventCard({
                     setOpenShareDropdown(false);
                   }}
                 >
-                  แดชบอร์ด
+                  {tScan("dashboard")}
                 </button>
               </div>
             )}

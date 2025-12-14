@@ -1,4 +1,5 @@
 import { CalendarMonth, LocationOn, WatchLater } from "@mui/icons-material";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 
 interface DiscoveryEventCardProps {
@@ -18,6 +19,7 @@ export default function DiscoveryEventCard({
   location,
   description,
 }: DiscoveryEventCardProps) {
+  const tEvent = useTranslations("event");
   return (
     <Link
       key={id}
@@ -62,7 +64,7 @@ export default function DiscoveryEventCard({
       {/* Description */}
       <div className="flex flex-col mb-4">
         <h2 className="title-medium-emphasized text-neutral-600">
-          รายละเอียดกิจกรรม
+          {tEvent("details")}
         </h2>
         <p className="body-small-primary text-neutral-600">{description}</p>
       </div>

@@ -40,7 +40,7 @@ export default function Home() {
   const topRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
-  const t = useTranslations("home");
+  const tHome = useTranslations("home");
 
   useEffect(() => {
     setCurrentEvents(myCurrentEvents);
@@ -89,7 +89,7 @@ export default function Home() {
         {/* Header */}
         <div className="flex justify-between gap-4 mb-6">
           <h1 className="headline-small-emphasized text-neutral-600">
-            {t("myEvents")}
+            {tHome("myEvents")}
           </h1>
           <Link href={"/discovery"}>
             <ExploreOutlined
@@ -102,8 +102,8 @@ export default function Home() {
         {/* Number of Results */}
         <div className="flex justify-between items-center gap-4 mb-4">
           <p className="label-small-primary text-neutral-600">
-            แสดงกิจกรรม {Math.min(3, currentEvents.length)} จาก 
-            {currentEvents.length}
+            {tHome("showing")} {Math.min(3, currentEvents.length)} 
+            {tHome("from")} {currentEvents.length}
           </p>
           <div
             className="flex items-center gap-2 cursor-pointer"
@@ -111,7 +111,9 @@ export default function Home() {
               setOpenLLEPopup(true);
             }}
           >
-            <p className="label-large-primary text-neutral-600">ดูทั้งหมด</p>
+            <p className="label-large-primary text-neutral-600">
+              {tHome("viewAll")}
+            </p>
             <OpenInNew
               sx={{ width: 16, height: 16 }}
               className="text-primary -translate-y-1"
@@ -144,10 +146,10 @@ export default function Home() {
             type="text"
             onClick={() => setOpenLLEPopup(true)}
           >
-            <p className="translate-y-1">จัดการกิจกรรม</p>
+            <p className="translate-y-1">{tHome("manageEvents")}</p>
           </QuickAttendButton>
           <p className="label-small-primary text-neutral-400">
-            เข้าสู่ Backoffice เพื่อจัดการและแก้ไขกิจกรรม
+            {tHome("backofficeNote")}
           </p>
         </div>
       </div>
@@ -157,7 +159,7 @@ export default function Home() {
         {/* Header */}
         <div className="flex justify-between gap-4 mb-6 relative">
           <h1 className="headline-small-emphasized text-neutral-600">
-            กิจกรรมที่ผ่านมา
+            {tHome("pastEvents")}
           </h1>
           <div className="relative h-fit">
             <SwapVert
@@ -178,7 +180,7 @@ export default function Home() {
                     setOpenSortDropdown(false);
                   }}
                 >
-                  วันที่จัดกิจกรรม: ใหม่สุด-เก่าสุด
+                  {tHome("sortNewestOldest")}
                 </button>
                 <button
                   className="cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-100"
@@ -189,7 +191,7 @@ export default function Home() {
                     setOpenSortDropdown(false);
                   }}
                 >
-                  วันที่จัดกิจกรรม: เก่าสุด-ใหม่สุด
+                  {tHome("sortOldestNewest")}
                 </button>
               </div>
             )}

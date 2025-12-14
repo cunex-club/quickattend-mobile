@@ -15,6 +15,7 @@ import {
 import QuickAttendButton from "../QuickAttendButton";
 import LLEPopup from "../popup/LLEPopup";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 interface PastEventCardProps {
   id: string;
@@ -39,6 +40,8 @@ export default function PastEventCard({
 }: PastEventCardProps) {
   const [openLLEPopup, setOpenLLEPopup] = useState(false);
   const [openDetail, setOpenDetail] = useState(false);
+
+  const tEvent = useTranslations("event");
 
   return (
     <div
@@ -99,7 +102,7 @@ export default function PastEventCard({
         {/* Description */}
         <div className="flex flex-col mb-4">
           <h2 className="title-medium-emphasized text-neutral-600">
-            รายละเอียดกิจกรรม
+            {tEvent("details")}
           </h2>
           <p className="body-small-primary text-neutral-600">{description}</p>
         </div>
@@ -131,7 +134,7 @@ export default function PastEventCard({
                   sx={{ width: 20, height: 20 }}
                   className="text-neutral-white"
                 />
-                <p className="translate-y-1">สถิติการลงทะเบียน</p>
+                <p className="translate-y-1">{tEvent("registrationStats")}</p>
               </QuickAttendButton>
 
               <div className="flex gap-2 flex-1">
@@ -183,7 +186,7 @@ export default function PastEventCard({
                 sx={{ width: 20, height: 20 }}
                 className="text-neutral-white"
               />
-              <p className="translate-y-1">แบบฟอร์มประเมินกิจกรรม</p>
+              <p className="translate-y-1">{tEvent("evaluationForm")}</p>
             </QuickAttendButton>
           </div>
         </div>

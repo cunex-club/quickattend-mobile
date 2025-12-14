@@ -27,6 +27,7 @@ import SuccessScanPopup from "@/components/popup/SuccessScanPopup";
 import RegisteredScanPopup from "@/components/popup/RegisteredScanPopup";
 import FailScanPopup from "@/components/popup/FailScanPopup";
 import { EventInterface } from "@/utils/interface";
+import { useTranslations } from "next-intl";
 
 const ScanPage = () => {
   const { id } = useParams();
@@ -49,12 +50,16 @@ const ScanPage = () => {
   const [showRegisteredScanPopup, setShowRegisteredScanPopup] = useState(false);
   const [showFailScanPopup, setShowFailScanPopup] = useState(false);
   const [timeStamp, setTimeStamp] = useState("");
-  const [showCopyPopup, setShowCopyPopup] = useState(false);
+  const [showMessagePopup, setShowMessagePopup] = useState(false);
+  const [message, setMessage] = useState("");
   const [scannerSize, setScannerSize] = useState(50);
   const [showCamera, setShowCamera] = useState(true);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [note, setNote] = useState("");
   const [showTimeoutPopup, setShowTimeoutPopup] = useState(false);
+
+  const tScan = useTranslations("scan");
+  const tEvent = useTranslations("event");
 
   const [isToggleEvents, setToggleEvents] = useState(false);
   const [myOtherFiveEvents, setMyOtherFiveEvents] = useState<
@@ -226,15 +231,20 @@ const ScanPage = () => {
     try {
       const track = stream.getVideoTracks()[0];
       const capabilities = (track.getCapabilities?.() as any) || {};
-      if (!capabilities.torch) return alert("อุปกรณ์นี้ไม่รองรับไฟฉาย");
+      if (!capabilities.torch) {
+        setShowMessagePopup(true);
+        setMessage(tScan("flashlightNotSupport"));
+        setTimeout(() => setShowMessagePopup(false), 2000);
+      }
 
       await track.applyConstraints({
         advanced: [{ torch: !isFlashOn } as any],
       });
       setIsFlashOn(!isFlashOn);
     } catch (err) {
-      console.error(err);
-      alert("ไม่สามารถเปิด/ปิดไฟฉายได้");
+      setShowMessagePopup(true);
+      setMessage(tScan("flashlightToggleFail"));
+      setTimeout(() => setShowMessagePopup(false), 2000);
     }
   };
 
@@ -287,8 +297,9 @@ const ScanPage = () => {
                   type="icon"
                   onClick={() => {
                     navigator.clipboard.writeText(event?.name || "");
-                    setShowCopyPopup(true);
-                    setTimeout(() => setShowCopyPopup(false), 2000);
+                    setShowMessagePopup(true);
+                    setMessage(tScan("copySuccess"));
+                    setTimeout(() => setShowMessagePopup(false), 2000);
                   }}
                   className="w-full h-full rounded-full border-none"
                 >
@@ -319,7 +330,7 @@ const ScanPage = () => {
         <div className="w-full px-6 flex flex-col justify-center items-center gap-1 z-10 flex-wrap">
           <div className="relative flex gap-2 items-center">
             <p className="title-large-emphasized translate-y-1 truncate max-w-60">
-              {event?.name || "ไม่พบชื่อกิจกรรม"}
+              {event?.name || tEvent("notFoundTitle")}
             </p>
             <ExpandMore
               sx={{ width: 24, height: 24 }}
@@ -394,7 +405,7 @@ const ScanPage = () => {
       {/* POPUPS */}
       {showTimeoutPopup && (
         <ErrorPopup
-          errorMessage={`ข้อมูล QR ไม่ถูกต้อง<br/>กรุณาตรวจสอบและลองใหม่อีกครั้ง`}
+          errorMessage={tScan("invalidQR")}
           onNext={e => {
             e.preventDefault();
             e.stopPropagation();
@@ -436,9 +447,9 @@ const ScanPage = () => {
         />
       )}
 
-      {showCopyPopup && (
+      {showMessagePopup && (
         <div className="fixed top-24 left-1/2 -translate-x-1/2 bg-primary text-white px-4 py-2 rounded-full shadow-lg animate-fade-in-out z-50">
-          <p className="label-large-primary translate-y-1">คัดลอกสำเร็จแล้ว</p>
+          <p className="label-large-primary translate-y-1">{message}</p>
         </div>
       )}
     </>

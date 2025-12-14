@@ -23,11 +23,15 @@ import {
 } from "@mui/icons-material";
 import Image from "next/image";
 import { EventInterface } from "@/utils/interface";
+import { useTranslations } from "next-intl";
 
 function DiscoveryEventDetail() {
   const { id } = useParams();
   const [event, setEvent] = useState<EventInterface | null>(null);
   const [isInvisibleScrollToTop, setInvisibleScrollToTop] = useState(false);
+
+  const tEvent = useTranslations("event");
+  const tBreadCrumb = useTranslations("breadcrumb");
 
   const topRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -70,11 +74,15 @@ function DiscoveryEventDetail() {
       <div className="flex gap-1 mb-6 items-center flex-wrap">
         <Link className="flex gap-1 items-center" href="/">
           <HomeOutlined fontSize="small" className="text-primary" />
-          <p className="body-small-primary text-neutral-500">หน้าหลัก</p>
+          <p className="body-small-primary text-neutral-500">
+            {tBreadCrumb("home")}
+          </p>
         </Link>
         <ChevronRightOutlined fontSize="small" className="text-primary" />
         <Link className="flex gap-1 items-center" href="/discovery">
-          <p className="body-small-primary text-neutral-500">สำรวจกิจกรรม</p>
+          <p className="body-small-primary text-neutral-500">
+            {tBreadCrumb("discovery")}
+          </p>
         </Link>
         <ChevronRightOutlined fontSize="small" className="text-primary" />
         <Link className="flex gap-1 items-center" href={`/discovery/${id}`}>
@@ -126,7 +134,7 @@ function DiscoveryEventDetail() {
       {/* Event Description */}
       <div className="flex flex-col mb-6 gap-2">
         <h2 className="title-large-emphasized text-neutral-600">
-          รายละเอียดกิจกรรม
+          {tEvent("details")}
         </h2>
         <p className="body-medium-primary text-neutral-600">
           {eventDescription}
@@ -136,7 +144,7 @@ function DiscoveryEventDetail() {
       {/* Event Schedule */}
       <div className="flex flex-col mb-6 gap-2">
         <h2 className="title-large-emphasized text-neutral-600">
-          กำหนดการกิจกรรม
+          {tEvent("schedule")}
         </h2>
 
         <div className="grid grid-cols-2 gap-x-2 gap-y-1">
@@ -154,14 +162,16 @@ function DiscoveryEventDetail() {
       {/* Event Owner */}
       <div className="flex flex-col mb-6 gap-2">
         <h2 className="title-large-emphasized text-neutral-600">
-          ผู้จัดกิจกรรม
+          {tEvent("organizer")}
         </h2>
         <p className="body-medium-primary text-neutral-600">{eventOwner}</p>
       </div>
 
       {/* Event Map */}
       <div className="flex flex-col gap-2">
-        <h2 className="title-large-emphasized text-neutral-600">ดูแผนที่</h2>
+        <h2 className="title-large-emphasized text-neutral-600">
+          {tEvent("viewMap")}
+        </h2>
         <Image src={"/mock/map.png"} alt="mock map" width={350} height={180} />
       </div>
 

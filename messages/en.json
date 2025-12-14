@@ -2,7 +2,7 @@
   "home": {
     "myEvents": "My Events",
     "pastEvents": "Past Events",
-    "showingEvents": "Showing",
+    "showing": "Showing",
     "from": "of",
     "viewAll": "View All",
     "manageEvents": "Manage Events",
@@ -11,8 +11,9 @@
     "sortOldestNewest": "Event Date: Oldest-Newest"
   },
   "discovery": {
-    "title": "Explore Events",
-    "explore": "Explore Events"
+    "explore": "Explore Events",
+    "sortNewestOldest": "Event Date: Newest-Oldest",
+    "sortOldestNewest": "Event Date: Oldest-Newest"
   },
   "event": {
     "details": "Event Details",
@@ -21,26 +22,33 @@
     "viewMap": "View Map",
     "scanParticipants": "Scan Participants",
     "registrationStats": "Registration Statistics",
-    "evaluationForm": "Evaluation Form"
-  },
-  "breadcrumb": {
-    "home": "Home",
-    "discovery": "Explore Events"
+    "evaluationForm": "Evaluation Form",
+    "notFoundTitle": "Unknown Event"
   },
   "scan": {
-    "eventManager": "Event Manager",
     "copySuccess": "Copied successfully",
     "scannerQR": "QR Scanner",
     "dashboard": "Dashboard",
-    "successTitle": "Registration Successful",
+    "successTitle": "Success",
     "registeredTitle": "Already Registered",
-    "failTitle": "Registration Failed",
+    "failTitle": "Failed",
     "participantDetails": "Participant Details",
     "studentId": "Student ID",
     "registeredAt": "Registered at:",
     "note": "Note",
     "notePlaceholder": "Enter additional information (if any)",
-    "notEligible": "Not eligible to register for this event"
+    "notEligible": "Not eligible to register for this event",
+    "flashlightNotSupport": "This device does not support flashlight.",
+    "flashlightToggleFail": "Unable to turn the flashlight on or off.",
+    "invalidQR": "Invalid QR code.<br/>Please check and try again."
+  },
+  "lle": {
+    "externalServiceTitle": "Alert",
+    "externalServiceMessage": "The selected service will redirect you to an external provider's website.\nDo you want to continue?"
+  },
+  "breadcrumb": {
+    "home": "Home",
+    "discovery": "Explore Events"
   },
   "common": {
     "confirm": "Confirm",

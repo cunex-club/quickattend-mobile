@@ -29,12 +29,17 @@ import {
 import QuickAttendButton from "@/components/QuickAttendButton";
 import LLEPopup from "@/components/popup/LLEPopup";
 import { EventInterface } from "@/utils/interface";
+import { useTranslations } from "next-intl";
 
 function PastEventDetail() {
   const { id } = useParams();
   const [isInvisibleScrollToTop, setInvisibleScrollToTop] = useState(false);
   const [openLLEPopup, setOpenLLEPopup] = useState(false);
   const [event, setEvent] = useState<EventInterface | null>(null);
+
+  const tEvent = useTranslations("event");
+  const tBreadCrumb = useTranslations("breadcrumb");
+  const tScan = useTranslations("scan");
 
   const topRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -77,7 +82,9 @@ function PastEventDetail() {
       <div className="flex gap-1 mb-6 items-center flex-wrap">
         <Link className="flex gap-1 items-center" href="/">
           <HomeOutlined fontSize="small" className="text-primary" />
-          <p className="body-small-primary text-neutral-500">หน้าหลัก</p>
+          <p className="body-small-primary text-neutral-500">
+            {tBreadCrumb("home")}
+          </p>
         </Link>
         <ChevronRightOutlined fontSize="small" className="text-primary" />
         <Link className="flex gap-1 items-center" href={`/pastevents/${id}`}>
@@ -129,7 +136,7 @@ function PastEventDetail() {
       {/* Event Description */}
       <div className="flex flex-col mb-6 gap-2">
         <h2 className="title-large-emphasized text-neutral-600">
-          รายละเอียดกิจกรรม
+          {tEvent("details")}
         </h2>
         <p className="body-medium-primary text-neutral-600">
           {eventDescription}
@@ -139,7 +146,7 @@ function PastEventDetail() {
       {/* Event Schedule */}
       <div className="flex flex-col mb-6 gap-2">
         <h2 className="title-large-emphasized text-neutral-600">
-          กำหนดการกิจกรรม
+          {tEvent("schedule")}
         </h2>
 
         <div className="grid grid-cols-2 gap-x-2 gap-y-1">
@@ -157,7 +164,7 @@ function PastEventDetail() {
       {/* Event Owner */}
       <div className="flex flex-col mb-6 gap-2">
         <h2 className="title-large-emphasized text-neutral-600">
-          ผู้จัดกิจกรรม
+          {tEvent("organizer")}
         </h2>
         <p className="body-medium-primary text-neutral-600">{eventOwner}</p>
       </div>
@@ -180,7 +187,7 @@ function PastEventDetail() {
                 sx={{ width: 20, height: 20 }}
                 className="text-neutral-white"
               />
-              <p className="translate-y-1">สถิติการลงทะเบียน</p>
+              <p className="translate-y-1">{tEvent("registrationStats")}</p>
             </QuickAttendButton>
 
             <div className="flex gap-2 flex-1">
@@ -232,7 +239,7 @@ function PastEventDetail() {
               sx={{ width: 20, height: 20 }}
               className="text-neutral-white"
             />
-            <p className="translate-y-1">แบบฟอร์มประเมินกิจกรรม</p>
+            <p className="translate-y-1">{tEvent("evaluationForm")}</p>
           </QuickAttendButton>
         </div>
       </div>

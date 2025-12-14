@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { EventInterface } from "./interface";
 
 export const allEvents: EventInterface[] = [
@@ -40,8 +41,6 @@ export const eventSchedules = [
 
 export const displayButtonsFirstRowPastEvents = true;
 export const maxPageNumber = 10;
-export const defaultLLEPopupDescription =
-  "บริการที่เลือกจะนำท่านไปสู่เว็บไซต์ของผู้ให้บริการที่อยู่ภายนอกแอปพลิเคชัน\nท่านยืนยันจะใช้บริการต่อหรือไม่";
 
 export const scanTimeOutMs = 10000;
 
