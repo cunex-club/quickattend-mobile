@@ -1,4 +1,3 @@
-import { useTranslations } from "next-intl";
 import { EventInterface } from "./interface";
 
 export const allEvents: EventInterface[] = [

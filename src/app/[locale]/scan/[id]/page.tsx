@@ -28,6 +28,7 @@ import RegisteredScanPopup from "@/components/popup/RegisteredScanPopup";
 import FailScanPopup from "@/components/popup/FailScanPopup";
 import { EventInterface } from "@/utils/interface";
 import { useTranslations } from "next-intl";
+import { usePageLoading } from "@/context/PageLoadingContext";
 
 const ScanPage = () => {
   const { id } = useParams();
@@ -38,6 +39,8 @@ const ScanPage = () => {
   const isScanningRef = useRef(false);
   const isResettingRef = useRef(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const { showPageLoading } = usePageLoading();
 
   // States
   const [event, setEvent] = useState<EventInterface | null>(null);
@@ -283,7 +286,10 @@ const ScanPage = () => {
                 <QuickAttendButton
                   variant="outline"
                   type="icon"
-                  onClick={() => router.push("/")}
+                  onClick={() => {
+                    showPageLoading();
+                    router.push("/");
+                  }}
                   className="w-full h-full rounded-full border-none"
                 >
                   <Home className="w-6 h-6" />
@@ -352,6 +358,7 @@ const ScanPage = () => {
                         e.stopPropagation();
                         e.preventDefault();
                         setToggleEvents(false);
+                        showPageLoading();
                         router.push(`/scan/${event.id}`);
                       }}
                     >

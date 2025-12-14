@@ -1,6 +1,7 @@
 "use client";
 
 import DiscoveryEventCard from "@/components/card/DiscoveryEventCard";
+import { usePageLoading } from "@/context/PageLoadingContext";
 import {
   eventDate,
   eventDescription,
@@ -31,6 +32,8 @@ export default function Discovery() {
 
   const tDiscovery = useTranslations("discovery");
   const tBreadCrumb = useTranslations("breadcrumb");
+
+  const { showPageLoading } = usePageLoading();
 
   const topRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -78,14 +81,27 @@ export default function Discovery() {
     >
       {/* Breadcrumb */}
       <div className="flex gap-1 mb-6 items-center flex-wrap">
-        <Link className="flex gap-1 items-center" href="/">
+        <Link
+          className="flex gap-1 items-center"
+          href="/"
+          onClick={() => {
+            showPageLoading();
+          }}
+        >
           <HomeOutlined fontSize="small" className="text-primary" />
           <p className="body-small-primary text-neutral-500">
             {tBreadCrumb("home")}
           </p>
         </Link>
         <ChevronRightOutlined fontSize="small" className="text-primary" />
-        <Link className="flex gap-1 items-center" href="/discovery">
+        <Link
+          className="flex gap-1 items-center"
+          href="/discovery"
+          onClick={() => {
+            showPageLoading();
+            window.location.reload();
+          }}
+        >
           <p className="body-small-primary text-neutral-500">
             {tBreadCrumb("discovery")}
           </p>

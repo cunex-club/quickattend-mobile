@@ -15,6 +15,7 @@ import LLEPopup from "../popup/LLEPopup";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { usePageLoading } from "@/context/PageLoadingContext";
 
 interface MyEventCardProps {
   id: string;
@@ -39,6 +40,8 @@ export default function MyEventCard({
   const [openLLEPopup, setOpenLLEPopup] = useState(false);
   const [openShareDropdown, setOpenShareDropdown] = useState(false);
 
+  const { showPageLoading, hidePageLoading } = usePageLoading();
+
   const tEvent = useTranslations("event");
   const tScan = useTranslations("scan");
 
@@ -47,6 +50,9 @@ export default function MyEventCard({
       key={id}
       className="w-full min-h-30 h-fit bg-neutral-100 rounded-4xl flex flex-col px-4 py-6 cursor-pointer overflow-visible"
       href={`/myevents/${id}`}
+      onClick={() => {
+        showPageLoading();
+      }}
     >
       {/* Header */}
       <div className="flex justify-between items-center gap-4 mb-1">
@@ -118,6 +124,7 @@ export default function MyEventCard({
           onClick={e => {
             e.stopPropagation();
             e.preventDefault();
+            showPageLoading();
             router.push(`/scan/${id}`);
           }}
         >
@@ -137,6 +144,7 @@ export default function MyEventCard({
               onClick={e => {
                 e.stopPropagation();
                 e.preventDefault();
+                hidePageLoading();
                 setOpenLLEPopup(true);
               }}
             >
@@ -155,6 +163,7 @@ export default function MyEventCard({
               onClick={e => {
                 e.stopPropagation();
                 e.preventDefault();
+                hidePageLoading();
                 setOpenShareDropdown(prev => !prev);
               }}
             >
@@ -172,6 +181,7 @@ export default function MyEventCard({
                   onClick={e => {
                     e.stopPropagation();
                     e.preventDefault();
+                    showPageLoading();
                     setOpenShareDropdown(false);
                     router.push(`/scan/${id}`);
                   }}

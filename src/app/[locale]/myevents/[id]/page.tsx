@@ -28,6 +28,7 @@ import QuickAttendButton from "@/components/QuickAttendButton";
 import LLEPopup from "@/components/popup/LLEPopup";
 import { EventInterface } from "@/utils/interface";
 import { useTranslations } from "next-intl";
+import { usePageLoading } from "@/context/PageLoadingContext";
 
 function MyEventDetail() {
   const { id } = useParams();
@@ -44,6 +45,8 @@ function MyEventDetail() {
     }
     setEvent(targetEvent);
   }, [id]);
+
+  const { showPageLoading } = usePageLoading();
 
   const tEvent = useTranslations("event");
   const tBreadCrumb = useTranslations("breadcrumb");
@@ -80,14 +83,27 @@ function MyEventDetail() {
     >
       {/* Breadcrumb */}
       <div className="flex gap-1 mb-6 items-center flex-wrap">
-        <Link className="flex gap-1 items-center" href="/">
+        <Link
+          className="flex gap-1 items-center"
+          href="/"
+          onClick={() => {
+            showPageLoading();
+          }}
+        >
           <HomeOutlined fontSize="small" className="text-primary" />
           <p className="body-small-primary text-neutral-500">
             {tBreadCrumb("home")}
           </p>
         </Link>
         <ChevronRightOutlined fontSize="small" className="text-primary" />
-        <Link className="flex gap-1 items-center" href={`/myevents/${id}`}>
+        <Link
+          className="flex gap-1 items-center"
+          href={`/myevents/${id}`}
+          onClick={() => {
+            showPageLoading();
+            window.location.reload();
+          }}
+        >
           <p className="body-small-primary text-neutral-500 truncate max-w-[120px]">
             {event?.name}
           </p>
@@ -178,6 +194,7 @@ function MyEventDetail() {
           onClick={e => {
             e.stopPropagation();
             e.preventDefault();
+            showPageLoading();
             router.push(`/scan/${id}`);
           }}
         >
@@ -232,6 +249,7 @@ function MyEventDetail() {
                   onClick={e => {
                     e.stopPropagation();
                     e.preventDefault();
+                    showPageLoading();
                     router.push(`/scan/${id}`);
                     setOpenShareDropdown(false);
                   }}

@@ -24,6 +24,7 @@ import {
 import Image from "next/image";
 import { EventInterface } from "@/utils/interface";
 import { useTranslations } from "next-intl";
+import { usePageLoading } from "@/context/PageLoadingContext";
 
 function DiscoveryEventDetail() {
   const { id } = useParams();
@@ -32,6 +33,8 @@ function DiscoveryEventDetail() {
 
   const tEvent = useTranslations("event");
   const tBreadCrumb = useTranslations("breadcrumb");
+
+  const { showPageLoading } = usePageLoading();
 
   const topRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -72,20 +75,39 @@ function DiscoveryEventDetail() {
     >
       {/* Breadcrumb */}
       <div className="flex gap-1 mb-6 items-center flex-wrap">
-        <Link className="flex gap-1 items-center" href="/">
+        <Link
+          className="flex gap-1 items-center"
+          href="/"
+          onClick={() => {
+            showPageLoading();
+          }}
+        >
           <HomeOutlined fontSize="small" className="text-primary" />
           <p className="body-small-primary text-neutral-500">
             {tBreadCrumb("home")}
           </p>
         </Link>
         <ChevronRightOutlined fontSize="small" className="text-primary" />
-        <Link className="flex gap-1 items-center" href="/discovery">
+        <Link
+          className="flex gap-1 items-center"
+          href="/discovery"
+          onClick={() => {
+            showPageLoading();
+          }}
+        >
           <p className="body-small-primary text-neutral-500">
             {tBreadCrumb("discovery")}
           </p>
         </Link>
         <ChevronRightOutlined fontSize="small" className="text-primary" />
-        <Link className="flex gap-1 items-center" href={`/discovery/${id}`}>
+        <Link
+          className="flex gap-1 items-center"
+          href={`/discovery/${id}`}
+          onClick={() => {
+            showPageLoading();
+            window.location.reload();
+          }}
+        >
           <p className="body-small-primary text-neutral-500 truncate max-w-[120px]">
             {event?.name}
           </p>

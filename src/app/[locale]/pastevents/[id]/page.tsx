@@ -30,6 +30,7 @@ import QuickAttendButton from "@/components/QuickAttendButton";
 import LLEPopup from "@/components/popup/LLEPopup";
 import { EventInterface } from "@/utils/interface";
 import { useTranslations } from "next-intl";
+import { usePageLoading } from "@/context/PageLoadingContext";
 
 function PastEventDetail() {
   const { id } = useParams();
@@ -39,10 +40,11 @@ function PastEventDetail() {
 
   const tEvent = useTranslations("event");
   const tBreadCrumb = useTranslations("breadcrumb");
-  const tScan = useTranslations("scan");
 
   const topRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  const { showPageLoading } = usePageLoading();
 
   useEffect(() => {
     const targetEvent = allEvents.filter(e => e.id === id)[0] ?? null;
@@ -80,14 +82,27 @@ function PastEventDetail() {
     >
       {/* Breadcrumb */}
       <div className="flex gap-1 mb-6 items-center flex-wrap">
-        <Link className="flex gap-1 items-center" href="/">
+        <Link
+          className="flex gap-1 items-center"
+          href="/"
+          onClick={() => {
+            showPageLoading();
+          }}
+        >
           <HomeOutlined fontSize="small" className="text-primary" />
           <p className="body-small-primary text-neutral-500">
             {tBreadCrumb("home")}
           </p>
         </Link>
         <ChevronRightOutlined fontSize="small" className="text-primary" />
-        <Link className="flex gap-1 items-center" href={`/pastevents/${id}`}>
+        <Link
+          className="flex gap-1 items-center"
+          href={`/pastevents/${id}`}
+          onClick={() => {
+            showPageLoading();
+            window.location.reload();
+          }}
+        >
           <p className="body-small-primary text-neutral-500 truncate max-w-[120px]">
             {event?.name}
           </p>

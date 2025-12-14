@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import "../globals.css";
 import localFont from "next/font/local";
-import PageLoading from "@/components/PageLoading";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
+import { PageLoadingProvider } from "@/context/PageLoadingContext";
 
 const chulaBoldFont = localFont({
   src: "../../../public/font/CHULALONGKORNBold.otf",
@@ -48,10 +48,11 @@ export default async function RootLayout({
         }}
       >
         <NextIntlClientProvider messages={messages}>
-          <div className="w-full sm:max-w-[390px] min-h-screen bg-neutral-white relative">
-            <PageLoading />
-            {children}
-          </div>
+          <PageLoadingProvider>
+            <div className="w-full sm:max-w-[390px] min-h-screen bg-neutral-white relative">
+              {children}
+            </div>
+          </PageLoadingProvider>
         </NextIntlClientProvider>
       </body>
     </html>

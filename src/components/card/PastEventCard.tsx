@@ -16,6 +16,7 @@ import QuickAttendButton from "../QuickAttendButton";
 import LLEPopup from "../popup/LLEPopup";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { usePageLoading } from "@/context/PageLoadingContext";
 
 interface PastEventCardProps {
   id: string;
@@ -40,6 +41,8 @@ export default function PastEventCard({
 }: PastEventCardProps) {
   const [openLLEPopup, setOpenLLEPopup] = useState(false);
   const [openDetail, setOpenDetail] = useState(false);
+
+  const { showPageLoading, hidePageLoading } = usePageLoading();
 
   const tEvent = useTranslations("event");
 
@@ -72,6 +75,9 @@ export default function PastEventCard({
         className={`transition-all duration-300 ease-in-out overflow-hidden ${
           openDetail ? "min-h-30 opacity-100 mt-2" : "max-h-0 opacity-0 mt-0"
         }`}
+        onClick={() => {
+          showPageLoading();
+        }}
         href={`/pastevents/${id}`}
       >
         {/* Information */}
@@ -126,6 +132,7 @@ export default function PastEventCard({
                 variant="filled"
                 onClick={e => {
                   e.stopPropagation();
+                  hidePageLoading();
                   setOpenLLEPopup(true);
                   e.preventDefault();
                 }}
@@ -143,6 +150,7 @@ export default function PastEventCard({
                   variant="outline"
                   onClick={e => {
                     e.stopPropagation();
+                    hidePageLoading();
                     setOpenLLEPopup(true);
                     e.preventDefault();
                   }}
@@ -158,6 +166,7 @@ export default function PastEventCard({
                   variant="outline"
                   onClick={e => {
                     e.stopPropagation();
+                    hidePageLoading();
                     setOpenLLEPopup(true);
                     e.preventDefault();
                   }}
@@ -178,6 +187,7 @@ export default function PastEventCard({
               variant="filled"
               onClick={e => {
                 e.stopPropagation();
+                hidePageLoading();
                 setOpenLLEPopup(true);
                 e.preventDefault();
               }}

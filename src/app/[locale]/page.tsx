@@ -27,6 +27,7 @@ import {
 } from "@/utils/const";
 import { EventInterface } from "@/utils/interface";
 import { useTranslations } from "next-intl";
+import { usePageLoading } from "@/context/PageLoadingContext";
 
 export default function Home() {
   const [sortOption, setSortOption] = useState<0 | 1 | null>(null);
@@ -39,6 +40,8 @@ export default function Home() {
 
   const topRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  const { showPageLoading } = usePageLoading();
 
   const tHome = useTranslations("home");
 
@@ -91,7 +94,12 @@ export default function Home() {
           <h1 className="headline-small-emphasized text-neutral-600">
             {tHome("myEvents")}
           </h1>
-          <Link href={"/discovery"}>
+          <Link
+            href={"/discovery"}
+            onClick={() => {
+              showPageLoading();
+            }}
+          >
             <ExploreOutlined
               sx={{ width: 24, height: 24 }}
               className="text-primary cursor-pointer"
