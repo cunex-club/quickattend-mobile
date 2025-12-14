@@ -55,6 +55,7 @@ const ScanPage = () => {
   const [timeStamp, setTimeStamp] = useState("");
   const [showMessagePopup, setShowMessagePopup] = useState(false);
   const [message, setMessage] = useState("");
+  const messageTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [scannerSize, setScannerSize] = useState(50);
   const [showCamera, setShowCamera] = useState(true);
   const [stream, setStream] = useState<MediaStream | null>(null);
@@ -83,6 +84,31 @@ const ScanPage = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(handleTimeout, scanTimeOutMs);
   };
+
+  const showMessage = (msg: string) => {
+    if (messageTimeoutRef.current) {
+      clearTimeout(messageTimeoutRef.current);
+    }
+
+    setShowMessagePopup(false);
+
+    setTimeout(() => {
+      setMessage(msg);
+      setShowMessagePopup(true);
+
+      messageTimeoutRef.current = setTimeout(() => {
+        setShowMessagePopup(false);
+      }, 2500);
+    }, 50);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (messageTimeoutRef.current) {
+        clearTimeout(messageTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Camera control logic
   const stopCamera = () => {
@@ -235,9 +261,8 @@ const ScanPage = () => {
       const track = stream.getVideoTracks()[0];
       const capabilities = (track.getCapabilities?.() as any) || {};
       if (!capabilities.torch) {
-        setShowMessagePopup(true);
-        setMessage(tScan("flashlightNotSupport"));
-        setTimeout(() => setShowMessagePopup(false), 2000);
+        showMessage(tScan("flashlightNotSupport"));
+        return;
       }
 
       await track.applyConstraints({
@@ -245,9 +270,7 @@ const ScanPage = () => {
       });
       setIsFlashOn(!isFlashOn);
     } catch (err) {
-      setShowMessagePopup(true);
-      setMessage(tScan("flashlightToggleFail"));
-      setTimeout(() => setShowMessagePopup(false), 2000);
+      showMessage(tScan("flashlightToggleFail"));
     }
   };
 
@@ -303,9 +326,7 @@ const ScanPage = () => {
                   type="icon"
                   onClick={() => {
                     navigator.clipboard.writeText(event?.name || "");
-                    setShowMessagePopup(true);
-                    setMessage(tScan("copySuccess"));
-                    setTimeout(() => setShowMessagePopup(false), 2000);
+                    showMessage(tScan("copySuccess"));
                   }}
                   className="w-full h-full rounded-full border-none"
                 >
