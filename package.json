@@ -16,6 +16,7 @@
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^7.3.4",
     "@mui/material": "^7.3.4",
+    "html5-qrcode": "^2.3.8",
     "next": "15.5.4",
     "next-intl": "^4.6.0",
     "react": "19.1.0",

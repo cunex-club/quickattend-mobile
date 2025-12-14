@@ -1,0 +1,52 @@
+{
+  "home": {
+    "myEvents": "My Events",
+    "pastEvents": "Past Events",
+    "showingEvents": "Showing",
+    "from": "of",
+    "viewAll": "View All",
+    "manageEvents": "Manage Events",
+    "backofficeNote": "Access Backoffice to manage and edit events",
+    "sortNewestOldest": "Event Date: Newest-Oldest",
+    "sortOldestNewest": "Event Date: Oldest-Newest"
+  },
+  "discovery": {
+    "title": "Explore Events",
+    "explore": "Explore Events"
+  },
+  "event": {
+    "details": "Event Details",
+    "schedule": "Event Schedule",
+    "organizer": "Event Organizer",
+    "viewMap": "View Map",
+    "scanParticipants": "Scan Participants",
+    "registrationStats": "Registration Statistics",
+    "evaluationForm": "Evaluation Form"
+  },
+  "breadcrumb": {
+    "home": "Home",
+    "discovery": "Explore Events"
+  },
+  "scan": {
+    "eventManager": "Event Manager",
+    "copySuccess": "Copied successfully",
+    "scannerQR": "QR Scanner",
+    "dashboard": "Dashboard",
+    "successTitle": "Registration Successful",
+    "registeredTitle": "Already Registered",
+    "failTitle": "Registration Failed",
+    "participantDetails": "Participant Details",
+    "studentId": "Student ID",
+    "registeredAt": "Registered at:",
+    "note": "Note",
+    "notePlaceholder": "Enter additional information (if any)",
+    "notEligible": "Not eligible to register for this event"
+  },
+  "common": {
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "loading": "Loading...",
+    "alert": "Alert",
+    "error": "Error"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "home": {
+    "myEvents": "กิจกรรมของฉัน",
+    "pastEvents": "กิจกรรมที่ผ่านมา",
+    "showingEvents": "แสดงกิจกรรม",
+    "from": "จาก",
+    "viewAll": "ดูทั้งหมด",
+    "manageEvents": "จัดการกิจกรรม",
+    "backofficeNote": "เข้าสู่ Backoffice เพื่อจัดการและแก้ไขกิจกรรม",
+    "sortNewestOldest": "วันที่จัดกิจกรรม: ใหม่สุด-เก่าสุด",
+    "sortOldestNewest": "วันที่จัดกิจกรรม: เก่าสุด-ใหม่สุด"
+  },
+  "discovery": {
+    "title": "สำรวจกิจกรรม",
+    "explore": "สำรวจกิจกรรม"
+  },
+  "event": {
+    "details": "รายละเอียดกิจกรรม",
+    "schedule": "กำหนดการกิจกรรม",
+    "organizer": "ผู้จัดกิจกรรม",
+    "viewMap": "ดูแผนที่",
+    "scanParticipants": "สแกนผู้เข้าร่วมกิจกรรม",
+    "registrationStats": "สถิติการลงทะเบียน",
+    "evaluationForm": "แบบฟอร์มประเมินกิจกรรม"
+  },
+  "breadcrumb": {
+    "home": "หน้าหลัก",
+    "discovery": "สำรวจกิจกรรม"
+  },
+  "scan": {
+    "eventManager": "ผู้ดูแลกิจกรรม",
+    "copySuccess": "คัดลอกสำเร็จแล้ว",
+    "scannerQR": "ตัวสแกน QR",
+    "dashboard": "แดชบอร์ด",
+    "successTitle": "ลงทะเบียนสำเร็จ",
+    "registeredTitle": "ลงทะเบียนแล้ว",
+    "failTitle": "ลงทะเบียนไม่สำเร็จ",
+    "participantDetails": "รายละเอียดผู้ลงทะเบียนเข้างาน",
+    "studentId": "รหัสประจำตัว",
+    "registeredAt": "ลงทะเบียนสำเร็จ:",
+    "note": "หมายเหตุ",
+    "notePlaceholder": "กรอกข้อมูลเพิ่มเติม (ถ้ามี)",
+    "notEligible": "ไม่ได้อยู่ในรายชื่อผู้มีสิทธิ์ลงทะเบียนเข้าร่วมกิจกรรม"
+  },
+  "common": {
+    "confirm": "ตกลง",
+    "cancel": "ยกเลิก",
+    "loading": "Loading...",
+    "alert": "แจ้งเตือน",
+    "error": "ข้อผิดพลาด"
+  }
+}
