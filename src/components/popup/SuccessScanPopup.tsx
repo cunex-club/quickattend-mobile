@@ -1,4 +1,4 @@
-import PopupLayout from "@/layout/popup";
+import PopupLayout from "@/layout/PopupLayout";
 import { Business, CheckCircle, Person, WatchLater } from "@mui/icons-material";
 import QuickAttendButton from "../QuickAttendButton";
 

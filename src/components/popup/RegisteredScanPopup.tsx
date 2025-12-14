@@ -1,4 +1,4 @@
-import PopupLayout from "@/layout/popup";
+import PopupLayout from "@/layout/PopupLayout";
 import {
   Business,
   Person,
