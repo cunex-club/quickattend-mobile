@@ -46,7 +46,7 @@ function MyEventDetail() {
     setEvent(targetEvent);
   }, [id]);
 
-  const { showPageLoading } = usePageLoading();
+  const { showPageLoading, pageLoading } = usePageLoading();
 
   const tEvent = useTranslations("event");
   const tBreadCrumb = useTranslations("breadcrumb");
@@ -275,7 +275,7 @@ function MyEventDetail() {
       {/* Go to Top Button */}
       <button
         className={`fixed right-8 bottom-12 p-4 w-14 h-14 rounded-full bg-primary z-50 cursor-pointer ${
-          isInvisibleScrollToTop ? "hidden" : "block"
+          isInvisibleScrollToTop || pageLoading ? "hidden" : "block"
         }`}
         onClick={() => topRef.current?.scrollTo({ top: 0, behavior: "smooth" })}
       >
