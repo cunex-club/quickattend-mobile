@@ -38,6 +38,8 @@ function MyEventDetail() {
   const [openShareDropdown, setOpenShareDropdown] = useState(false);
   const [event, setEvent] = useState<EventInterface | null>(null);
 
+  const [tohref, setToHref] = useState("");
+
   useEffect(() => {
     const targetEvent = allEvents.filter(e => e.id === id)[0] ?? null;
     if (!targetEvent) {
@@ -282,7 +284,9 @@ function MyEventDetail() {
         <ArrowUpward sx={{ width: 24, height: 24 }} className="text-white" />
       </button>
 
-      {openLLEPopup && <LLEPopup setOpenLLEPopup={setOpenLLEPopup} />}
+      {openLLEPopup && (
+        <LLEPopup setOpenLLEPopup={setOpenLLEPopup} tohref={tohref} />
+      )}
     </div>
   );
 }

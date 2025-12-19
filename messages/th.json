@@ -8,7 +8,8 @@
     "manageEvents": "จัดการกิจกรรม",
     "backofficeNote": "เข้าสู่ Backoffice เพื่อจัดการและแก้ไขกิจกรรม",
     "sortNewestOldest": "วันที่จัดกิจกรรม: ใหม่สุด-เก่าสุด",
-    "sortOldestNewest": "วันที่จัดกิจกรรม: เก่าสุด-ใหม่สุด"
+    "sortOldestNewest": "วันที่จัดกิจกรรม: เก่าสุด-ใหม่สุด",
+    "createEvent": "สร้างกิจกรรม"
   },
   "discovery": {
     "explore": "สำรวจกิจกรรม",

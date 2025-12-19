@@ -42,6 +42,8 @@ export default function PastEventCard({
   const [openLLEPopup, setOpenLLEPopup] = useState(false);
   const [openDetail, setOpenDetail] = useState(false);
 
+  const [tohref, setToHref] = useState("");
+
   const { showPageLoading, hidePageLoading } = usePageLoading();
 
   const tEvent = useTranslations("event");
@@ -203,7 +205,9 @@ export default function PastEventCard({
       </Link>
 
       {/* LLE Popup */}
-      {openLLEPopup && <LLEPopup setOpenLLEPopup={setOpenLLEPopup} />}
+      {openLLEPopup && (
+        <LLEPopup setOpenLLEPopup={setOpenLLEPopup} tohref={tohref} />
+      )}
     </div>
   );
 }

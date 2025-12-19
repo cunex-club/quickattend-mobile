@@ -38,6 +38,8 @@ function PastEventDetail() {
   const [openLLEPopup, setOpenLLEPopup] = useState(false);
   const [event, setEvent] = useState<EventInterface | null>(null);
 
+  const [tohref, setToHref] = useState("");
+
   const tEvent = useTranslations("event");
   const tBreadCrumb = useTranslations("breadcrumb");
 
@@ -269,7 +271,9 @@ function PastEventDetail() {
         <ArrowUpward sx={{ width: 24, height: 24 }} className="text-white" />
       </button>
 
-      {openLLEPopup && <LLEPopup setOpenLLEPopup={setOpenLLEPopup} />}
+      {openLLEPopup && (
+        <LLEPopup setOpenLLEPopup={setOpenLLEPopup} tohref={tohref} />
+      )}
     </div>
   );
 }

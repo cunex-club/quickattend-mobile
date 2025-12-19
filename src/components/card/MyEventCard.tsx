@@ -40,6 +40,8 @@ export default function MyEventCard({
   const [openLLEPopup, setOpenLLEPopup] = useState(false);
   const [openShareDropdown, setOpenShareDropdown] = useState(false);
 
+  const [tohref, setToHref] = useState("");
+
   const { showPageLoading, hidePageLoading } = usePageLoading();
 
   const tEvent = useTranslations("event");
@@ -203,7 +205,9 @@ export default function MyEventCard({
           </div>
         </div>
 
-        {openLLEPopup && <LLEPopup setOpenLLEPopup={setOpenLLEPopup} />}
+        {openLLEPopup && (
+          <LLEPopup setOpenLLEPopup={setOpenLLEPopup} tohref={tohref} />
+        )}
       </div>
     </Link>
   );

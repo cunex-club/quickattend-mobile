@@ -11,6 +11,7 @@ import {
   ArrowUpward,
   ChevronLeft,
   ChevronRight,
+  AddCircleOutline,
 } from "@mui/icons-material";
 import LLEPopup from "@/components/popup/LLEPopup";
 import Link from "next/link";
@@ -37,6 +38,8 @@ export default function Home() {
   const [isInvisibleScrollToTop, setInvisibleScrollToTop] = useState(false);
   const [currentEvents, setCurrentEvents] = useState<EventInterface[]>([]);
   const [pastEvents, setPastEvents] = useState<EventInterface[]>([]);
+
+  const [tohref, setToHref] = useState("");
 
   const topRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -90,21 +93,39 @@ export default function Home() {
       {/* My Events */}
       <div className="mb-12">
         {/* Header */}
-        <div className="flex justify-between gap-4 mb-6">
+        <div className="flex justify-between gap-3 mb-6">
           <h1 className="headline-small-emphasized text-neutral-600">
             {tHome("myEvents")}
           </h1>
-          <Link
-            href={"/discovery"}
-            onClick={() => {
-              showPageLoading();
-            }}
-          >
-            <ExploreOutlined
-              sx={{ width: 24, height: 24 }}
-              className="text-primary cursor-pointer"
-            />
-          </Link>
+
+          <div className="flex items-center gap-1 -translate-y-2 flex-wrap justify-end">
+            <QuickAttendButton
+              type="text"
+              variant="outline"
+              onClick={() => {
+                setOpenLLEPopup(true);
+              }}
+            >
+              <AddCircleOutline
+                sx={{ width: 14, height: 14 }}
+                className="text-primary"
+              />
+              <p className="translate-y-1 label-large-primary">
+                {tHome("createEvent")}
+              </p>
+            </QuickAttendButton>
+            <Link
+              href={"/discovery"}
+              onClick={() => {
+                showPageLoading();
+              }}
+            >
+              <ExploreOutlined
+                sx={{ width: 24, height: 24 }}
+                className="text-primary cursor-pointer"
+              />
+            </Link>
+          </div>
         </div>
 
         {/* Number of Results */}
@@ -315,7 +336,9 @@ export default function Home() {
         <ArrowUpward sx={{ width: 24, height: 24 }} className="text-white" />
       </button>
 
-      {openLLEPopup && <LLEPopup setOpenLLEPopup={setOpenLLEPopup} />}
+      {openLLEPopup && (
+        <LLEPopup setOpenLLEPopup={setOpenLLEPopup} tohref={tohref} />
+      )}
     </div>
   );
 }
