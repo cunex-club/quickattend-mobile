@@ -10,31 +10,34 @@ import {
   allEvents,
 } from "@/utils/const";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { Fragment, useEffect, useRef, useState } from "react";
 
 import {
   ArrowUpward,
   CalendarMonth,
   ChevronRightOutlined,
-  CropFree,
   HomeOutlined,
   LocationOn,
-  TrendingUp,
-  UploadFile,
   WatchLater,
 } from "@mui/icons-material";
-import QuickAttendButton from "@/components/QuickAttendButton";
-import LLEPopup from "@/components/popup/LLEPopup";
+import Image from "next/image";
 import { EventInterface } from "@/utils/interface";
+import { useTranslations } from "next-intl";
+import { usePageLoading } from "@/context/PageLoadingContext";
 
-function MyEventDetail() {
+function DiscoveryEventDetail() {
   const { id } = useParams();
-  const router = useRouter();
-  const [isInvisibleScrollToTop, setInvisibleScrollToTop] = useState(false);
-  const [openLLEPopup, setOpenLLEPopup] = useState(false);
-  const [openShareDropdown, setOpenShareDropdown] = useState(false);
   const [event, setEvent] = useState<EventInterface | null>(null);
+  const [isInvisibleScrollToTop, setInvisibleScrollToTop] = useState(false);
+
+  const tEvent = useTranslations("event");
+  const tBreadCrumb = useTranslations("breadcrumb");
+
+  const { showPageLoading } = usePageLoading();
+
+  const topRef = useRef<HTMLDivElement>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const targetEvent = allEvents.filter(e => e.id === id)[0] ?? null;
@@ -43,9 +46,6 @@ function MyEventDetail() {
     }
     setEvent(targetEvent);
   }, [id]);
-
-  const topRef = useRef<HTMLDivElement>(null);
-  const bottomRef = useRef<HTMLDivElement>(null);
 
   // Check whether users reach the bottom or not
   useEffect(() => {
@@ -75,12 +75,39 @@ function MyEventDetail() {
     >
       {/* Breadcrumb */}
       <div className="flex gap-1 mb-6 items-center flex-wrap">
-        <Link className="flex gap-1 items-center" href="/">
+        <Link
+          className="flex gap-1 items-center"
+          href="/"
+          onClick={() => {
+            showPageLoading();
+          }}
+        >
           <HomeOutlined fontSize="small" className="text-primary" />
-          <p className="body-small-primary text-neutral-500">หน้าหลัก</p>
+          <p className="body-small-primary text-neutral-500">
+            {tBreadCrumb("home")}
+          </p>
         </Link>
         <ChevronRightOutlined fontSize="small" className="text-primary" />
-        <Link className="flex gap-1 items-center" href={`/myevents/${id}`}>
+        <Link
+          className="flex gap-1 items-center"
+          href="/discovery"
+          onClick={() => {
+            showPageLoading();
+          }}
+        >
+          <p className="body-small-primary text-neutral-500">
+            {tBreadCrumb("discovery")}
+          </p>
+        </Link>
+        <ChevronRightOutlined fontSize="small" className="text-primary" />
+        <Link
+          className="flex gap-1 items-center"
+          href={`/discovery/${id}`}
+          onClick={() => {
+            showPageLoading();
+            window.location.reload();
+          }}
+        >
           <p className="body-small-primary text-neutral-500 truncate max-w-[120px]">
             {event?.name}
           </p>
@@ -129,7 +156,7 @@ function MyEventDetail() {
       {/* Event Description */}
       <div className="flex flex-col mb-6 gap-2">
         <h2 className="title-large-emphasized text-neutral-600">
-          รายละเอียดกิจกรรม
+          {tEvent("details")}
         </h2>
         <p className="body-medium-primary text-neutral-600">
           {eventDescription}
@@ -139,7 +166,7 @@ function MyEventDetail() {
       {/* Event Schedule */}
       <div className="flex flex-col mb-6 gap-2">
         <h2 className="title-large-emphasized text-neutral-600">
-          กำหนดการกิจกรรม
+          {tEvent("schedule")}
         </h2>
 
         <div className="grid grid-cols-2 gap-x-2 gap-y-1">
@@ -157,95 +184,20 @@ function MyEventDetail() {
       {/* Event Owner */}
       <div className="flex flex-col mb-6 gap-2">
         <h2 className="title-large-emphasized text-neutral-600">
-          ผู้จัดกิจกรรม
+          {tEvent("organizer")}
         </h2>
         <p className="body-medium-primary text-neutral-600">{eventOwner}</p>
       </div>
 
-      {/* Buttons */}
-      <div className="flex flex-wrap gap-2" ref={bottomRef}>
-        {/* Scan Button */}
-        <QuickAttendButton
-          type="text"
-          variant="filled"
-          onClick={e => {
-            e.stopPropagation();
-            e.preventDefault();
-            router.push(`/scan/${id}`);
-          }}
-        >
-          <CropFree
-            sx={{ width: 20, height: 20 }}
-            className="text-neutral-white"
-          />
-          <p className="translate-y-1">สแกนผู้เข้าร่วมกิจกรรม</p>
-        </QuickAttendButton>
-
-        <div className="flex gap-2 flex-1 items-center">
-          {/* Stats Button */}
-          <div className="relative flex-1">
-            <QuickAttendButton
-              variant="outline"
-              type="icon"
-              onClick={e => {
-                e.stopPropagation();
-                e.preventDefault();
-                setOpenLLEPopup(true);
-              }}
-            >
-              <TrendingUp sx={{ width: 20, height: 20 }} />
-            </QuickAttendButton>
-
-            {/* Dummy Box */}
-            <div className="w-30 hidden absolute bottom-full mb-1 left-1/2 -translate-x-1/2 bg-neutral-white rounded-lg shadow-elevation-1 p-2 z-10"></div>
-          </div>
-
-          {/* Share Button */}
-          <div className="relative flex-1">
-            <QuickAttendButton
-              type="icon"
-              variant="outline"
-              onClick={e => {
-                e.stopPropagation();
-                e.preventDefault();
-                setOpenShareDropdown(prev => !prev);
-              }}
-            >
-              <UploadFile
-                sx={{ width: 20, height: 20 }}
-                className="text-primary"
-              />
-            </QuickAttendButton>
-
-            {/* Share Dropdown */}
-            {openShareDropdown && (
-              <div className="w-30 absolute bottom-full mb-1 right-0 bg-neutral-white rounded-lg shadow-elevation-1 p-2 z-10">
-                <button
-                  className="cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-300"
-                  onClick={e => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    router.push(`/scan/${id}`);
-                    setOpenShareDropdown(false);
-                  }}
-                >
-                  ตัวสแกน QR
-                </button>
-                <button
-                  className="cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-300"
-                  onClick={e => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    setOpenShareDropdown(false);
-                  }}
-                >
-                  แดชบอร์ด
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
+      {/* Event Map */}
+      <div className="flex flex-col gap-2">
+        <h2 className="title-large-emphasized text-neutral-600">
+          {tEvent("viewMap")}
+        </h2>
+        <Image src={"/mock/map.png"} alt="mock map" width={350} height={180} />
       </div>
+
+      <div ref={bottomRef}></div>
 
       {/* Go to Top Button */}
       <button
@@ -256,10 +208,8 @@ function MyEventDetail() {
       >
         <ArrowUpward sx={{ width: 24, height: 24 }} className="text-white" />
       </button>
-
-      {openLLEPopup && <LLEPopup setOpenLLEPopup={setOpenLLEPopup} />}
     </div>
   );
 }
 
-export default MyEventDetail;
+export default DiscoveryEventDetail;

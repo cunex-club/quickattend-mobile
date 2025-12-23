@@ -1,0 +1,61 @@
+{
+  "home": {
+    "myEvents": "กิจกรรมของฉัน",
+    "pastEvents": "กิจกรรมที่ผ่านมา",
+    "showing": "แสดงกิจกรรม",
+    "from": "จาก",
+    "viewAll": "ดูทั้งหมด",
+    "manageEvents": "จัดการกิจกรรม",
+    "backofficeNote": "เข้าสู่ Backoffice เพื่อจัดการและแก้ไขกิจกรรม",
+    "sortNewestOldest": "วันที่จัดกิจกรรม: ใหม่สุด-เก่าสุด",
+    "sortOldestNewest": "วันที่จัดกิจกรรม: เก่าสุด-ใหม่สุด",
+    "createEvent": "สร้างกิจกรรม"
+  },
+  "discovery": {
+    "explore": "สำรวจกิจกรรม",
+    "sortNewestOldest": "วันที่จัดกิจกรรม: ใหม่สุด-เก่าสุด",
+    "sortOldestNewest": "วันที่จัดกิจกรรม: เก่าสุด-ใหม่สุด"
+  },
+  "event": {
+    "details": "รายละเอียดกิจกรรม",
+    "schedule": "กำหนดการกิจกรรม",
+    "organizer": "ผู้จัดกิจกรรม",
+    "viewMap": "ดูแผนที่",
+    "scanParticipants": "สแกนผู้เข้าร่วมกิจกรรม",
+    "registrationStats": "สถิติการลงทะเบียน",
+    "evaluationForm": "แบบฟอร์มประเมินกิจกรรม",
+    "notFoundTitle": "ไม่พบชื่อกิจกรรม"
+  },
+  "scan": {
+    "copySuccess": "คัดลอกสำเร็จแล้ว",
+    "scannerQR": "ตัวสแกน QR",
+    "dashboard": "แดชบอร์ด",
+    "successTitle": "ลงทะเบียนสำเร็จ",
+    "registeredTitle": "ลงทะเบียนแล้ว",
+    "failTitle": "ลงทะเบียนไม่สำเร็จ",
+    "participantDetails": "รายละเอียดผู้ลงทะเบียนเข้างาน",
+    "studentId": "รหัสประจำตัว",
+    "registeredAt": "ลงทะเบียนสำเร็จ:",
+    "note": "หมายเหตุ",
+    "notePlaceholder": "กรอกข้อมูลเพิ่มเติม (ถ้ามี)",
+    "notEligible": "ไม่ได้อยู่ในรายชื่อผู้มีสิทธิ์ลงทะเบียนเข้าร่วมกิจกรรม",
+    "flashlightNotSupport": "อุปกรณ์นี้ไม่รองรับไฟฉาย",
+    "flashlightToggleFail": "ไม่สามารถเปิด/ปิดไฟฉายได้",
+    "invalidQR": "ข้อมูล QR ไม่ถูกต้อง<br/>กรุณาตรวจสอบและลองใหม่อีกครั้ง"
+  },
+  "lle": {
+    "externalServiceTitle": "แจ้งเตือน",
+    "externalServiceMessage": "บริการที่เลือกจะนำท่านไปสู่เว็บไซต์ของผู้ให้บริการที่อยู่ภายนอกแอปพลิเคชัน\nท่านยืนยันจะใช้บริการต่อหรือไม่"
+  },
+  "breadcrumb": {
+    "home": "หน้าหลัก",
+    "discovery": "สำรวจกิจกรรม"
+  },
+  "common": {
+    "confirm": "ตกลง",
+    "cancel": "ยกเลิก",
+    "loading": "Loading...",
+    "alert": "แจ้งเตือน",
+    "error": "ข้อผิดพลาด"
+  }
+}

@@ -1,6 +1,7 @@
 import { ErrorOutline } from "@mui/icons-material";
 import QuickAttendButton from "../QuickAttendButton";
-import PopupLayout from "@/layout/popup";
+import PopupLayout from "@/layout/PopupLayout";
+import { useTranslations } from "next-intl";
 
 interface ErrorPopupProps {
   errorMessage: string;
@@ -17,6 +18,8 @@ function ErrorPopup({
   onCancel,
   onCancelMessage,
 }: ErrorPopupProps) {
+  const tCommon = useTranslations("common");
+
   return (
     <PopupLayout className="relative bg-neutral-white w-[349px] rounded-4xl px-4 py-6">
       <div className="w-full h-fit flex justify-center">
@@ -38,7 +41,9 @@ function ErrorPopup({
             variant="outline"
             onClick={e => onCancel(e)}
           >
-            <p className="translate-y-1">{onCancelMessage || "ยกเลิก"}</p>
+            <p className="translate-y-1">
+              {onCancelMessage || tCommon("cancel")}
+            </p>
           </QuickAttendButton>
         )}
         <QuickAttendButton
@@ -46,7 +51,7 @@ function ErrorPopup({
           variant="filled"
           onClick={e => onNext(e)}
         >
-          <p className="translate-y-1">{onNextMessage || "ตกลง"}</p>
+          <p className="translate-y-1">{onNextMessage || tCommon("confirm")}</p>
         </QuickAttendButton>
       </div>
     </PopupLayout>
