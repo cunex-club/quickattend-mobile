@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import localFont from "next/font/local";
+import PageLoading from "@/components/PageLoading";
 
 const chulaBoldFont = localFont({
   src: "../../public/font/CHULALONGKORNBold.otf",
@@ -32,7 +33,8 @@ export default function RootLayout({
           backgroundColor: "var(--neutral-600)",
         }}
       >
-        <div className="w-full sm:max-w-[390px] min-h-screen bg-neutral-white">
+        <div className="w-full sm:max-w-[390px] min-h-screen bg-neutral-white relative">
+          <PageLoading />
           {children}
         </div>
       </body>

@@ -163,7 +163,7 @@ function MyEventDetail() {
       </div>
 
       {/* Buttons */}
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2" ref={bottomRef}>
         {/* Scan Button */}
         <QuickAttendButton
           type="text"
