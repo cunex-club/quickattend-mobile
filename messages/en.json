@@ -1,0 +1,61 @@
+{
+  "home": {
+    "myEvents": "My Events",
+    "pastEvents": "Past Events",
+    "showing": "Showing",
+    "from": "of",
+    "viewAll": "View All",
+    "manageEvents": "Manage Events",
+    "backofficeNote": "Access Backoffice to manage and edit events",
+    "sortNewestOldest": "Event Date: Newest-Oldest",
+    "sortOldestNewest": "Event Date: Oldest-Newest",
+    "createEvent": "Create Events"
+  },
+  "discovery": {
+    "explore": "Explore Events",
+    "sortNewestOldest": "Event Date: Newest-Oldest",
+    "sortOldestNewest": "Event Date: Oldest-Newest"
+  },
+  "event": {
+    "details": "Event Details",
+    "schedule": "Event Schedule",
+    "organizer": "Event Organizer",
+    "viewMap": "View Map",
+    "scanParticipants": "Scan Participants",
+    "registrationStats": "Registration Statistics",
+    "evaluationForm": "Evaluation Form",
+    "notFoundTitle": "Unknown Event"
+  },
+  "scan": {
+    "copySuccess": "Copied successfully",
+    "scannerQR": "QR Scanner",
+    "dashboard": "Dashboard",
+    "successTitle": "Success",
+    "registeredTitle": "Already Registered",
+    "failTitle": "Failed",
+    "participantDetails": "Participant Details",
+    "studentId": "Student ID",
+    "registeredAt": "Registered at:",
+    "note": "Note",
+    "notePlaceholder": "Enter additional information (if any)",
+    "notEligible": "Not eligible to register for this event",
+    "flashlightNotSupport": "This device does not support flashlight.",
+    "flashlightToggleFail": "Unable to turn the flashlight on or off.",
+    "invalidQR": "Invalid QR code.<br/>Please check and try again."
+  },
+  "lle": {
+    "externalServiceTitle": "Alert",
+    "externalServiceMessage": "The selected service will redirect you to an external provider's website.\nDo you want to continue?"
+  },
+  "breadcrumb": {
+    "home": "Home",
+    "discovery": "Explore Events"
+  },
+  "common": {
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "loading": "Loading...",
+    "alert": "Alert",
+    "error": "Error"
+  }
+}

@@ -15,6 +15,8 @@ import {
 import QuickAttendButton from "../QuickAttendButton";
 import LLEPopup from "../popup/LLEPopup";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { usePageLoading } from "@/context/PageLoadingContext";
 
 interface PastEventCardProps {
   id: string;
@@ -39,6 +41,12 @@ export default function PastEventCard({
 }: PastEventCardProps) {
   const [openLLEPopup, setOpenLLEPopup] = useState(false);
   const [openDetail, setOpenDetail] = useState(false);
+
+  const [tohref, setToHref] = useState("");
+
+  const { showPageLoading, hidePageLoading } = usePageLoading();
+
+  const tEvent = useTranslations("event");
 
   return (
     <div
@@ -69,6 +77,9 @@ export default function PastEventCard({
         className={`transition-all duration-300 ease-in-out overflow-hidden ${
           openDetail ? "min-h-30 opacity-100 mt-2" : "max-h-0 opacity-0 mt-0"
         }`}
+        onClick={() => {
+          showPageLoading();
+        }}
         href={`/pastevents/${id}`}
       >
         {/* Information */}
@@ -99,7 +110,7 @@ export default function PastEventCard({
         {/* Description */}
         <div className="flex flex-col mb-4">
           <h2 className="title-medium-emphasized text-neutral-600">
-            รายละเอียดกิจกรรม
+            {tEvent("details")}
           </h2>
           <p className="body-small-primary text-neutral-600">{description}</p>
         </div>
@@ -123,6 +134,7 @@ export default function PastEventCard({
                 variant="filled"
                 onClick={e => {
                   e.stopPropagation();
+                  hidePageLoading();
                   setOpenLLEPopup(true);
                   e.preventDefault();
                 }}
@@ -131,7 +143,7 @@ export default function PastEventCard({
                   sx={{ width: 20, height: 20 }}
                   className="text-neutral-white"
                 />
-                <p className="translate-y-1">สถิติการลงทะเบียน</p>
+                <p className="translate-y-1">{tEvent("registrationStats")}</p>
               </QuickAttendButton>
 
               <div className="flex gap-2 flex-1">
@@ -140,6 +152,7 @@ export default function PastEventCard({
                   variant="outline"
                   onClick={e => {
                     e.stopPropagation();
+                    hidePageLoading();
                     setOpenLLEPopup(true);
                     e.preventDefault();
                   }}
@@ -155,6 +168,7 @@ export default function PastEventCard({
                   variant="outline"
                   onClick={e => {
                     e.stopPropagation();
+                    hidePageLoading();
                     setOpenLLEPopup(true);
                     e.preventDefault();
                   }}
@@ -175,6 +189,7 @@ export default function PastEventCard({
               variant="filled"
               onClick={e => {
                 e.stopPropagation();
+                hidePageLoading();
                 setOpenLLEPopup(true);
                 e.preventDefault();
               }}
@@ -183,14 +198,16 @@ export default function PastEventCard({
                 sx={{ width: 20, height: 20 }}
                 className="text-neutral-white"
               />
-              <p className="translate-y-1">แบบฟอร์มประเมินกิจกรรม</p>
+              <p className="translate-y-1">{tEvent("evaluationForm")}</p>
             </QuickAttendButton>
           </div>
         </div>
       </Link>
 
       {/* LLE Popup */}
-      {openLLEPopup && <LLEPopup setOpenLLEPopup={setOpenLLEPopup} />}
+      {openLLEPopup && (
+        <LLEPopup setOpenLLEPopup={setOpenLLEPopup} tohref={tohref} />
+      )}
     </div>
   );
 }

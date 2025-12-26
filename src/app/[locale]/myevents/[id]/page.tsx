@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  displayButtonsFirstRowPastEvents,
   eventDate,
   eventDescription,
   eventLocation,
@@ -11,33 +10,35 @@ import {
   allEvents,
 } from "@/utils/const";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Fragment, useEffect, useRef, useState } from "react";
 
 import {
   ArrowUpward,
   CalendarMonth,
   ChevronRightOutlined,
-  DifferenceOutlined,
-  Feed,
+  CropFree,
   HomeOutlined,
   LocationOn,
-  SaveAlt,
   TrendingUp,
+  UploadFile,
   WatchLater,
 } from "@mui/icons-material";
 import QuickAttendButton from "@/components/QuickAttendButton";
 import LLEPopup from "@/components/popup/LLEPopup";
 import { EventInterface } from "@/utils/interface";
+import { useTranslations } from "next-intl";
+import { usePageLoading } from "@/context/PageLoadingContext";
 
-function PastEventDetail() {
+function MyEventDetail() {
   const { id } = useParams();
+  const router = useRouter();
   const [isInvisibleScrollToTop, setInvisibleScrollToTop] = useState(false);
   const [openLLEPopup, setOpenLLEPopup] = useState(false);
+  const [openShareDropdown, setOpenShareDropdown] = useState(false);
   const [event, setEvent] = useState<EventInterface | null>(null);
 
-  const topRef = useRef<HTMLDivElement>(null);
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const [tohref, setToHref] = useState("");
 
   useEffect(() => {
     const targetEvent = allEvents.filter(e => e.id === id)[0] ?? null;
@@ -46,6 +47,15 @@ function PastEventDetail() {
     }
     setEvent(targetEvent);
   }, [id]);
+
+  const { showPageLoading, pageLoading } = usePageLoading();
+
+  const tEvent = useTranslations("event");
+  const tBreadCrumb = useTranslations("breadcrumb");
+  const tScan = useTranslations("scan");
+
+  const topRef = useRef<HTMLDivElement>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
 
   // Check whether users reach the bottom or not
   useEffect(() => {
@@ -75,12 +85,27 @@ function PastEventDetail() {
     >
       {/* Breadcrumb */}
       <div className="flex gap-1 mb-6 items-center flex-wrap">
-        <Link className="flex gap-1 items-center" href="/">
+        <Link
+          className="flex gap-1 items-center"
+          href="/"
+          onClick={() => {
+            showPageLoading();
+          }}
+        >
           <HomeOutlined fontSize="small" className="text-primary" />
-          <p className="body-small-primary text-neutral-500">หน้าหลัก</p>
+          <p className="body-small-primary text-neutral-500">
+            {tBreadCrumb("home")}
+          </p>
         </Link>
         <ChevronRightOutlined fontSize="small" className="text-primary" />
-        <Link className="flex gap-1 items-center" href={`/pastevents/${id}`}>
+        <Link
+          className="flex gap-1 items-center"
+          href={`/myevents/${id}`}
+          onClick={() => {
+            showPageLoading();
+            window.location.reload();
+          }}
+        >
           <p className="body-small-primary text-neutral-500 truncate max-w-[120px]">
             {event?.name}
           </p>
@@ -129,7 +154,7 @@ function PastEventDetail() {
       {/* Event Description */}
       <div className="flex flex-col mb-6 gap-2">
         <h2 className="title-large-emphasized text-neutral-600">
-          รายละเอียดกิจกรรม
+          {tEvent("details")}
         </h2>
         <p className="body-medium-primary text-neutral-600">
           {eventDescription}
@@ -139,7 +164,7 @@ function PastEventDetail() {
       {/* Event Schedule */}
       <div className="flex flex-col mb-6 gap-2">
         <h2 className="title-large-emphasized text-neutral-600">
-          กำหนดการกิจกรรม
+          {tEvent("schedule")}
         </h2>
 
         <div className="grid grid-cols-2 gap-x-2 gap-y-1">
@@ -157,99 +182,113 @@ function PastEventDetail() {
       {/* Event Owner */}
       <div className="flex flex-col mb-6 gap-2">
         <h2 className="title-large-emphasized text-neutral-600">
-          ผู้จัดกิจกรรม
+          {tEvent("organizer")}
         </h2>
         <p className="body-medium-primary text-neutral-600">{eventOwner}</p>
       </div>
 
       {/* Buttons */}
-      <div className="flex flex-col gap-2">
-        {/* First Row */}
-        {displayButtonsFirstRowPastEvents && (
-          <div className="flex gap-2 flex-wrap items-center">
+      <div className="flex flex-wrap gap-2" ref={bottomRef}>
+        {/* Scan Button */}
+        <QuickAttendButton
+          type="text"
+          variant="filled"
+          onClick={e => {
+            e.stopPropagation();
+            e.preventDefault();
+            showPageLoading();
+            router.push(`/scan/${id}`);
+          }}
+        >
+          <CropFree
+            sx={{ width: 20, height: 20 }}
+            className="text-neutral-white"
+          />
+          <p className="translate-y-1">{tEvent("scanParticipants")}</p>
+        </QuickAttendButton>
+
+        <div className="flex gap-2 flex-1 items-center">
+          {/* Stats Button */}
+          <div className="relative flex-1">
             <QuickAttendButton
-              type="text"
-              variant="filled"
+              variant="outline"
+              type="icon"
               onClick={e => {
                 e.stopPropagation();
-                setOpenLLEPopup(true);
                 e.preventDefault();
+                setOpenLLEPopup(true);
               }}
             >
-              <TrendingUp
-                sx={{ width: 20, height: 20 }}
-                className="text-neutral-white"
-              />
-              <p className="translate-y-1">สถิติการลงทะเบียน</p>
+              <TrendingUp sx={{ width: 20, height: 20 }} />
             </QuickAttendButton>
 
-            <div className="flex gap-2 flex-1">
-              <QuickAttendButton
-                type="icon"
-                variant="outline"
-                onClick={e => {
-                  e.stopPropagation();
-                  setOpenLLEPopup(true);
-                  e.preventDefault();
-                }}
-              >
-                <SaveAlt
-                  sx={{ width: 20, height: 20 }}
-                  className="text-primary"
-                />
-              </QuickAttendButton>
-
-              <QuickAttendButton
-                type="icon"
-                variant="outline"
-                onClick={e => {
-                  e.stopPropagation();
-                  setOpenLLEPopup(true);
-                  e.preventDefault();
-                }}
-              >
-                <DifferenceOutlined
-                  sx={{ width: 20, height: 20 }}
-                  className="text-primary"
-                />
-              </QuickAttendButton>
-            </div>
+            {/* Dummy Box */}
+            <div className="w-30 hidden absolute bottom-full mb-1 left-1/2 -translate-x-1/2 bg-neutral-white rounded-lg shadow-elevation-1 p-2 z-10"></div>
           </div>
-        )}
 
-        {/* Second Row */}
-        <div className="flex gap-2 flex-wrap items-center">
-          <QuickAttendButton
-            type="text"
-            variant="filled"
-            onClick={e => {
-              e.stopPropagation();
-              setOpenLLEPopup(true);
-              e.preventDefault();
-            }}
-          >
-            <Feed
-              sx={{ width: 20, height: 20 }}
-              className="text-neutral-white"
-            />
-            <p className="translate-y-1">แบบฟอร์มประเมินกิจกรรม</p>
-          </QuickAttendButton>
+          {/* Share Button */}
+          <div className="relative flex-1">
+            <QuickAttendButton
+              type="icon"
+              variant="outline"
+              onClick={e => {
+                e.stopPropagation();
+                e.preventDefault();
+                setOpenShareDropdown(prev => !prev);
+              }}
+            >
+              <UploadFile
+                sx={{ width: 20, height: 20 }}
+                className="text-primary"
+              />
+            </QuickAttendButton>
+
+            {/* Share Dropdown */}
+            {openShareDropdown && (
+              <div className="w-30 absolute bottom-full mb-1 right-0 bg-neutral-white rounded-lg shadow-elevation-1 p-2 z-10">
+                <button
+                  className="cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-300"
+                  onClick={e => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    showPageLoading();
+                    router.push(`/scan/${id}`);
+                    setOpenShareDropdown(false);
+                  }}
+                >
+                  {tScan("scannerQR")}
+                </button>
+                <button
+                  className="cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-300"
+                  onClick={e => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    setOpenShareDropdown(false);
+                  }}
+                >
+                  {tScan("dashboard")}
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
       {/* Go to Top Button */}
       <button
         className={`fixed right-8 bottom-12 p-4 w-14 h-14 rounded-full bg-primary z-50 cursor-pointer ${
-          isInvisibleScrollToTop ? "hidden" : "block"
+          isInvisibleScrollToTop || pageLoading ? "hidden" : "block"
         }`}
         onClick={() => topRef.current?.scrollTo({ top: 0, behavior: "smooth" })}
       >
         <ArrowUpward sx={{ width: 24, height: 24 }} className="text-white" />
       </button>
 
-      {openLLEPopup && <LLEPopup setOpenLLEPopup={setOpenLLEPopup} />}
+      {openLLEPopup && (
+        <LLEPopup setOpenLLEPopup={setOpenLLEPopup} tohref={tohref} />
+      )}
     </div>
   );
 }
 
-export default PastEventDetail;
+export default MyEventDetail;

@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Html5Qrcode } from "html5-qrcode";
 import {
-  Bolt,
   ExpandMore,
   FlashOff,
   FlashOn,
@@ -28,6 +27,8 @@ import SuccessScanPopup from "@/components/popup/SuccessScanPopup";
 import RegisteredScanPopup from "@/components/popup/RegisteredScanPopup";
 import FailScanPopup from "@/components/popup/FailScanPopup";
 import { EventInterface } from "@/utils/interface";
+import { useTranslations } from "next-intl";
+import { usePageLoading } from "@/context/PageLoadingContext";
 
 const ScanPage = () => {
   const { id } = useParams();
@@ -38,6 +39,8 @@ const ScanPage = () => {
   const isScanningRef = useRef(false);
   const isResettingRef = useRef(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const { showPageLoading } = usePageLoading();
 
   // States
   const [event, setEvent] = useState<EventInterface | null>(null);
@@ -50,12 +53,17 @@ const ScanPage = () => {
   const [showRegisteredScanPopup, setShowRegisteredScanPopup] = useState(false);
   const [showFailScanPopup, setShowFailScanPopup] = useState(false);
   const [timeStamp, setTimeStamp] = useState("");
-  const [showCopyPopup, setShowCopyPopup] = useState(false);
+  const [showMessagePopup, setShowMessagePopup] = useState(false);
+  const [message, setMessage] = useState("");
+  const messageTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [scannerSize, setScannerSize] = useState(50);
   const [showCamera, setShowCamera] = useState(true);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [note, setNote] = useState("");
   const [showTimeoutPopup, setShowTimeoutPopup] = useState(false);
+
+  const tScan = useTranslations("scan");
+  const tEvent = useTranslations("event");
 
   const [isToggleEvents, setToggleEvents] = useState(false);
   const [myOtherFiveEvents, setMyOtherFiveEvents] = useState<
@@ -76,6 +84,31 @@ const ScanPage = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(handleTimeout, scanTimeOutMs);
   };
+
+  const showMessage = (msg: string) => {
+    if (messageTimeoutRef.current) {
+      clearTimeout(messageTimeoutRef.current);
+    }
+
+    setShowMessagePopup(false);
+
+    setTimeout(() => {
+      setMessage(msg);
+      setShowMessagePopup(true);
+
+      messageTimeoutRef.current = setTimeout(() => {
+        setShowMessagePopup(false);
+      }, 2500);
+    }, 50);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (messageTimeoutRef.current) {
+        clearTimeout(messageTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Camera control logic
   const stopCamera = () => {
@@ -227,15 +260,17 @@ const ScanPage = () => {
     try {
       const track = stream.getVideoTracks()[0];
       const capabilities = (track.getCapabilities?.() as any) || {};
-      if (!capabilities.torch) return alert("อุปกรณ์นี้ไม่รองรับไฟฉาย");
+      if (!capabilities.torch) {
+        showMessage(tScan("flashlightNotSupport"));
+        return;
+      }
 
       await track.applyConstraints({
         advanced: [{ torch: !isFlashOn } as any],
       });
       setIsFlashOn(!isFlashOn);
     } catch (err) {
-      console.error(err);
-      alert("ไม่สามารถเปิด/ปิดไฟฉายได้");
+      showMessage(tScan("flashlightToggleFail"));
     }
   };
 
@@ -274,7 +309,10 @@ const ScanPage = () => {
                 <QuickAttendButton
                   variant="outline"
                   type="icon"
-                  onClick={() => router.push("/")}
+                  onClick={() => {
+                    showPageLoading();
+                    router.push("/");
+                  }}
                   className="w-full h-full rounded-full border-none"
                 >
                   <Home className="w-6 h-6" />
@@ -288,8 +326,7 @@ const ScanPage = () => {
                   type="icon"
                   onClick={() => {
                     navigator.clipboard.writeText(event?.name || "");
-                    setShowCopyPopup(true);
-                    setTimeout(() => setShowCopyPopup(false), 2000);
+                    showMessage(tScan("copySuccess"));
                   }}
                   className="w-full h-full rounded-full border-none"
                 >
@@ -320,7 +357,7 @@ const ScanPage = () => {
         <div className="w-full px-6 flex flex-col justify-center items-center gap-1 z-10 flex-wrap">
           <div className="relative flex gap-2 items-center">
             <p className="title-large-emphasized translate-y-1 truncate max-w-60">
-              {event?.name || "ไม่พบชื่อกิจกรรม"}
+              {event?.name || tEvent("notFoundTitle")}
             </p>
             <ExpandMore
               sx={{ width: 24, height: 24 }}
@@ -335,11 +372,14 @@ const ScanPage = () => {
                   return (
                     <button
                       key={event.id}
-                      className="cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-300"
+                      className={`text-ellipsis cursor-pointer block w-full body-small-primary text-left 
+                        py-1 text-neutral-600 hover:bg-neutral-300
+                        truncate overflow-hidden whitespace-nowrap`}
                       onClick={e => {
                         e.stopPropagation();
                         e.preventDefault();
                         setToggleEvents(false);
+                        showPageLoading();
                         router.push(`/scan/${event.id}`);
                       }}
                     >
@@ -393,7 +433,7 @@ const ScanPage = () => {
       {/* POPUPS */}
       {showTimeoutPopup && (
         <ErrorPopup
-          errorMessage={`ข้อมูล QR ไม่ถูกต้อง<br/>กรุณาตรวจสอบและลองใหม่อีกครั้ง`}
+          errorMessage={tScan("invalidQR")}
           onNext={e => {
             e.preventDefault();
             e.stopPropagation();
@@ -435,9 +475,9 @@ const ScanPage = () => {
         />
       )}
 
-      {showCopyPopup && (
+      {showMessagePopup && (
         <div className="fixed top-24 left-1/2 -translate-x-1/2 bg-primary text-white px-4 py-2 rounded-full shadow-lg animate-fade-in-out z-50">
-          <p className="label-large-primary translate-y-1">คัดลอกสำเร็จแล้ว</p>
+          <p className="label-large-primary translate-y-1">{message}</p>
         </div>
       )}
     </>

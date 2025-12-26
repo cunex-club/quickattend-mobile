@@ -1,4 +1,6 @@
+import { usePageLoading } from "@/context/PageLoadingContext";
 import { CalendarMonth, LocationOn, WatchLater } from "@mui/icons-material";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 
 interface DiscoveryEventCardProps {
@@ -18,8 +20,13 @@ export default function DiscoveryEventCard({
   location,
   description,
 }: DiscoveryEventCardProps) {
+  const tEvent = useTranslations("event");
+  const { showPageLoading } = usePageLoading();
   return (
     <Link
+      onClick={() => {
+        showPageLoading();
+      }}
       key={id}
       className="w-full min-h-20 h-fit bg-neutral-100 rounded-4xl flex flex-col px-4 py-6 cursor-pointer overflow-visible"
       href={`/discovery/${id}`}
@@ -62,7 +69,7 @@ export default function DiscoveryEventCard({
       {/* Description */}
       <div className="flex flex-col mb-4">
         <h2 className="title-medium-emphasized text-neutral-600">
-          รายละเอียดกิจกรรม
+          {tEvent("details")}
         </h2>
         <p className="body-small-primary text-neutral-600">{description}</p>
       </div>

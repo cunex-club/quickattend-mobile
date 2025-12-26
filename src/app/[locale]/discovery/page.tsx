@@ -1,6 +1,7 @@
 "use client";
 
 import DiscoveryEventCard from "@/components/card/DiscoveryEventCard";
+import { usePageLoading } from "@/context/PageLoadingContext";
 import {
   eventDate,
   eventDescription,
@@ -18,6 +19,7 @@ import {
   HomeOutlined,
   SwapVert,
 } from "@mui/icons-material";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
@@ -27,6 +29,11 @@ export default function Discovery() {
   const [openSortDropdown, setOpenSortDropdown] = useState(false);
   const [isInvisibleScrollToTop, setInvisibleScrollToTop] = useState(false);
   const [events, setEvents] = useState<EventInterface[]>([]);
+
+  const tDiscovery = useTranslations("discovery");
+  const tBreadCrumb = useTranslations("breadcrumb");
+
+  const { showPageLoading, pageLoading } = usePageLoading();
 
   const topRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -74,13 +81,30 @@ export default function Discovery() {
     >
       {/* Breadcrumb */}
       <div className="flex gap-1 mb-6 items-center flex-wrap">
-        <Link className="flex gap-1 items-center" href="/">
+        <Link
+          className="flex gap-1 items-center"
+          href="/"
+          onClick={() => {
+            showPageLoading();
+          }}
+        >
           <HomeOutlined fontSize="small" className="text-primary" />
-          <p className="body-small-primary text-neutral-500">หน้าหลัก</p>
+          <p className="body-small-primary text-neutral-500">
+            {tBreadCrumb("home")}
+          </p>
         </Link>
         <ChevronRightOutlined fontSize="small" className="text-primary" />
-        <Link className="flex gap-1 items-center" href="/discovery">
-          <p className="body-small-primary text-neutral-500">สำรวจกิจกรรม</p>
+        <Link
+          className="flex gap-1 items-center"
+          href="/discovery"
+          onClick={() => {
+            showPageLoading();
+            window.location.reload();
+          }}
+        >
+          <p className="body-small-primary text-neutral-500">
+            {tBreadCrumb("discovery")}
+          </p>
         </Link>
       </div>
 
@@ -89,7 +113,7 @@ export default function Discovery() {
         {/* Header */}
         <div className="flex justify-between gap-4 mb-6 relative">
           <h1 className="headline-small-emphasized text-neutral-600">
-            สำรวจกิจกรรม
+            {tDiscovery("explore")}
           </h1>
           <div className="relative h-fit">
             <SwapVert
@@ -110,7 +134,7 @@ export default function Discovery() {
                     setOpenSortDropdown(false);
                   }}
                 >
-                  วันที่จัดกิจกรรม: ใหม่สุด-เก่าสุด
+                  {tDiscovery("sortNewestOldest")}
                 </button>
                 <button
                   className="cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-100"
@@ -121,7 +145,7 @@ export default function Discovery() {
                     setOpenSortDropdown(false);
                   }}
                 >
-                  วันที่จัดกิจกรรม: เก่าสุด-ใหม่สุด
+                  {tDiscovery("sortOldestNewest")}
                 </button>
               </div>
             )}
@@ -228,7 +252,7 @@ export default function Discovery() {
       {/* Go to Top Button */}
       <button
         className={`fixed right-8 bottom-12 p-4 w-14 h-14 rounded-full bg-primary z-50 cursor-pointer ${
-          isInvisibleScrollToTop ? "hidden" : "block"
+          isInvisibleScrollToTop || pageLoading ? "hidden" : "block"
         }`}
         onClick={() => topRef.current?.scrollTo({ top: 0, behavior: "smooth" })}
       >

@@ -1,4 +1,4 @@
-import PopupLayout from "@/layout/popup";
+import PopupLayout from "@/layout/PopupLayout";
 import {
   Business,
   Person,
@@ -6,6 +6,7 @@ import {
   WatchLater,
 } from "@mui/icons-material";
 import QuickAttendButton from "../QuickAttendButton";
+import { useTranslations } from "next-intl";
 
 interface RegisteredScanPopupProps {
   studentId: string;
@@ -26,6 +27,8 @@ function RegisteredScanPopup({
   setNote,
   handleSubmit,
 }: RegisteredScanPopupProps) {
+  const tScan = useTranslations("scan");
+  const tCommon = useTranslations("common");
   return (
     <PopupLayout className="relative bg-neutral-white w-[349px] rounded-4xl">
       {/* Header */}
@@ -35,7 +38,7 @@ function RegisteredScanPopup({
           sx={{ width: 40, height: 40 }}
         />
         <p className="ml-2 headline-large-emphasized text-white translate-y-1.5">
-          ลงทะเบียนแล้ว
+          {tScan("registeredTitle")}
         </p>
       </div>
 
@@ -51,7 +54,7 @@ function RegisteredScanPopup({
         {/* Information */}
         <div className="flex flex-col gap-2 mb-8">
           <p className="title-medium-emphasized">
-            รายละเอียดผู้ลงทะเบียนเข้างาน
+            {tScan("participantDetails")}
           </p>
 
           {/* Name */}
@@ -59,7 +62,9 @@ function RegisteredScanPopup({
             <Person className="text-primary" sx={{ width: 16, height: 16 }} />
             <div className="flex flex-col -translate-y-1">
               <p className="body-medium-primary">{studentName}</p>
-              <p className="body-medium-primary">รหัสประจำตัว {studentId}</p>
+              <p className="body-medium-primary">
+                {tScan("studentId")} {studentId}
+              </p>
             </div>
           </div>
 
@@ -78,18 +83,18 @@ function RegisteredScanPopup({
               sx={{ width: 16, height: 16 }}
             />
             <p className="body-medium-primary -translate-y-1">
-              ลงทะเบียนสำเร็จ: {timeStamp} น.
+              {tScan("registeredAt")} {timeStamp}
             </p>
           </div>
         </div>
 
         {/* Note */}
         <form className="flex flex-col gap-2 mb-6">
-          <p className="title-medium-emphasized">หมายเหตุ</p>
+          <p className="title-medium-emphasized">{tScan("note")}</p>
           <input
             className="w-full h-11 border border-neutral-400 focus:outline-none rounded-md px-3"
             value={note}
-            placeholder="กรอกข้อมูลเพิ่มเติม (ถ้ามี)"
+            placeholder={tScan("notePlaceholder")}
             onChange={e => setNote(e.target.value)}
           />
         </form>
@@ -101,7 +106,7 @@ function RegisteredScanPopup({
             variant="filled"
             onClick={e => handleSubmit(e)}
           >
-            <p className="translate-y-1">ตกลง</p>
+            <p className="translate-y-1">{tCommon("confirm")}</p>
           </QuickAttendButton>
         </div>
       </div>
