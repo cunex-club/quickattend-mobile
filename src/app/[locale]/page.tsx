@@ -68,7 +68,7 @@ export default function Home() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setInvisibleScrollToTop(entry.isIntersecting);
+        setInvisibleScrollToTop(!entry.isIntersecting);
       },
       {
         root: null,
@@ -98,7 +98,7 @@ export default function Home() {
             {tHome("myEvents")}
           </h1>
 
-          <div className="flex items-center gap-1 -translate-y-2 flex-wrap justify-end">
+          <div className="flex items-center gap-2 -translate-y-2 flex-wrap justify-end">
             <QuickAttendButton
               type="text"
               variant="outline"

@@ -57,7 +57,7 @@ export default function Discovery() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setInvisibleScrollToTop(entry.isIntersecting);
+        setInvisibleScrollToTop(!entry.isIntersecting);
       },
       {
         root: null,

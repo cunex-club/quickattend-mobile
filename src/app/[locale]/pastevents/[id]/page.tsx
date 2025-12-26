@@ -60,7 +60,7 @@ function PastEventDetail() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setInvisibleScrollToTop(entry.isIntersecting);
+       setInvisibleScrollToTop(!entry.isIntersecting);
       },
       {
         root: null,
