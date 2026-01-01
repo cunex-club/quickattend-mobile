@@ -34,7 +34,7 @@ function DiscoveryEventDetail() {
   const tEvent = useTranslations("event");
   const tBreadCrumb = useTranslations("breadcrumb");
 
-  const { showPageLoading } = usePageLoading();
+  const { showPageLoading, pageLoading } = usePageLoading();
 
   const topRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -115,7 +115,7 @@ function DiscoveryEventDetail() {
       </div>
 
       {/* Event Name */}
-      <h1 className="headline-large-emphasized text-neutral-600 mb-4">
+      <h1 className="headline-large-emphasized text-neutral-600 mb-4 break-all">
         {event?.name}
       </h1>
 
@@ -127,7 +127,9 @@ function DiscoveryEventDetail() {
             sx={{ width: 14, height: 14 }}
             className="text-primary translate-y-1"
           />
-          <p className="body-medium-primary text-neutral-600">{eventDate}</p>
+          <p className="body-medium-primary text-neutral-600 break-all">
+            {eventDate}
+          </p>
         </div>
 
         {/* Time */}
@@ -136,7 +138,7 @@ function DiscoveryEventDetail() {
             sx={{ width: 14, height: 14 }}
             className="text-primary translate-y-1"
           />
-          <p className="body-medium-primary text-neutral-600">
+          <p className="body-medium-primary text-neutral-600 break-all">
             {eventTimeRange}
           </p>
         </div>
@@ -147,7 +149,7 @@ function DiscoveryEventDetail() {
             sx={{ width: 14, height: 18 }}
             className="text-primary translate-y-1"
           />
-          <p className="body-medium-primary text-neutral-600">
+          <p className="body-medium-primary text-neutral-600 break-all">
             {eventLocation}
           </p>
         </div>
@@ -158,7 +160,7 @@ function DiscoveryEventDetail() {
         <h2 className="title-large-emphasized text-neutral-600">
           {tEvent("details")}
         </h2>
-        <p className="body-medium-primary text-neutral-600">
+        <p className="body-medium-primary text-neutral-600 break-all">
           {eventDescription}
         </p>
       </div>
@@ -172,8 +174,10 @@ function DiscoveryEventDetail() {
         <div className="grid grid-cols-2 gap-x-2 gap-y-1">
           {eventSchedules.map((e, i) => (
             <Fragment key={i}>
-              <p className="body-medium-primary text-neutral-600">{e[0]}</p>
-              <p className="body-medium-primary text-neutral-600 text-right">
+              <p className="body-medium-primary text-neutral-600 break-all">
+                {e[0]}
+              </p>
+              <p className="body-medium-primary text-neutral-600 text-right break-all">
                 {e[1]}
               </p>
             </Fragment>
@@ -186,7 +190,9 @@ function DiscoveryEventDetail() {
         <h2 className="title-large-emphasized text-neutral-600">
           {tEvent("organizer")}
         </h2>
-        <p className="body-medium-primary text-neutral-600">{eventOwner}</p>
+        <p className="body-medium-primary text-neutral-600 break-all">
+          {eventOwner}
+        </p>
       </div>
 
       {/* Event Map */}
@@ -202,7 +208,7 @@ function DiscoveryEventDetail() {
       {/* Go to Top Button */}
       <button
         className={`fixed right-8 bottom-12 p-4 w-14 h-14 rounded-full bg-primary z-50 cursor-pointer ${
-          isInvisibleScrollToTop ? "hidden" : "block"
+          isInvisibleScrollToTop || pageLoading ? "hidden" : "block"
         }`}
         onClick={() => topRef.current?.scrollTo({ top: 0, behavior: "smooth" })}
       >

@@ -60,7 +60,7 @@ function PastEventDetail() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-       setInvisibleScrollToTop(!entry.isIntersecting);
+        setInvisibleScrollToTop(!entry.isIntersecting);
       },
       {
         root: null,
@@ -112,7 +112,7 @@ function PastEventDetail() {
       </div>
 
       {/* Event Name */}
-      <h1 className="headline-large-emphasized text-neutral-600 mb-4">
+      <h1 className="headline-large-emphasized text-neutral-600 mb-4 break-all">
         {event?.name}
       </h1>
 
@@ -124,7 +124,9 @@ function PastEventDetail() {
             sx={{ width: 14, height: 14 }}
             className="text-primary translate-y-1"
           />
-          <p className="body-medium-primary text-neutral-600">{eventDate}</p>
+          <p className="body-medium-primary text-neutral-600 break-all">
+            {eventDate}
+          </p>
         </div>
 
         {/* Time */}
@@ -133,7 +135,7 @@ function PastEventDetail() {
             sx={{ width: 14, height: 14 }}
             className="text-primary translate-y-1"
           />
-          <p className="body-medium-primary text-neutral-600">
+          <p className="body-medium-primary text-neutral-600 break-all">
             {eventTimeRange}
           </p>
         </div>
@@ -144,7 +146,7 @@ function PastEventDetail() {
             sx={{ width: 14, height: 18 }}
             className="text-primary translate-y-1"
           />
-          <p className="body-medium-primary text-neutral-600">
+          <p className="body-medium-primary text-neutral-600 break-all">
             {eventLocation}
           </p>
         </div>
@@ -155,7 +157,7 @@ function PastEventDetail() {
         <h2 className="title-large-emphasized text-neutral-600">
           {tEvent("details")}
         </h2>
-        <p className="body-medium-primary text-neutral-600">
+        <p className="body-medium-primary text-neutral-600 break-all">
           {eventDescription}
         </p>
       </div>
@@ -168,9 +170,11 @@ function PastEventDetail() {
 
         <div className="grid grid-cols-2 gap-x-2 gap-y-1">
           {eventSchedules.map((e, i) => (
-            <Fragment key={i}>
-              <p className="body-medium-primary text-neutral-600">{e[0]}</p>
-              <p className="body-medium-primary text-neutral-600 text-right">
+            <Fragment key={`Activity-${e}-${i}`}>
+              <p className="body-medium-primary text-neutral-600 break-all">
+                {e[0]}
+              </p>
+              <p className="body-medium-primary text-neutral-600 text-right break-all">
                 {e[1]}
               </p>
             </Fragment>
@@ -183,7 +187,9 @@ function PastEventDetail() {
         <h2 className="title-large-emphasized text-neutral-600">
           {tEvent("organizer")}
         </h2>
-        <p className="body-medium-primary text-neutral-600">{eventOwner}</p>
+        <p className="body-medium-primary text-neutral-600 break-all">
+          {eventOwner}
+        </p>
       </div>
 
       {/* Buttons */}
