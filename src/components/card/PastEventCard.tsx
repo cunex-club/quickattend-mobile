@@ -62,7 +62,7 @@ export default function PastEventCard({
           setOpenDetail(prev => !prev);
         }}
       >
-        <h2 className="title-large-emphasized text-neutral-600 translate-y-1 break-all line-clamp-1">
+        <h2 className="title-large-emphasized text-neutral-600 translate-y-1 break-all line-clamp-2">
           {name}
         </h2>
         {openDetail ? (

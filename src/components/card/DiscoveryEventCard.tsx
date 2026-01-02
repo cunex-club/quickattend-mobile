@@ -33,7 +33,7 @@ export default function DiscoveryEventCard({
     >
       {/* Header */}
       <div className="flex justify-between items-center gap-4 mb-1">
-        <h2 className="title-large-emphasized text-neutral-600 break-all line-clamp-1">
+        <h2 className="title-large-emphasized text-neutral-600 break-all line-clamp-2">
           {name}
         </h2>
       </div>
