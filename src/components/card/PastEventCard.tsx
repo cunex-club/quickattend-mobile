@@ -62,7 +62,7 @@ export default function PastEventCard({
           setOpenDetail(prev => !prev);
         }}
       >
-        <h2 className="title-large-emphasized text-neutral-600 translate-y-1 break-all">
+        <h2 className="title-large-emphasized text-neutral-600 translate-y-1 break-all line-clamp-1">
           {name}
         </h2>
         {openDetail ? (
@@ -107,7 +107,7 @@ export default function PastEventCard({
               sx={{ width: 14, height: 18 }}
               className="text-primary translate-y-1"
             />
-            <p className="body-medium-primary text-neutral-600 break-all">
+            <p className="body-medium-primary text-neutral-600 break-all line-clamp-2">
               {location}
             </p>
           </div>
@@ -118,7 +118,7 @@ export default function PastEventCard({
           <h2 className="title-medium-emphasized text-neutral-600">
             {tEvent("details")}
           </h2>
-          <p className="body-small-primary text-neutral-600 break-all">
+          <p className="body-small-primary text-neutral-600 break-all line-clamp-5">
             {description}
           </p>
         </div>
@@ -129,7 +129,7 @@ export default function PastEventCard({
             sx={{ width: 16, height: 16 }}
             className="text-primary translate-y-1"
           />
-          <p className="body-small-primary text-neutral-600 break-all">
+          <p className="body-small-primary text-neutral-600 break-all line-clamp-1">
             {owner}
           </p>
         </div>

@@ -33,7 +33,7 @@ export default function DiscoveryEventCard({
     >
       {/* Header */}
       <div className="flex justify-between items-center gap-4 mb-1">
-        <h2 className="title-large-emphasized text-neutral-600 break-all">
+        <h2 className="title-large-emphasized text-neutral-600 break-all line-clamp-1">
           {name}
         </h2>
       </div>
@@ -68,8 +68,11 @@ export default function DiscoveryEventCard({
             sx={{ width: 14, height: 18 }}
             className="text-primary translate-y-1"
           />
-          <p className="body-medium-primary text-neutral-600 break-all">
-            {location}
+          <p className="body-medium-primary text-neutral-600 break-all line-clamp-2">
+            vasfdasopdkasopdkasopdjkopasdjop[iasdjiopwasddj opweuj fopijweopfihj
+            wedoipfhjerfoipfgvhjeodipfg jerodfjfgvoperjfg opierasdh fgiopvjed
+            riopfgvj sdfiopgv jiopsdfgvj eiopd ghjiopdfhj giopdf jgiovj
+            dfiopgujdfziog j sdfiogjiosdfjgiopsdfjgiosdfjiogvjsdfiogjdfiogjo
           </p>
         </div>
       </div>
@@ -79,8 +82,11 @@ export default function DiscoveryEventCard({
         <h2 className="title-medium-emphasized text-neutral-600">
           {tEvent("details")}
         </h2>
-        <p className="body-small-primary text-neutral-600 break-all">
-          {description}
+        <p className="body-small-primary text-neutral-600 break-all line-clamp-5">
+          vasfdasopdkasopdkasopdjkopasdjop[iasdjiopwasddj opweuj fopijweopfihj
+          wedoipfhjerfoipfgvhjeodipfg jerodfjfgvoperjfg opierasdh fgiopvjed
+          riopfgvj sdfiopgv jiopsdfgvj eiopd ghjiopdfhj giopdf jgiovj
+          dfiopgujdfziog j sdfiogjiosdfjgiopsdfjgiosdfjiogvjsdfiogjdfiogjo
         </p>
       </div>
     </Link>
