@@ -69,10 +69,7 @@ export default function DiscoveryEventCard({
             className="text-primary translate-y-1"
           />
           <p className="body-medium-primary text-neutral-600 break-all line-clamp-2">
-            vasfdasopdkasopdkasopdjkopasdjop[iasdjiopwasddj opweuj fopijweopfihj
-            wedoipfhjerfoipfgvhjeodipfg jerodfjfgvoperjfg opierasdh fgiopvjed
-            riopfgvj sdfiopgv jiopsdfgvj eiopd ghjiopdfhj giopdf jgiovj
-            dfiopgujdfziog j sdfiogjiosdfjgiopsdfjgiosdfjiogvjsdfiogjdfiogjo
+            {location}
           </p>
         </div>
       </div>
@@ -82,11 +79,8 @@ export default function DiscoveryEventCard({
         <h2 className="title-medium-emphasized text-neutral-600">
           {tEvent("details")}
         </h2>
-        <p className="body-small-primary text-neutral-600 break-all line-clamp-5">
-          vasfdasopdkasopdkasopdjkopasdjop[iasdjiopwasddj opweuj fopijweopfihj
-          wedoipfhjerfoipfgvhjeodipfg jerodfjfgvoperjfg opierasdh fgiopvjed
-          riopfgvj sdfiopgv jiopsdfgvj eiopd ghjiopdfhj giopdf jgiovj
-          dfiopgujdfziog j sdfiogjiosdfjgiopsdfjgiosdfjiogvjsdfiogjdfiogjo
+        <p className="body-small-primary text-neutral-600 break-all line-clamp-5 whitespace-pre-wrap">
+          {description}
         </p>
       </div>
     </Link>

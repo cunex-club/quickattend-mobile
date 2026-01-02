@@ -118,7 +118,7 @@ export default function PastEventCard({
           <h2 className="title-medium-emphasized text-neutral-600">
             {tEvent("details")}
           </h2>
-          <p className="body-small-primary text-neutral-600 break-all line-clamp-5">
+          <p className="body-small-primary text-neutral-600 break-all line-clamp-5 whitespace-pre-wrap">
             {description}
           </p>
         </div>
