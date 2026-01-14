@@ -25,6 +25,9 @@ import Image from "next/image";
 import { EventInterface } from "@/utils/interface";
 import { useTranslations } from "next-intl";
 import { usePageLoading } from "@/context/PageLoadingContext";
+import GoogleMapPreview, {
+  DEFAULT_CENTER,
+} from "@/components/GoogleMapPreview";
 
 function DiscoveryEventDetail() {
   const { id } = useParams();
@@ -200,7 +203,8 @@ function DiscoveryEventDetail() {
         <h2 className="title-large-emphasized text-neutral-600">
           {tEvent("viewMap")}
         </h2>
-        <Image src={"/mock/map.png"} alt="mock map" width={350} height={180} />
+        {/* MOCK VERSION */}
+        <GoogleMapPreview lat={DEFAULT_CENTER.lat} lng={DEFAULT_CENTER.lng} />
       </div>
 
       <div ref={bottomRef}></div>
