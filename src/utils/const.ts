@@ -13,6 +13,14 @@ export const allEvents: EventInterface[] = [
   { id: "10", name: "Breath Fresh" },
 ];
 
+export const languageCode = ["th-th", "en-us"] as const;
+export type LanguageCode = (typeof languageCode)[number];
+
+export const languageLabel: Record<string, string> = {
+  "th-th": "ภาษาไทย",
+  "en-us": "English",
+};
+
 export const myCurrentEvents: EventInterface[] = allEvents.slice(0, 4);
 
 export const myPastEvents: EventInterface[] = allEvents.slice(4, 8);
