@@ -57,5 +57,9 @@
     "loading": "Loading...",
     "alert": "แจ้งเตือน",
     "error": "ข้อผิดพลาด"
+  },
+  "footer": {
+    "policy": "นโยบายความเป็นส่วนตัว",
+    "termsOfServices": "เงื่อนไขและข้อกำหนด"
   }
 }

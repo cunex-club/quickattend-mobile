@@ -57,5 +57,9 @@
     "loading": "Loading...",
     "alert": "Alert",
     "error": "Error"
+  },
+  "footer": {
+    "policy": "Privacy Policy",
+    "termsOfServices": "Terms and Conditions"
   }
 }
