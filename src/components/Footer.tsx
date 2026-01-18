@@ -87,7 +87,7 @@ const Footer = () => {
 
           {/* Policy */}
           <p
-            className="label-large-primary h-fit text-primary cursor-pointer underline mb-1"
+            className="label-large-primary h-fit text-primary cursor-pointer underline mb-1 text-end"
             onClick={() => {
               setOpenLLEPopup(true);
               if (locale == languageCode[0]) {
@@ -102,7 +102,7 @@ const Footer = () => {
           </p>
 
           {/* Terms of Services */}
-          <p className="label-large-primary text-primary">
+          <p className="label-large-primary text-primary text-end">
             {tFooter("termsOfServices")}
           </p>
         </div>
