@@ -102,8 +102,19 @@ const Footer = () => {
           </p>
 
           {/* Terms of Services */}
-          <p className="label-large-primary text-primary text-end">
-            {tFooter("termsOfServices")}
+          <p
+            className="label-large-primary underline cursor-pointer text-primary text-end"
+            onClick={() => {
+              setOpenLLEPopup(true);
+              if (locale == languageCode[0]) {
+                setToHref("https://cunex.chula.ac.th/privacy/cunex_th.html");
+              } else {
+                setToHref("https://cunex.chula.ac.th/privacy/cunex_en.html");
+              }
+              setDescription("");
+            }}
+          >
+            {tFooter("termsAndConditions")}
           </p>
         </div>
       </div>
