@@ -16,12 +16,12 @@ export default function QuickAttendButton({
   const baseColor =
     variant === "filled"
       ? "bg-primary border-primary text-neutral-white"
-      : "bg-neutral-white border-primary text-primary";
+      : "border-primary text-primary";
 
   const layout =
     type === "text"
-      ? `min-h-[36px] min-w-fit max-w-full flex-1`
-      : `min-h-[36px] w-full flex-1`;
+      ? `min-h-[32px] min-w-fit max-w-full flex-1`
+      : `min-h-[32px] w-full flex-1`;
 
   return (
     <button

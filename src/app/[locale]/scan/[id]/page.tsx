@@ -313,7 +313,7 @@ const ScanPage = () => {
                     showPageLoading();
                     router.push("/");
                   }}
-                  className="w-full h-full rounded-full border-none"
+                  className="w-full h-full rounded-full border-none bg-neutral-white"
                 >
                   <Home className="w-6 h-6" />
                 </QuickAttendButton>
@@ -328,7 +328,7 @@ const ScanPage = () => {
                     navigator.clipboard.writeText(event?.name || "");
                     showMessage(tScan("copySuccess"));
                   }}
-                  className="w-full h-full rounded-full border-none"
+                  className="w-full h-full rounded-full border-none bg-neutral-white"
                 >
                   <Link className="w-6 h-6" />
                 </QuickAttendButton>
@@ -341,7 +341,7 @@ const ScanPage = () => {
                 variant="outline"
                 type="icon"
                 onClick={toggleFlash}
-                className="w-full h-full rounded-full border-none"
+                className="w-full h-full rounded-full border-none bg-neutral-white"
               >
                 {isFlashOn ? (
                   <FlashOn className="w-6 h-6" />
