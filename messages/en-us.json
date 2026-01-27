@@ -54,7 +54,7 @@
   "common": {
     "confirm": "Confirm",
     "cancel": "Cancel",
-    "loading": "Loading...",
+    "loading": "Loading",
     "alert": "Alert",
     "error": "Error"
   },

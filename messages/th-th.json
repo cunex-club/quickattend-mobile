@@ -54,7 +54,7 @@
   "common": {
     "confirm": "ตกลง",
     "cancel": "ยกเลิก",
-    "loading": "Loading...",
+    "loading": "กำลังโหลดข้อมูล",
     "alert": "แจ้งเตือน",
     "error": "ข้อผิดพลาด"
   },
