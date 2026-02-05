@@ -6,6 +6,8 @@ import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { PageLoadingProvider } from "@/context/PageLoadingContext";
+import { getHealth } from "@/service/health";
+import { APP_ENV } from "@/utils/env";
 
 const chulaBoldFont = localFont({
   src: "../../../public/font/CHULALONGKORNBold.otf",
@@ -37,6 +39,11 @@ export default async function RootLayout({
   }
 
   const messages = await getMessages();
+
+  if (APP_ENV === "development") {
+    const health = await getHealth();
+    console.log("Health check:", health);
+  }
 
   return (
     <html lang={locale} className="h-full">

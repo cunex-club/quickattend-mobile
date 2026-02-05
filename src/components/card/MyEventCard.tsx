@@ -58,7 +58,9 @@ export default function MyEventCard({
     >
       {/* Header */}
       <div className="flex justify-between items-center gap-4 mb-1">
-        <h2 className="title-large-emphasized text-neutral-600">{name}</h2>
+        <h2 className="title-large-emphasized text-neutral-600 break-all line-clamp-2">
+          {name}
+        </h2>
         <MoreVert
           sx={{ width: 20, height: 20 }}
           className="cursor-pointer -translate-y-1"
@@ -78,7 +80,9 @@ export default function MyEventCard({
             sx={{ width: 14, height: 14 }}
             className="text-primary translate-y-1"
           />
-          <p className="body-medium-primary text-neutral-600">{date}</p>
+          <p className="body-medium-primary text-neutral-600 break-all">
+            {date}
+          </p>
         </div>
 
         {/* Time */}
@@ -87,7 +91,9 @@ export default function MyEventCard({
             sx={{ width: 14, height: 14 }}
             className="text-primary translate-y-1"
           />
-          <p className="body-medium-primary text-neutral-600">{timeRange}</p>
+          <p className="body-medium-primary text-neutral-600 break-all">
+            {timeRange}
+          </p>
         </div>
 
         {/* Location */}
@@ -96,7 +102,9 @@ export default function MyEventCard({
             sx={{ width: 14, height: 18 }}
             className="text-primary translate-y-1"
           />
-          <p className="body-medium-primary text-neutral-600">{location}</p>
+          <p className="body-medium-primary text-neutral-600 break-all line-clamp-2">
+            {location}
+          </p>
         </div>
       </div>
 
@@ -105,7 +113,9 @@ export default function MyEventCard({
         <h2 className="title-medium-emphasized text-neutral-600">
           {tEvent("details")}
         </h2>
-        <p className="body-small-primary text-neutral-600">{description}</p>
+        <p className="body-small-primary text-neutral-600 break-all line-clamp-5 whitespace-pre-wrap">
+          {description}
+        </p>
       </div>
 
       {/* Owner */}
@@ -114,7 +124,9 @@ export default function MyEventCard({
           sx={{ width: 16, height: 16 }}
           className="text-primary translate-y-1"
         />
-        <p className="body-small-primary text-neutral-600">{owner}</p>
+        <p className="body-small-primary text-neutral-600 break-all line-clamp-1">
+          {owner}
+        </p>
       </div>
 
       {/* Buttons */}

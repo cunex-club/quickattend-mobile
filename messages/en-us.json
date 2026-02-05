@@ -54,8 +54,12 @@
   "common": {
     "confirm": "Confirm",
     "cancel": "Cancel",
-    "loading": "Loading...",
+    "loading": "Loading",
     "alert": "Alert",
     "error": "Error"
+  },
+  "footer": {
+    "policy": "Privacy Policy",
+    "termsAndConditions": "Terms and Conditions"
   }
 }

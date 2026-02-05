@@ -62,7 +62,7 @@ export default function PastEventCard({
           setOpenDetail(prev => !prev);
         }}
       >
-        <h2 className="title-large-emphasized text-neutral-600 translate-y-1">
+        <h2 className="title-large-emphasized text-neutral-600 translate-y-1 break-all line-clamp-2">
           {name}
         </h2>
         {openDetail ? (
@@ -89,21 +89,27 @@ export default function PastEventCard({
               sx={{ width: 14, height: 14 }}
               className="text-primary translate-y-1"
             />
-            <p className="body-medium-primary text-neutral-600">{date}</p>
+            <p className="body-medium-primary text-neutral-600 break-all">
+              {date}
+            </p>
           </div>
           <div className="flex gap-2">
             <WatchLater
               sx={{ width: 14, height: 14 }}
               className="text-primary translate-y-1"
             />
-            <p className="body-medium-primary text-neutral-600">{timeRange}</p>
+            <p className="body-medium-primary text-neutral-600 break-all">
+              {timeRange}
+            </p>
           </div>
           <div className="flex gap-2">
             <LocationOn
               sx={{ width: 14, height: 18 }}
               className="text-primary translate-y-1"
             />
-            <p className="body-medium-primary text-neutral-600">{location}</p>
+            <p className="body-medium-primary text-neutral-600 break-all line-clamp-2">
+              {location}
+            </p>
           </div>
         </div>
 
@@ -112,7 +118,9 @@ export default function PastEventCard({
           <h2 className="title-medium-emphasized text-neutral-600">
             {tEvent("details")}
           </h2>
-          <p className="body-small-primary text-neutral-600">{description}</p>
+          <p className="body-small-primary text-neutral-600 break-all line-clamp-5 whitespace-pre-wrap">
+            {description}
+          </p>
         </div>
 
         {/* Owner */}
@@ -121,7 +129,9 @@ export default function PastEventCard({
             sx={{ width: 16, height: 16 }}
             className="text-primary translate-y-1"
           />
-          <p className="body-small-primary text-neutral-600">{owner}</p>
+          <p className="body-small-primary text-neutral-600 break-all line-clamp-1">
+            {owner}
+          </p>
         </div>
 
         {/* Buttons */}

@@ -38,7 +38,7 @@ function LLEPopup({ setOpenLLEPopup, tohref, description }: LLEPopupProps) {
             e.stopPropagation();
             e.preventDefault();
             if (tohref) {
-              window.location.href = tohref;
+              window.open(tohref, "_blank", "noopener,noreferrer");
             }
             setOpenLLEPopup(false);
           }}

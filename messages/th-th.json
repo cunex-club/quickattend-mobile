@@ -54,8 +54,12 @@
   "common": {
     "confirm": "ตกลง",
     "cancel": "ยกเลิก",
-    "loading": "Loading...",
+    "loading": "กำลังโหลดข้อมูล",
     "alert": "แจ้งเตือน",
     "error": "ข้อผิดพลาด"
+  },
+  "footer": {
+    "policy": "นโยบายความเป็นส่วนตัว",
+    "termsAndConditions": "เงื่อนไขและข้อกำหนด"
   }
 }
