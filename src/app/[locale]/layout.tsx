@@ -8,6 +8,7 @@ import { routing } from "@/i18n/routing";
 import { PageLoadingProvider } from "@/context/PageLoadingContext";
 import { getHealth } from "@/service/health";
 import { APP_ENV } from "@/utils/env";
+import { UserProvider } from "@/providers/UserProvider";
 
 const chulaBoldFont = localFont({
   src: "../../../public/font/CHULALONGKORNBold.otf",
@@ -56,9 +57,11 @@ export default async function RootLayout({
       >
         <NextIntlClientProvider messages={messages}>
           <PageLoadingProvider>
-            <div className="w-full sm:max-w-[390px] min-h-screen bg-neutral-white relative">
-              {children}
-            </div>
+            <UserProvider>
+              <div className="w-full sm:max-w-[390px] min-h-screen bg-neutral-white relative">
+                {children}
+              </div>
+            </UserProvider>
           </PageLoadingProvider>
         </NextIntlClientProvider>
       </body>
