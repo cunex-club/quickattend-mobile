@@ -7,6 +7,7 @@ import { useRouter } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import { APP_ENV } from "@/utils/env";
 import { getHealth } from "@/service/health";
+import { useSearchParams } from "next/navigation";
 
 const UserLoading = () => {
   const tCommon = useTranslations("common");
@@ -34,7 +35,11 @@ const UserNotFound = () => {
 
 const Landing = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { user, userLoading, setUser, setUserLoading } = useUser();
+
+  const tokenQuery = searchParams.get("token");
+  const langQuery = searchParams.get("lang");
 
   useEffect(() => {
     async function checkHealth() {
@@ -49,16 +54,27 @@ const Landing = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const token = process.env.NEXT_PUBLIC_MOCK_JWT_TOKEN ?? "";
+      const token =
+        tokenQuery ||
+        process.env.NEXT_PUBLIC_CUNEX_TOKEN ||
+        process.env.NEXT_PUBLIC_MOCK_JWT_TOKEN ||
+        "";
+
       if (!token) {
         setUser(null);
         setUserLoading(false);
         return;
       }
+
       try {
         const fetchedUser = await getUserProfile(token);
         setUser(fetchedUser);
-        router.replace("/");
+
+        if (langQuery === "th") {
+          router.replace("/", { locale: "th-th" });
+        } else {
+          router.replace("/", { locale: "en-us" });
+        }
       } catch {
         setUser(null);
       } finally {
