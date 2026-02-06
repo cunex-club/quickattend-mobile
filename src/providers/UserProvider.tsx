@@ -1,60 +1,35 @@
 "use client";
 
-import { getUserProfile } from "@/service/auth";
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  ReactNode,
-} from "react";
+import React, { createContext, useContext, useState, ReactNode } from "react";
 
 export interface User {
-  id: String;
-  ref_id: String;
-  firstname_th: String;
-  surname_th: String;
-  title_th: String;
-  firstname_en: String;
-  surname_en: String;
-  title_en: String;
+  id: string;
+  ref_id: string;
+  firstname_th: string;
+  surname_th: string;
+  title_th: string;
+  firstname_en: string;
+  surname_en: string;
+  title_en: string;
 }
 
 interface UserContextType {
-  user: User | null;
-  loading: boolean;
+  user: User | null | undefined;
+  userLoading: boolean;
+  setUser: (user: User | null) => void;
+  setUserLoading: (loading: boolean) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const token = process.env.NEXT_PUBLIC_MOCK_JWT_TOKEN ?? "";
-
-      if (token) {
-        try {
-          const fetchedUser = await getUserProfile(token);
-          setUser(fetchedUser);
-          console.log("UserProvider: User Information:", fetchedUser);
-        } catch (error) {
-          console.error("UserProvider: Error fetching user profile");
-        }
-      } else {
-        console.log("UserProvider: No token found");
-      }
-
-      setLoading(false);
-    };
-
-    fetchUser();
-  }, []);
+  const [user, setUser] = useState<User | null | undefined>(undefined);
+  const [userLoading, setUserLoading] = useState(true);
 
   return (
-    <UserContext.Provider value={{ user, loading }}>
+    <UserContext.Provider
+      value={{ user, userLoading, setUser, setUserLoading }}
+    >
       {children}
     </UserContext.Provider>
   );

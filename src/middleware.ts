@@ -4,7 +4,12 @@ import { i18nMiddleware } from "./middleware/i18n";
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
+  if (pathname === "/") {
+    return NextResponse.redirect(new URL("/landing", request.url));
+  }
+
   if (
+    pathname.startsWith("/landing") ||
     pathname.startsWith("/api") ||
     pathname.startsWith("/_next") ||
     pathname.startsWith("/_vercel") ||
