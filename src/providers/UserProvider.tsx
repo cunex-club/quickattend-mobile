@@ -1,54 +1,60 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import { getUserProfile } from "@/service/auth";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 
 export interface User {
-  email: string | null;
-  facultyCode?: string;
-  facultyNameEN?: string;
-  facultyNameTH?: string;
-  firstNameEN: string;
-  firstNameTH: string;
-  lastNameEN: string;
-  lastNameTH: string;
-  refId: string;
-  studentYear?: string;
-  titleNameEN: string;
-  titleNameTH: string;
-  userId: string;
-  userType: "STUDENT" | "STAFF";
+  id: String;
+  ref_id: String;
+  firstname_th: String;
+  surname_th: String;
+  title_th: String;
+  firstname_en: String;
+  surname_en: String;
+  title_en: String;
 }
-
-// Mock User Data from CUNEX
-const mockUser: User = {
-  email: null,
-  facultyCode: "21",
-  facultyNameEN: "FACULTY OF ENGINEERING",
-  facultyNameTH: "คณะวิศวกรรมศาสตร์",
-  firstNameEN: "Thanagorn",
-  firstNameTH: "ธนกร",
-  lastNameEN: "Chaiyut",
-  lastNameTH: "ไชยยุทธ",
-  refId: "6631321321",
-  studentYear: "2566",
-  titleNameEN: "MISTER",
-  titleNameTH: "นาย",
-  userId: "55555555-5555-5555-5555-555555555555",
-  userType: "STUDENT",
-};
 
 interface UserContextType {
   user: User | null;
-  setUser: (user: User | null) => void;
+  loading: boolean;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(mockUser);
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = process.env.NEXT_PUBLIC_MOCK_JWT_TOKEN ?? "";
+
+      if (token) {
+        try {
+          const fetchedUser = await getUserProfile(token);
+          setUser(fetchedUser);
+          console.log("UserProvider: User Information:", fetchedUser);
+        } catch (error) {
+          console.error("UserProvider: Error fetching user profile");
+        }
+      } else {
+        console.log("UserProvider: No token found");
+      }
+
+      setLoading(false);
+    };
+
+    fetchUser();
+  }, []);
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user, loading }}>
       {children}
     </UserContext.Provider>
   );
