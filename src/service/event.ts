@@ -34,7 +34,7 @@ export async function getEvents(
   isManaged: boolean | undefined,
   page: number = 1,
   pageSize: number = 8
-): Promise<Event[]> {
+): Promise<{ events: Event[]; meta: PaginationMeta | null }> {
   const path =
     isManaged == undefined
       ? `/events?page=${page}&pageSize=${pageSize}`
@@ -45,7 +45,12 @@ export async function getEvents(
     },
   });
 
-  return response.data.data;
+  console.log(response.data.meta);
+
+  return {
+    events: response.data.data,
+    meta: response.data.meta,
+  };
 }
 
 export interface Agenda {

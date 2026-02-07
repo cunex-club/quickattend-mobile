@@ -1,83 +1,82 @@
 "use client";
 
-import {
-  eventDate,
-  eventDescription,
-  eventLocation,
-  eventOwner,
-  eventSchedules,
-  eventTimeRange,
-} from "@/utils/const";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 
 import {
-  ArrowUpward,
   CalendarMonth,
   ChevronRightOutlined,
   HomeOutlined,
   LocationOn,
   WatchLater,
 } from "@mui/icons-material";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { usePageLoading } from "@/context/PageLoadingContext";
 import GoogleMapPreview, {
   DEFAULT_CENTER,
 } from "@/components/GoogleMapPreview";
 import Footer from "@/components/Footer";
+import { EventDetail, getEventById } from "@/service/event";
+import { formatEventDateTime } from "@/utils/function";
+import EventNotFound from "@/components/EventNotFound";
+import { useUser } from "@/providers/UserProvider";
 
 function DiscoveryEventDetail() {
   const { id } = useParams();
-  const [event, setEvent] = useState<Event | null>(null);
-  const [isInvisibleScrollToTop, setInvisibleScrollToTop] = useState(false);
+  const { userToken } = useUser();
+  const locale = useLocale();
+  const [event, setEvent] = useState<EventDetail | null>(null);
 
   const tEvent = useTranslations("event");
   const tBreadCrumb = useTranslations("breadcrumb");
 
-  const { showPageLoading, pageLoading } = usePageLoading();
-
-  const topRef = useRef<HTMLDivElement>(null);
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const { showPageLoading, hidePageLoading } = usePageLoading();
 
   useEffect(() => {
-    const targetEvent = allEvents.filter(e => e.id === id)[0] ?? null;
-    if (!targetEvent) {
-      return;
+    async function fetchEvent() {
+      if (!userToken || !id) return;
+
+      showPageLoading();
+      try {
+        const res = await getEventById(userToken, id as string);
+        setEvent(res);
+      } catch (err) {
+        console.error(err);
+        setEvent(null);
+      } finally {
+        hidePageLoading();
+      }
     }
-    setEvent(targetEvent);
+
+    fetchEvent();
   }, [id]);
 
-  // Check whether users reach the bottom or not
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setInvisibleScrollToTop(!entry.isIntersecting);
-      },
-      {
-        root: null,
-        threshold: 0.1,
-      }
+  if (!event) {
+    return (
+      <div className="w-full min-h-screen flex flex-col bg-neutral-white">
+        <EventNotFound />
+
+        <Footer />
+      </div>
     );
+  }
 
-    if (bottomRef.current) {
-      observer.observe(bottomRef.current);
-    }
-
-    return () => {
-      if (bottomRef.current) observer.unobserve(bottomRef.current);
-    };
-  }, []);
+  const { date, timeRange } = formatEventDateTime(
+    event.start_time,
+    event.end_time,
+    locale as "th-TH" | "en-US"
+  );
 
   return (
-    <div ref={topRef} className="w-full h-screen overflow-auto relative">
+    <div className="w-full h-screen overflow-auto relative">
       {/* Content */}
       <div className="flex flex-col px-8 pt-8 pb-12">
         {/* Breadcrumb */}
         <div className="flex gap-1 mb-6 items-center flex-wrap">
           <Link
             className="flex gap-1 items-center"
-            href="/"
+            href={`/${locale}`}
             onClick={() => {
               showPageLoading();
             }}
@@ -128,7 +127,7 @@ function DiscoveryEventDetail() {
               className="text-primary translate-y-1"
             />
             <p className="body-medium-primary text-neutral-600 break-all">
-              {eventDate}
+              {date}
             </p>
           </div>
 
@@ -139,7 +138,7 @@ function DiscoveryEventDetail() {
               className="text-primary translate-y-1"
             />
             <p className="body-medium-primary text-neutral-600 break-all">
-              {eventTimeRange}
+              {timeRange}
             </p>
           </div>
 
@@ -150,7 +149,7 @@ function DiscoveryEventDetail() {
               className="text-primary translate-y-1"
             />
             <p className="body-medium-primary text-neutral-600 break-all">
-              {eventLocation}
+              {event.location}
             </p>
           </div>
         </div>
@@ -161,7 +160,7 @@ function DiscoveryEventDetail() {
             {tEvent("details")}
           </h2>
           <p className="body-medium-primary text-neutral-600 break-all">
-            {eventDescription}
+            {event.description ?? "-"}
           </p>
         </div>
 
@@ -172,16 +171,23 @@ function DiscoveryEventDetail() {
           </h2>
 
           <div className="grid grid-cols-2 gap-x-2 gap-y-1">
-            {eventSchedules.map((e, i) => (
-              <Fragment key={i}>
-                <p className="body-medium-primary text-neutral-600 break-all">
-                  {e[0]}
-                </p>
-                <p className="body-medium-primary text-neutral-600 text-right break-all">
-                  {e[1]}
-                </p>
-              </Fragment>
-            ))}
+            {event.agenda.map((e, i) => {
+              const { timeRange } = formatEventDateTime(
+                e.start_time,
+                e.end_time,
+                locale as "th-TH" | "en-US"
+              );
+              return (
+                <Fragment key={i}>
+                  <p className="body-medium-primary text-neutral-600 break-all">
+                    {e.activity_name}
+                  </p>
+                  <p className="body-medium-primary text-neutral-600 text-right break-all">
+                    {timeRange}
+                  </p>
+                </Fragment>
+              );
+            })}
           </div>
         </div>
 
@@ -191,7 +197,7 @@ function DiscoveryEventDetail() {
             {tEvent("organizer")}
           </h2>
           <p className="body-medium-primary text-neutral-600 break-all">
-            {eventOwner}
+            {event.organizer}
           </p>
         </div>
 
@@ -200,23 +206,12 @@ function DiscoveryEventDetail() {
           <h2 className="title-large-emphasized text-neutral-600">
             {tEvent("viewMap")}
           </h2>
-          {/* MOCK VERSION */}
-          <GoogleMapPreview lat={DEFAULT_CENTER.lat} lng={DEFAULT_CENTER.lng} />
+
+          <GoogleMapPreview
+            lat={event.lat ?? DEFAULT_CENTER.lat}
+            lng={event.lng ?? DEFAULT_CENTER.lng}
+          />
         </div>
-
-        <div ref={bottomRef}></div>
-
-        {/* Go to Top Button */}
-        <button
-          className={`fixed right-8 bottom-12 p-4 w-14 h-14 rounded-full bg-primary z-50 cursor-pointer ${
-            isInvisibleScrollToTop || pageLoading ? "hidden" : "block"
-          }`}
-          onClick={() =>
-            topRef.current?.scrollTo({ top: 0, behavior: "smooth" })
-          }
-        >
-          <ArrowUpward sx={{ width: 24, height: 24 }} className="text-white" />
-        </button>
       </div>
 
       <Footer />

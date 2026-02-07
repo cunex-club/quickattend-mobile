@@ -4,7 +4,7 @@ import DiscoveryEventCard from "@/components/card/DiscoveryEventCard";
 import Footer from "@/components/Footer";
 import { usePageLoading } from "@/context/PageLoadingContext";
 import { useUser } from "@/providers/UserProvider";
-import { Event, getEvents } from "@/service/event";
+import { Event, getEvents, PaginationMeta } from "@/service/event";
 import { EVENTS_PER_PAGE } from "@/utils/const";
 
 import {
@@ -26,6 +26,9 @@ export default function Discovery() {
   const [openSortDropdown, setOpenSortDropdown] = useState(false);
 
   const [events, setEvents] = useState<Event[]>([]);
+  const [paginationMeta, setPaginationMeta] = useState<PaginationMeta | null>(
+    null
+  );
 
   const tDiscovery = useTranslations("discovery");
   const tBreadCrumb = useTranslations("breadcrumb");
@@ -36,13 +39,15 @@ export default function Discovery() {
     const fetchDiscoveryEvents = async () => {
       showPageLoading();
       try {
-        const fetchedEvents = await getEvents(
+        const fetched = await getEvents(
           userToken,
           undefined,
           currentPageNumber,
           EVENTS_PER_PAGE
         );
-        setEvents(fetchedEvents);
+
+        setEvents(fetched.events);
+        setPaginationMeta(fetched.meta);
       } catch (err) {
         console.error(err);
         setEvents([]);
@@ -70,12 +75,13 @@ export default function Discovery() {
     );
   })();
 
-  const maxPageNumber = Math.max(1, Math.ceil(events.length / EVENTS_PER_PAGE));
+  const maxPageNumber = paginationMeta
+    ? Math.ceil(
+        paginationMeta.pagination.total / paginationMeta.pagination.pageSize
+      )
+    : 1;
 
-  const paginatedEvents = sortedEvents.slice(
-    (currentPageNumber - 1) * EVENTS_PER_PAGE,
-    currentPageNumber * EVENTS_PER_PAGE
-  );
+  const paginatedEvents = sortedEvents;
 
   return (
     <div className="h-screen flex flex-col bg-neutral-white">

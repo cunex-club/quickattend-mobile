@@ -39,7 +39,7 @@ export default function Home() {
     const fetchEvents = async () => {
       showPageLoading();
       try {
-        const events = await getEvents(userToken, true);
+        const { events } = await getEvents(userToken, true);
 
         const now = new Date();
 
