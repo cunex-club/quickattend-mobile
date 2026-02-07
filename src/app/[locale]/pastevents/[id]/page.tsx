@@ -38,7 +38,7 @@ function PastEventDetail() {
   const tEvent = useTranslations("event");
   const tBreadCrumb = useTranslations("breadcrumb");
 
-  const { showPageLoading, hidePageLoading } = usePageLoading();
+  const { showPageLoading, hidePageLoading, pageLoading } = usePageLoading();
 
   useEffect(() => {
     async function fetchEvent() {
@@ -62,7 +62,7 @@ function PastEventDetail() {
   if (!event) {
     return (
       <div className="w-full min-h-screen flex flex-col bg-neutral-white">
-        <EventNotFound />
+        {!pageLoading && <EventNotFound />}
 
         <Footer />
       </div>
@@ -97,16 +97,16 @@ function PastEventDetail() {
             <ChevronRightOutlined fontSize="small" className="text-primary" />
             <Link
               className="flex gap-1 items-center"
-              href={`/${locale}/pastevents/${id}`}
+              href={`/pastevents/${id}`}
             >
               <p className="body-small-primary text-neutral-500 truncate max-w-[120px]">
-                {event?.name}
+                {event.name}
               </p>
             </Link>
           </div>
           {/* Event Name */}
           <h1 className="headline-large-emphasized text-neutral-600 mb-4 break-all">
-            {event?.name}
+            {event.name}
           </h1>
           {/* Event Information */}
           <div className="flex flex-col gap-1 mb-6">
@@ -159,23 +159,29 @@ function PastEventDetail() {
             </h2>
 
             <div className="grid grid-cols-2 gap-x-2 gap-y-1">
-              {event.agenda.map((e, i) => {
-                const { timeRange } = formatEventDateTime(
-                  e.start_time,
-                  e.end_time,
-                  locale as "th-TH" | "en-US"
-                );
-                return (
-                  <Fragment key={`Activity-${e}-${i}`}>
-                    <p className="body-medium-primary text-neutral-600 break-all">
-                      {e.activity_name}
-                    </p>
-                    <p className="body-medium-primary text-neutral-600 text-right break-all">
-                      {timeRange}
-                    </p>
-                  </Fragment>
-                );
-              })}
+              {event.agenda.length > 0 ? (
+                event.agenda.map((e, i) => {
+                  const { timeRange } = formatEventDateTime(
+                    e.start_time,
+                    e.end_time,
+                    locale as "th-TH" | "en-US"
+                  );
+                  return (
+                    <Fragment key={i}>
+                      <p className="body-medium-primary text-neutral-600 break-all">
+                        {e.activity_name}
+                      </p>
+                      <p className="body-medium-primary text-neutral-600 text-right break-all">
+                        {timeRange}
+                      </p>
+                    </Fragment>
+                  );
+                })
+              ) : (
+                <p className="body-medium-primary text-neutral-600 break-all">
+                  -
+                </p>
+              )}
             </div>
           </div>
           {/* Event Owner */}
