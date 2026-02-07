@@ -15,16 +15,17 @@ import {
 import QuickAttendButton from "../QuickAttendButton";
 import LLEPopup from "../popup/LLEPopup";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { usePageLoading } from "@/context/PageLoadingContext";
+import { formatEventDateTime } from "@/utils/function";
 
 interface PastEventCardProps {
   id: string;
   name: string;
-  date: string;
-  timeRange: string;
+  startTime: string;
+  endTime: string;
   location: string;
-  description: string;
+  description?: string;
   owner: string;
   displayFirstRow: boolean;
 }
@@ -32,8 +33,8 @@ interface PastEventCardProps {
 export default function PastEventCard({
   id,
   name,
-  date,
-  timeRange,
+  startTime,
+  endTime,
   location,
   description,
   owner,
@@ -45,6 +46,14 @@ export default function PastEventCard({
   const [tohref, setToHref] = useState("");
 
   const { showPageLoading, hidePageLoading } = usePageLoading();
+
+  const locale = useLocale();
+
+  const { date, timeRange } = formatEventDateTime(
+    startTime,
+    endTime,
+    locale as "th-TH" | "en-US"
+  );
 
   const tEvent = useTranslations("event");
 
@@ -119,7 +128,7 @@ export default function PastEventCard({
             {tEvent("details")}
           </h2>
           <p className="body-small-primary text-neutral-600 break-all line-clamp-5 whitespace-pre-wrap">
-            {description}
+            {description ?? "-"}
           </p>
         </div>
 

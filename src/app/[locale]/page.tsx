@@ -15,15 +15,6 @@ import {
 } from "@mui/icons-material";
 import LLEPopup from "@/components/popup/LLEPopup";
 import Link from "next/link";
-import {
-  displayButtonsFirstRowPastEvents,
-  eventDate,
-  eventDescription,
-  eventLocation,
-  eventOwner,
-  eventTimeRange,
-  maxPageNumber,
-} from "@/utils/const";
 import { useTranslations } from "next-intl";
 import { usePageLoading } from "@/context/PageLoadingContext";
 import Footer from "@/components/Footer";
@@ -37,7 +28,6 @@ export default function Home() {
   const [openSortDropdown, setOpenSortDropdown] = useState(false);
   const [currentEvents, setCurrentEvents] = useState<Event[]>([]);
   const [pastEvents, setPastEvents] = useState<Event[]>([]);
-
   const [tohref, setToHref] = useState("");
 
   const topRef = useRef<HTMLDivElement>(null);
@@ -48,22 +38,27 @@ export default function Home() {
 
   const tHome = useTranslations("home");
 
+  const EVENTS_PER_PAGE = 4;
+
   useEffect(() => {
     const fetchManagedEvents = async () => {
       showPageLoading();
       try {
-        const events = await getEvents(userToken, true, currentPageNumber);
-        console.log(events);
-
+        const events = await getEvents(userToken, true);
         const now = new Date();
 
         const current = events.filter(e => new Date(e.end_time) >= now);
-        const past = events.filter(e => new Date(e.end_time) < now);
+        const past = events
+          .filter(e => new Date(e.end_time) < now)
+          .sort(
+            (a, b) =>
+              new Date(b.end_time).getTime() - new Date(a.end_time).getTime()
+          );
 
         setCurrentEvents(current);
         setPastEvents(past);
-      } catch (error) {
-        console.error(error);
+      } catch (err) {
+        console.error(err);
         setCurrentEvents([]);
         setPastEvents([]);
       } finally {
@@ -71,30 +66,43 @@ export default function Home() {
       }
     };
 
-    if (userToken) {
-      fetchManagedEvents();
-    }
-  }, [userToken, currentPageNumber]);
+    if (userToken) fetchManagedEvents();
+  }, [userToken]);
 
   // When there's a change in sort option
-  useEffect(() => {
-    if (sortOption === 0) {
-      // Newest - Oldest
-      alert("Sorting from new to old");
-    } else if (sortOption === 1) {
-      // Oldest - Newest
-      alert("Sorting from old to new");
+  const sortedPastEvents = (() => {
+    // Oldest -> Newest
+    if (sortOption === 1) {
+      return [...pastEvents].sort(
+        (a, b) =>
+          new Date(a.end_time).getTime() - new Date(b.end_time).getTime()
+      );
     }
-  }, [sortOption]);
+
+    // Newest -> Oldest
+    return [...pastEvents].sort(
+      (a, b) => new Date(b.end_time).getTime() - new Date(a.end_time).getTime()
+    );
+  })();
 
   useEffect(() => {
-    topRef.current?.scrollTo({ top: 0, behavior: "smooth" });
-  }, [currentPageNumber]);
+    setCurrentPageNumber(1);
+  }, [sortOption]);
+
+  const maxPageNumber = Math.max(
+    1,
+    Math.ceil(pastEvents.length / EVENTS_PER_PAGE)
+  );
+
+  const paginatedPastEvents = sortedPastEvents.slice(
+    (currentPageNumber - 1) * EVENTS_PER_PAGE,
+    currentPageNumber * EVENTS_PER_PAGE
+  );
 
   return (
     <div ref={topRef} className="w-full h-screen overflow-auto relative">
       {/* Content */}
-      <div className="w-full flex flex-col px-8 py-12">
+      <div className="w-full h-fit flex flex-col px-8 pt-12">
         {/* My Events */}
         <div className="mb-12">
           {/* Header */}
@@ -136,8 +144,9 @@ export default function Home() {
           {/* Number of Results */}
           <div className="flex justify-between items-center gap-4 mb-4">
             <p className="label-small-primary text-neutral-600">
-              {tHome("showing")} {Math.min(3, currentEvents.length)} 
-              {tHome("from")} {currentEvents.length}
+              {tHome("showingCurrentEvents", {
+                count: currentEvents.length,
+              })}
             </p>
             <div
               className="flex items-center gap-2 cursor-pointer"
@@ -164,11 +173,11 @@ export default function Home() {
                     key={event.id}
                     id={event.id}
                     name={event.name}
-                    date={eventDate}
-                    timeRange={eventTimeRange}
-                    location={eventLocation}
-                    description={eventDescription}
-                    owner={eventOwner}
+                    startTime={event.start_time}
+                    endTime={event.end_time}
+                    location={event.location}
+                    description={event.description}
+                    owner={event.organizer}
                   />
                 );
               })
@@ -195,7 +204,7 @@ export default function Home() {
         </div>
 
         {/* Past Events */}
-        <div className="mb-6 ">
+        <div className="mb-6">
           {/* Header */}
           <div className="flex justify-between gap-4 mb-6 relative">
             <h1 className="headline-small-emphasized text-neutral-600">
@@ -240,22 +249,20 @@ export default function Home() {
 
           {/* Events */}
           <div className="flex flex-col gap-4">
-            {pastEvents.length > 0 ? (
-              pastEvents.map(event => {
-                return (
-                  <PastEventCard
-                    key={event.id}
-                    id={event.id}
-                    name={event.name}
-                    date={eventDate}
-                    timeRange={eventTimeRange}
-                    location={eventLocation}
-                    description={eventDescription}
-                    owner={eventOwner}
-                    displayFirstRow={displayButtonsFirstRowPastEvents}
-                  />
-                );
-              })
+            {paginatedPastEvents.length > 0 ? (
+              paginatedPastEvents.map(event => (
+                <PastEventCard
+                  key={event.id}
+                  id={event.id}
+                  name={event.name}
+                  startTime={event.start_time}
+                  endTime={event.end_time}
+                  location={event.location}
+                  description={event.description}
+                  owner={event.organizer}
+                  displayFirstRow={true}
+                />
+              ))
             ) : (
               <p className="label-small-primary text-center text-neutral-600 my-6">
                 {tHome("noEvents")}
@@ -347,8 +354,9 @@ export default function Home() {
         <button
           className="p-2 w-8 h-8 rounded-full bg-neutral-white border border-neutral-300 cursor-pointer"
           onClick={() => {
-            if (currentPageNumber < maxPageNumber)
+            if (currentPageNumber < maxPageNumber) {
               setCurrentPageNumber(prev => prev + 1);
+            }
           }}
         >
           <ChevronRight

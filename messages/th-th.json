@@ -2,8 +2,7 @@
   "home": {
     "myEvents": "กิจกรรมของฉัน",
     "pastEvents": "กิจกรรมที่ผ่านมา",
-    "showing": "แสดงกิจกรรม",
-    "from": "จาก",
+    "showingCurrentEvents": "แสดงกิจกรรม {count} กิจกรรม",
     "viewAll": "ดูทั้งหมด",
     "manageEvents": "จัดการกิจกรรม",
     "backofficeNote": "เข้าสู่ Backoffice เพื่อจัดการและแก้ไขกิจกรรม",

@@ -1,15 +1,6 @@
 "use client";
 
-import {
-  displayButtonsFirstRowPastEvents,
-  eventDate,
-  eventDescription,
-  eventLocation,
-  eventOwner,
-  eventSchedules,
-  eventTimeRange,
-  allEvents,
-} from "@/utils/const";
+import { eventSchedules } from "@/utils/const";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Fragment, useEffect, useRef, useState } from "react";

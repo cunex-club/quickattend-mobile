@@ -2,8 +2,7 @@
   "home": {
     "myEvents": "My Events",
     "pastEvents": "Past Events",
-    "showing": "Showing",
-    "from": "of",
+    "showingCurrentEvents": "Showing {count} event{plural}",
     "viewAll": "View All",
     "manageEvents": "Manage Events",
     "backofficeNote": "Access Backoffice to manage and edit events",
