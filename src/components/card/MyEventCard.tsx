@@ -60,7 +60,7 @@ export default function MyEventCard({
     <Link
       key={id}
       className="w-full min-h-30 h-fit bg-neutral-100 rounded-4xl flex flex-col px-4 py-6 cursor-pointer overflow-visible"
-      href={`/myevents/${id}`}
+      href={`/${locale}/myevents/${id}`}
       onClick={() => {
         showPageLoading();
       }}

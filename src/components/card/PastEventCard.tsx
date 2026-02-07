@@ -27,6 +27,7 @@ interface PastEventCardProps {
   location: string;
   description?: string;
   owner: string;
+  evaluationFormPath: string | null;
   displayFirstRow: boolean;
 }
 
@@ -38,6 +39,7 @@ export default function PastEventCard({
   location,
   description,
   owner,
+  evaluationFormPath,
   displayFirstRow,
 }: PastEventCardProps) {
   const [openLLEPopup, setOpenLLEPopup] = useState(false);
@@ -89,7 +91,7 @@ export default function PastEventCard({
         onClick={() => {
           showPageLoading();
         }}
-        href={`/pastevents/${id}`}
+        href={`/${locale}/pastevents/${id}`}
       >
         {/* Information */}
         <div className="flex flex-col gap-1 mb-4">
@@ -210,6 +212,10 @@ export default function PastEventCard({
                 e.stopPropagation();
                 hidePageLoading();
                 setOpenLLEPopup(true);
+                if (evaluationFormPath) {
+                  setOpenLLEPopup(true);
+                  setToHref(evaluationFormPath);
+                }
                 e.preventDefault();
               }}
             >

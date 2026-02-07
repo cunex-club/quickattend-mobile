@@ -57,7 +57,9 @@
     "loading": "Loading",
     "alert": "Alert",
     "error": "Error",
-    "userNotFound": "User not found"
+    "userNotFound": "User not found",
+    "eventNotFound": "Event not found",
+    "home": "Home"
   },
   "footer": {
     "policy": "Privacy Policy",
