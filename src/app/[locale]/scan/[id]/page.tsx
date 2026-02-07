@@ -16,9 +16,6 @@ import {
   scannedID,
   scanTimeOutMs,
   scannedFaculty,
-  eventRole,
-  myCurrentEvents,
-  allEvents,
 } from "@/utils/const";
 import QuickAttendButton from "@/components/QuickAttendButton";
 import ErrorPopup from "@/components/popup/ErrorPopup";

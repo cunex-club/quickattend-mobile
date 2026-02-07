@@ -38,9 +38,6 @@ function PastEventDetail() {
   const tEvent = useTranslations("event");
   const tBreadCrumb = useTranslations("breadcrumb");
 
-  const topRef = useRef<HTMLDivElement>(null);
-  const bottomRef = useRef<HTMLDivElement>(null);
-
   const { showPageLoading, hidePageLoading } = usePageLoading();
 
   useEffect(() => {
@@ -64,10 +61,7 @@ function PastEventDetail() {
 
   if (!event) {
     return (
-      <div
-        ref={topRef}
-        className="w-full min-h-screen flex flex-col bg-neutral-white"
-      >
+      <div className="w-full min-h-screen flex flex-col bg-neutral-white">
         <EventNotFound />
 
         <Footer />
@@ -82,9 +76,9 @@ function PastEventDetail() {
   );
 
   return (
-    <div ref={topRef} className="min-h-screen flex flex-col bg-neutral-white">
+    <div className="min-h-screen flex flex-col bg-neutral-white">
       {/* Content */}
-      <div className="flex-1 w-full overflow-auto">
+      <div className="flex-1 w-full">
         <div className="flex flex-col px-8 pt-8 pb-12">
           {/* Breadcrumb */}
           <div className="flex gap-1 mb-6 items-center flex-wrap">
@@ -104,10 +98,6 @@ function PastEventDetail() {
             <Link
               className="flex gap-1 items-center"
               href={`/${locale}/pastevents/${id}`}
-              onClick={() => {
-                showPageLoading();
-                window.location.reload();
-              }}
             >
               <p className="body-small-primary text-neutral-500 truncate max-w-[120px]">
                 {event?.name}
@@ -198,7 +188,7 @@ function PastEventDetail() {
             </p>
           </div>
           {/* Buttons */}
-          <div className="flex flex-col gap-2" ref={bottomRef}>
+          <div className="flex flex-col gap-2">
             {/* First Row */}
             <div className="flex gap-2 flex-wrap items-center">
               <QuickAttendButton

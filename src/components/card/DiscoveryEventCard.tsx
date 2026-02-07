@@ -1,4 +1,5 @@
 import { usePageLoading } from "@/context/PageLoadingContext";
+import { formatEventDateTime } from "@/utils/function";
 import { CalendarMonth, LocationOn, WatchLater } from "@mui/icons-material";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
@@ -6,23 +7,29 @@ import Link from "next/link";
 interface DiscoveryEventCardProps {
   id: string;
   name: string;
-  date: string;
-  timeRange: string;
+  startTime: string;
+  endTime: string;
   location: string;
-  description: string;
+  description?: string;
 }
 
 export default function DiscoveryEventCard({
   id,
   name,
-  date,
-  timeRange,
+  startTime,
+  endTime,
   location,
   description,
 }: DiscoveryEventCardProps) {
   const tEvent = useTranslations("event");
   const locale = useLocale();
   const { showPageLoading } = usePageLoading();
+
+  const { date, timeRange } = formatEventDateTime(
+    startTime,
+    endTime,
+    locale as "th-TH" | "en-US"
+  );
   return (
     <Link
       onClick={() => {

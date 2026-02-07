@@ -22,18 +22,19 @@ interface EventsResponse {
 
 export async function getEvents(
   token: string,
-  isManaged: boolean,
+  isManaged: boolean | undefined,
   page: number = 1,
   pageSize: number = 8
 ): Promise<Event[]> {
-  const response = await Axios.get<EventsResponse>(
-    `/events?page=${page}&managed=${isManaged}&pageSize=${pageSize}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  const path =
+    isManaged == undefined
+      ? `/events?page=${page}&pageSize=${pageSize}`
+      : `/events?page=${page}&managed=${isManaged}&pageSize=${pageSize}`;
+  const response = await Axios.get<EventsResponse>(path, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
   return response.data.data;
 }
@@ -52,6 +53,8 @@ export interface EventDetail {
   end_time: string;
   location: string;
   role: Role;
+  lat: number;
+  lng: number;
   evaluation_form: string;
   agenda: Agenda[];
 }

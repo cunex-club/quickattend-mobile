@@ -41,9 +41,6 @@ function MyEventDetail() {
   const tBreadCrumb = useTranslations("breadcrumb");
   const tScan = useTranslations("scan");
 
-  const topRef = useRef<HTMLDivElement>(null);
-  const bottomRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     async function fetchEvent() {
       if (!userToken || !id) return;
@@ -65,10 +62,7 @@ function MyEventDetail() {
 
   if (!event) {
     return (
-      <div
-        ref={topRef}
-        className="w-full min-h-screen flex flex-col bg-neutral-white"
-      >
+      <div className="w-full min-h-screen flex flex-col bg-neutral-white">
         <EventNotFound />
 
         <Footer />
@@ -83,7 +77,7 @@ function MyEventDetail() {
   );
 
   return (
-    <div ref={topRef} className="min-h-screen flex flex-col bg-neutral-white">
+    <div className="min-h-screen flex flex-col bg-neutral-white">
       {/* Content */}
       <div className="flex-1 w-full overflow-auto">
         <div className="w-full flex flex-col px-8 pt-8 pb-12">
@@ -105,10 +99,6 @@ function MyEventDetail() {
             <Link
               className="flex gap-1 items-center"
               href={`/${locale}/myevents/${id}`}
-              onClick={() => {
-                showPageLoading();
-                window.location.reload();
-              }}
             >
               <p className="body-small-primary text-neutral-500 truncate max-w-[120px]">
                 {event?.name}
@@ -205,7 +195,7 @@ function MyEventDetail() {
           </div>
 
           {/* Buttons */}
-          <div className="flex flex-wrap gap-2" ref={bottomRef}>
+          <div className="flex flex-wrap gap-2">
             {/* Scan Button */}
             <QuickAttendButton
               type="text"

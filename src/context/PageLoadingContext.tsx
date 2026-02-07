@@ -18,7 +18,7 @@ export const PageLoading = () => {
   const tCommon = useTranslations("common");
 
   return (
-    <div className="absolute top-0 bg-linear-to-b from-black/40 to-transparent w-full max-w-[390px] flex h-[150px] justify-center items-center">
+    <div className="absolute top-0 bg-linear-to-b from-black/40 to-transparent w-full sm:max-w-[390px] flex h-[150px] justify-center items-center">
       <div className="bg-neutral-white flex items-center gap-3 px-4 py-2 rounded-4xl">
         <span className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
         <p className="title-medium-primary font-bold translate-y-1">
