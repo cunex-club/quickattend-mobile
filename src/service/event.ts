@@ -1,6 +1,15 @@
 import Axios from "@/utils/axios";
 
-export type Role = "OWNER" | "STAFF" | "MANAGER" | null;
+export type Role = "OWNER" | "STAFF" | "MANAGER" | "Attendee" | null;
+
+export interface PaginationMeta {
+  pagination: {
+    page: number;
+    pageSize: number;
+    total: number;
+    hasNext: boolean;
+  };
+}
 
 export interface Event {
   id: string;
@@ -17,7 +26,7 @@ export interface Event {
 interface EventsResponse {
   data: Event[];
   error: null;
-  meta: null;
+  meta: PaginationMeta | null;
 }
 
 export async function getEvents(

@@ -36,10 +36,11 @@ export default function Home() {
   const tHome = useTranslations("home");
 
   useEffect(() => {
-    const fetchManagedEvents = async () => {
+    const fetchEvents = async () => {
       showPageLoading();
       try {
         const events = await getEvents(userToken, true);
+
         const now = new Date();
 
         const current = events.filter(e => new Date(e.end_time) >= now);
@@ -61,8 +62,8 @@ export default function Home() {
       }
     };
 
-    if (userToken) fetchManagedEvents();
-  }, [userToken]);
+    if (userToken) fetchEvents();
+  }, [userToken, currentPageNumber]);
 
   // When there's a change in sort option
   const sortedPastEvents = (() => {
