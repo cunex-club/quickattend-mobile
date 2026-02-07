@@ -26,9 +26,9 @@ import { formatDateToTime } from "@/utils/function";
 import SuccessScanPopup from "@/components/popup/SuccessScanPopup";
 import RegisteredScanPopup from "@/components/popup/RegisteredScanPopup";
 import FailScanPopup from "@/components/popup/FailScanPopup";
-import { EventInterface } from "@/utils/interface";
 import { useTranslations } from "next-intl";
 import { usePageLoading } from "@/context/PageLoadingContext";
+import { Event } from "@/service/event";
 
 const ScanPage = () => {
   const { id } = useParams();
@@ -43,7 +43,7 @@ const ScanPage = () => {
   const { showPageLoading } = usePageLoading();
 
   // States
-  const [event, setEvent] = useState<EventInterface | null>(null);
+  const [event, setEvent] = useState<Event | null>(null);
   const [scanner, setScanner] = useState<Html5Qrcode | null>(null);
   const [isFlashOn, setIsFlashOn] = useState(false);
   const [result, setResult] = useState<
@@ -66,9 +66,9 @@ const ScanPage = () => {
   const tEvent = useTranslations("event");
 
   const [isToggleEvents, setToggleEvents] = useState(false);
-  const [myOtherFiveEvents, setMyOtherFiveEvents] = useState<
-    EventInterface[] | null
-  >(null);
+  const [myOtherFiveEvents, setMyOtherFiveEvents] = useState<Event[] | null>(
+    null
+  );
 
   useEffect(() => {
     const targetEvent = allEvents.filter(e => e.id === id)[0] ?? null;

@@ -9,7 +9,8 @@
     "backofficeNote": "Access Backoffice to manage and edit events",
     "sortNewestOldest": "Event Date: Newest-Oldest",
     "sortOldestNewest": "Event Date: Oldest-Newest",
-    "createEvent": "Create Events"
+    "createEvent": "Create Events",
+    "noEvents": "No events"
   },
   "discovery": {
     "explore": "Explore Events",

@@ -7,7 +7,6 @@ import {
   eventOwner,
   eventSchedules,
   eventTimeRange,
-  allEvents,
 } from "@/utils/const";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -21,7 +20,6 @@ import {
   LocationOn,
   WatchLater,
 } from "@mui/icons-material";
-import { EventInterface } from "@/utils/interface";
 import { useTranslations } from "next-intl";
 import { usePageLoading } from "@/context/PageLoadingContext";
 import GoogleMapPreview, {
@@ -31,7 +29,7 @@ import Footer from "@/components/Footer";
 
 function DiscoveryEventDetail() {
   const { id } = useParams();
-  const [event, setEvent] = useState<EventInterface | null>(null);
+  const [event, setEvent] = useState<Event | null>(null);
   const [isInvisibleScrollToTop, setInvisibleScrollToTop] = useState(false);
 
   const tEvent = useTranslations("event");

@@ -28,16 +28,16 @@ import {
 } from "@mui/icons-material";
 import QuickAttendButton from "@/components/QuickAttendButton";
 import LLEPopup from "@/components/popup/LLEPopup";
-import { EventInterface } from "@/utils/interface";
 import { useTranslations } from "next-intl";
 import { usePageLoading } from "@/context/PageLoadingContext";
 import Footer from "@/components/Footer";
+import { Event } from "@/service/event";
 
 function PastEventDetail() {
   const { id } = useParams();
   const [isInvisibleScrollToTop, setInvisibleScrollToTop] = useState(false);
   const [openLLEPopup, setOpenLLEPopup] = useState(false);
-  const [event, setEvent] = useState<EventInterface | null>(null);
+  const [event, setEvent] = useState<Event | null>(null);
 
   const [tohref, setToHref] = useState("");
 

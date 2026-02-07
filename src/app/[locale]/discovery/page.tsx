@@ -3,6 +3,7 @@
 import DiscoveryEventCard from "@/components/card/DiscoveryEventCard";
 import Footer from "@/components/Footer";
 import { usePageLoading } from "@/context/PageLoadingContext";
+import { Event } from "@/service/event";
 import {
   eventDate,
   eventDescription,
@@ -11,7 +12,6 @@ import {
   maxPageNumber,
   discoveryEvents,
 } from "@/utils/const";
-import { EventInterface } from "@/utils/interface";
 import {
   ArrowUpward,
   ChevronLeft,
@@ -29,7 +29,7 @@ export default function Discovery() {
   const [currentPageNumber, setCurrentPageNumber] = useState<number>(1);
   const [openSortDropdown, setOpenSortDropdown] = useState(false);
   const [isInvisibleScrollToTop, setInvisibleScrollToTop] = useState(false);
-  const [events, setEvents] = useState<EventInterface[]>([]);
+  const [events, setEvents] = useState<Event[]>([]);
 
   const tDiscovery = useTranslations("discovery");
   const tBreadCrumb = useTranslations("breadcrumb");

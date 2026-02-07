@@ -21,38 +21,60 @@ import {
   eventDescription,
   eventLocation,
   eventOwner,
-  myCurrentEvents,
   eventTimeRange,
   maxPageNumber,
-  myPastEvents,
 } from "@/utils/const";
-import { EventInterface } from "@/utils/interface";
 import { useTranslations } from "next-intl";
 import { usePageLoading } from "@/context/PageLoadingContext";
 import Footer from "@/components/Footer";
+import { Event, getEvents } from "@/service/event";
+import { useUser } from "@/providers/UserProvider";
 
 export default function Home() {
   const [sortOption, setSortOption] = useState<0 | 1 | null>(null);
   const [currentPageNumber, setCurrentPageNumber] = useState<number>(1);
   const [openLLEPopup, setOpenLLEPopup] = useState(false);
   const [openSortDropdown, setOpenSortDropdown] = useState(false);
-  const [isInvisibleScrollToTop, setInvisibleScrollToTop] = useState(false);
-  const [currentEvents, setCurrentEvents] = useState<EventInterface[]>([]);
-  const [pastEvents, setPastEvents] = useState<EventInterface[]>([]);
+  const [currentEvents, setCurrentEvents] = useState<Event[]>([]);
+  const [pastEvents, setPastEvents] = useState<Event[]>([]);
 
   const [tohref, setToHref] = useState("");
 
   const topRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
-  const { showPageLoading, pageLoading } = usePageLoading();
+  const { userToken } = useUser();
+  const { showPageLoading, hidePageLoading, pageLoading } = usePageLoading();
 
   const tHome = useTranslations("home");
 
   useEffect(() => {
-    setCurrentEvents(myCurrentEvents);
-    setPastEvents(myPastEvents);
-  }, []);
+    const fetchManagedEvents = async () => {
+      showPageLoading();
+      try {
+        const events = await getEvents(userToken, true, currentPageNumber);
+        console.log(events);
+
+        const now = new Date();
+
+        const current = events.filter(e => new Date(e.end_time) >= now);
+        const past = events.filter(e => new Date(e.end_time) < now);
+
+        setCurrentEvents(current);
+        setPastEvents(past);
+      } catch (error) {
+        console.error(error);
+        setCurrentEvents([]);
+        setPastEvents([]);
+      } finally {
+        hidePageLoading();
+      }
+    };
+
+    if (userToken) {
+      fetchManagedEvents();
+    }
+  }, [userToken, currentPageNumber]);
 
   // When there's a change in sort option
   useEffect(() => {
@@ -65,31 +87,14 @@ export default function Home() {
     }
   }, [sortOption]);
 
-  // Check whether users reach the bottom or not
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setInvisibleScrollToTop(!entry.isIntersecting);
-      },
-      {
-        root: null,
-        threshold: 0.1,
-      }
-    );
-
-    if (bottomRef.current) {
-      observer.observe(bottomRef.current);
-    }
-
-    return () => {
-      if (bottomRef.current) observer.unobserve(bottomRef.current);
-    };
-  }, []);
+    topRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+  }, [currentPageNumber]);
 
   return (
     <div ref={topRef} className="w-full h-screen overflow-auto relative">
       {/* Content */}
-      <div className="flex flex-col px-8 py-12">
+      <div className="w-full flex flex-col px-8 py-12">
         {/* My Events */}
         <div className="mb-12">
           {/* Header */}
@@ -152,20 +157,26 @@ export default function Home() {
 
           {/* Events */}
           <div className="flex flex-col gap-4 mb-6">
-            {currentEvents.slice(0, 3).map(event => {
-              return (
-                <MyEventCard
-                  key={event.id}
-                  id={event.id}
-                  name={event.name}
-                  date={eventDate}
-                  timeRange={eventTimeRange}
-                  location={eventLocation}
-                  description={eventDescription}
-                  owner={eventOwner}
-                />
-              );
-            })}
+            {currentEvents.length > 0 ? (
+              currentEvents.map(event => {
+                return (
+                  <MyEventCard
+                    key={event.id}
+                    id={event.id}
+                    name={event.name}
+                    date={eventDate}
+                    timeRange={eventTimeRange}
+                    location={eventLocation}
+                    description={eventDescription}
+                    owner={eventOwner}
+                  />
+                );
+              })
+            ) : (
+              <p className="label-small-primary text-center text-neutral-600 my-6">
+                {tHome("noEvents")}
+              </p>
+            )}
           </div>
 
           {/* Button */}
@@ -184,7 +195,7 @@ export default function Home() {
         </div>
 
         {/* Past Events */}
-        <div className="mb-6">
+        <div className="mb-6 ">
           {/* Header */}
           <div className="flex justify-between gap-4 mb-6 relative">
             <h1 className="headline-small-emphasized text-neutral-600">
@@ -229,116 +240,121 @@ export default function Home() {
 
           {/* Events */}
           <div className="flex flex-col gap-4">
-            {pastEvents.map(event => {
-              return (
-                <PastEventCard
-                  key={event.id}
-                  id={event.id}
-                  name={event.name}
-                  date={eventDate}
-                  timeRange={eventTimeRange}
-                  location={eventLocation}
-                  description={eventDescription}
-                  owner={eventOwner}
-                  displayFirstRow={displayButtonsFirstRowPastEvents}
-                />
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Page Number Buttons */}
-        <div
-          className="flex justify-between items-center gap-2"
-          ref={bottomRef}
-        >
-          {/* Left */}
-          <button
-            className="p-2 w-8 h-8 rounded-full bg-neutral-white border border-neutral-300 cursor-pointer"
-            onClick={() => {
-              if (currentPageNumber > 1) setCurrentPageNumber(prev => prev - 1);
-            }}
-          >
-            <ChevronLeft
-              sx={{ width: 16, height: 16 }}
-              className="text-primary -translate-y-0.5"
-            />
-          </button>
-
-          {/* Numbers */}
-          <div className="flex items-center gap-1 flex-wrap justify-center">
-            {(() => {
-              const pages: (number | "...")[] = [];
-
-              if (maxPageNumber <= 5) {
-                for (let i = 1; i <= maxPageNumber; i++) pages.push(i);
-              } else {
-                if (currentPageNumber <= 2) {
-                  pages.push(1, 2, 3, "...", maxPageNumber);
-                } else if (currentPageNumber >= maxPageNumber - 1) {
-                  pages.push(
-                    1,
-                    "...",
-                    maxPageNumber - 2,
-                    maxPageNumber - 1,
-                    maxPageNumber
-                  );
-                } else {
-                  pages.push(1, "...", currentPageNumber, "...", maxPageNumber);
-                }
-              }
-
-              return pages.map((page, index) => {
-                const isActive = page === currentPageNumber;
-                const isEllipsis = page === "...";
-
+            {pastEvents.length > 0 ? (
+              pastEvents.map(event => {
                 return (
-                  <button
-                    key={index}
-                    className={`p-2 w-8 h-8 rounded-full bg-neutral-white border label-large-primary ${
-                      isEllipsis
-                        ? "border-neutral-300 cursor-default"
-                        : isActive
-                          ? "bg-primary border-primary text-neutral-white cursor-pointer"
-                          : "border-neutral-300 text-neutral-600 cursor-pointer"
-                    }`}
-                    disabled={isEllipsis}
-                    onClick={() =>
-                      typeof page === "number" && setCurrentPageNumber(page)
-                    }
-                  >
-                    {page}
-                  </button>
+                  <PastEventCard
+                    key={event.id}
+                    id={event.id}
+                    name={event.name}
+                    date={eventDate}
+                    timeRange={eventTimeRange}
+                    location={eventLocation}
+                    description={eventDescription}
+                    owner={eventOwner}
+                    displayFirstRow={displayButtonsFirstRowPastEvents}
+                  />
                 );
-              });
-            })()}
+              })
+            ) : (
+              <p className="label-small-primary text-center text-neutral-600 my-6">
+                {tHome("noEvents")}
+              </p>
+            )}
           </div>
-
-          {/* Right */}
-          <button
-            className="p-2 w-8 h-8 rounded-full bg-neutral-white border border-neutral-300 cursor-pointer"
-            onClick={() => {
-              if (currentPageNumber < maxPageNumber)
-                setCurrentPageNumber(prev => prev + 1);
-            }}
-          >
-            <ChevronRight
-              sx={{ width: 16, height: 16 }}
-              className="text-primary -translate-y-0.5"
-            />
-          </button>
         </div>
 
         {/* Go to Top Button */}
         <button
           className={`fixed right-8 bottom-12 p-4 w-14 h-14 rounded-full bg-primary z-50 cursor-pointer ${
-            isInvisibleScrollToTop || pageLoading ? "hidden" : "block"
+            pageLoading ? "hidden" : "block"
           }`}
           onClick={() =>
             topRef.current?.scrollTo({ top: 0, behavior: "smooth" })
           }
         >
           <ArrowUpward sx={{ width: 24, height: 24 }} className="text-white" />
+        </button>
+      </div>
+
+      <div ref={bottomRef}></div>
+
+      {/* Page Number Buttons */}
+      <div className="flex justify-between items-center gap-2 px-8 py-6">
+        {/* Left */}
+        <button
+          className="p-2 w-8 h-8 rounded-full bg-neutral-white border border-neutral-300 cursor-pointer"
+          onClick={() => {
+            if (currentPageNumber > 1) setCurrentPageNumber(prev => prev - 1);
+          }}
+        >
+          <ChevronLeft
+            sx={{ width: 16, height: 16 }}
+            className="text-primary -translate-y-0.5"
+          />
+        </button>
+
+        {/* Numbers */}
+        <div className="flex items-center gap-1 flex-wrap justify-center">
+          {(() => {
+            const pages: (number | "...")[] = [];
+
+            if (maxPageNumber <= 5) {
+              for (let i = 1; i <= maxPageNumber; i++) pages.push(i);
+            } else {
+              if (currentPageNumber <= 2) {
+                pages.push(1, 2, 3, "...", maxPageNumber);
+              } else if (currentPageNumber >= maxPageNumber - 1) {
+                pages.push(
+                  1,
+                  "...",
+                  maxPageNumber - 2,
+                  maxPageNumber - 1,
+                  maxPageNumber
+                );
+              } else {
+                pages.push(1, "...", currentPageNumber, "...", maxPageNumber);
+              }
+            }
+
+            return pages.map((page, index) => {
+              const isActive = page === currentPageNumber;
+              const isEllipsis = page === "...";
+
+              return (
+                <button
+                  key={index}
+                  className={`p-2 w-8 h-8 rounded-full bg-neutral-white border label-large-primary ${
+                    isEllipsis
+                      ? "border-neutral-300 cursor-default"
+                      : isActive
+                        ? "bg-primary border-primary text-neutral-white cursor-pointer"
+                        : "border-neutral-300 text-neutral-600 cursor-pointer"
+                  }`}
+                  disabled={isEllipsis}
+                  onClick={() =>
+                    typeof page === "number" && setCurrentPageNumber(page)
+                  }
+                >
+                  {page}
+                </button>
+              );
+            });
+          })()}
+        </div>
+
+        {/* Right */}
+        <button
+          className="p-2 w-8 h-8 rounded-full bg-neutral-white border border-neutral-300 cursor-pointer"
+          onClick={() => {
+            if (currentPageNumber < maxPageNumber)
+              setCurrentPageNumber(prev => prev + 1);
+          }}
+        >
+          <ChevronRight
+            sx={{ width: 16, height: 16 }}
+            className="text-primary -translate-y-0.5"
+          />
         </button>
       </div>
 

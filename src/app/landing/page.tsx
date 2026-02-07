@@ -36,7 +36,8 @@ const UserNotFound = () => {
 const Landing = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { user, userLoading, setUser, setUserLoading } = useUser();
+  const { user, userLoading, setUser, setUserLoading, setUserToken } =
+    useUser();
 
   const tokenQuery = searchParams.get("token");
   const langQuery = searchParams.get("lang");
@@ -69,12 +70,10 @@ const Landing = () => {
       try {
         const fetchedUser = await getUserProfile(token);
         setUser(fetchedUser);
+        setUserToken(token);
 
-        if (langQuery === "th") {
-          router.replace("/", { locale: "th-th" });
-        } else {
-          router.replace("/", { locale: "en-us" });
-        }
+        const locale = langQuery === "th" ? "th-th" : "en-us";
+        router.replace("/", { locale });
       } catch {
         setUser(null);
       } finally {
@@ -83,7 +82,7 @@ const Landing = () => {
     };
 
     fetchUser();
-  }, [router, setUser, setUserLoading]);
+  }, [tokenQuery, langQuery, router]);
 
   if (userLoading || user === undefined) {
     return <UserLoading />;
