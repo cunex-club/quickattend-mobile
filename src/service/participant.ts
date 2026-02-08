@@ -1,6 +1,6 @@
 import Axios from "@/utils/axios";
 
-export type CheckInStatus = "SUCCESS" | "DUPLICATE";
+export type CheckInStatus = "success" | "duplicate";
 
 export interface UserInformationQRCode {
   id: string;
@@ -67,5 +67,5 @@ export async function updateParticipantCommentQRCode(
     }
   );
 
-  return response.status;
+  return response.data.data;
 }

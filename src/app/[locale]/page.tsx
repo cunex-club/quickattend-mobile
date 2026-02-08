@@ -54,7 +54,6 @@ export default function Home() {
         setCurrentEvents(current);
         setPastEvents(past);
       } catch (err) {
-        console.error(err);
         setCurrentEvents([]);
         setPastEvents([]);
       } finally {

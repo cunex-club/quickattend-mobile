@@ -23,13 +23,20 @@ import { formatDateToTime } from "@/utils/function";
 import SuccessScanPopup from "@/components/popup/SuccessScanPopup";
 import RegisteredScanPopup from "@/components/popup/RegisteredScanPopup";
 import FailScanPopup from "@/components/popup/FailScanPopup";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { usePageLoading } from "@/context/PageLoadingContext";
-import { Event } from "@/service/event";
+import { Event, getEventById, getEvents } from "@/service/event";
+import { useUser } from "@/providers/UserProvider";
+import {
+  getParticipantInformationQRCode,
+  updateParticipantCommentQRCode,
+} from "@/service/participant";
+import { DEFAULT_CENTER } from "@/components/GoogleMapPreview";
 
 const ScanPage = () => {
   const { id } = useParams();
   const router = useRouter();
+  const locale = useLocale();
 
   // Refs
   const qrRef = useRef<HTMLDivElement>(null);
@@ -37,18 +44,17 @@ const ScanPage = () => {
   const isResettingRef = useRef(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const { showPageLoading } = usePageLoading();
+  const { userToken } = useUser();
+  const { showPageLoading, hidePageLoading } = usePageLoading();
 
   // States
   const [event, setEvent] = useState<Event | null>(null);
   const [scanner, setScanner] = useState<Html5Qrcode | null>(null);
   const [isFlashOn, setIsFlashOn] = useState(false);
-  const [result, setResult] = useState<
-    "success" | "registered" | "fail" | null
-  >(null);
-  const [showSuccessScanPopup, setShowSuccessScanPopup] = useState(false);
-  const [showRegisteredScanPopup, setShowRegisteredScanPopup] = useState(false);
-  const [showFailScanPopup, setShowFailScanPopup] = useState(false);
+  const [result, setResult] = useState<"success" | "duplicate" | "fail" | null>(
+    null
+  );
+  const [showScanResultPopup, setShowResultScanPopup] = useState(false);
   const [timeStamp, setTimeStamp] = useState("");
   const [showMessagePopup, setShowMessagePopup] = useState(false);
   const [message, setMessage] = useState("");
@@ -58,6 +64,11 @@ const ScanPage = () => {
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [note, setNote] = useState("");
   const [showTimeoutPopup, setShowTimeoutPopup] = useState(false);
+  const [location, setLocation] = useState<{
+    lat: number;
+    lng: number;
+  }>({ lat: DEFAULT_CENTER.lat, lng: DEFAULT_CENTER.lng });
+  const [oneTimeCode, setOneTimeCode] = useState("");
 
   const tScan = useTranslations("scan");
   const tEvent = useTranslations("event");
@@ -68,13 +79,44 @@ const ScanPage = () => {
   );
 
   useEffect(() => {
-    const targetEvent = allEvents.filter(e => e.id === id)[0] ?? null;
-    if (!targetEvent) {
-      return;
+    async function fetchEvent() {
+      if (!userToken || !id) return;
+
+      showPageLoading();
+      try {
+        const thisEvent = await getEventById(userToken, id as string);
+        setEvent(thisEvent);
+      } catch (err) {
+        console.error(err);
+        setEvent(null);
+      } finally {
+        hidePageLoading();
+      }
     }
-    setEvent(targetEvent);
-    setMyOtherFiveEvents(myCurrentEvents.filter(e => e.id != id).slice(0, 5));
-  }, []);
+
+    fetchEvent();
+  }, [id]);
+
+  useEffect(() => {
+    const fetchMyEvents = async () => {
+      showPageLoading();
+      try {
+        const { events } = await getEvents(userToken, true);
+        const now = new Date();
+        const current = events.filter(e => new Date(e.end_time) >= now);
+
+        setMyOtherFiveEvents(
+          current.filter(e => e.id != (id as string)).slice(0, 5)
+        );
+      } catch (err) {
+        setMyOtherFiveEvents([]);
+      } finally {
+        hidePageLoading();
+      }
+    };
+
+    if (userToken) fetchMyEvents();
+  }, [id]);
 
   // Timeout logic
   const startTimeout = () => {
@@ -123,7 +165,8 @@ const ScanPage = () => {
   };
 
   // Handling the scanned QR code
-  const handleScanned = (code: string) => {
+  const handleScanned = async (code: string) => {
+    showPageLoading();
     if (isResettingRef.current || isScanningRef.current) return;
     isScanningRef.current = true;
     setShowCamera(false);
@@ -132,52 +175,53 @@ const ScanPage = () => {
     const now = new Date();
     setTimeStamp(formatDateToTime(now));
 
-    // TODO: Send Code to backend for validation
+    navigator.geolocation.getCurrentPosition(position => {
+      const { latitude, longitude } = position.coords;
 
-    console.log(code);
-    setResult("success");
+      setLocation({
+        lat: latitude,
+        lng: longitude,
+      });
+    });
+
+    try {
+      const response = await getParticipantInformationQRCode(
+        code,
+        userToken,
+        id as string,
+        location.lat,
+        location.lng
+      );
+
+      setResult(response.status);
+      setOneTimeCode(response.code);
+    } catch (err) {
+      setResult("fail");
+    } finally {
+      hidePageLoading();
+      setShowResultScanPopup(true);
+    }
   };
 
   // Handling sending notes in Success Popup
-  const handleSubmitSuccessScan = (
+  const handleUpdateComment = async (
     e: React.MouseEvent<Element, MouseEvent>
   ) => {
+    showPageLoading();
     e.preventDefault();
     e.stopPropagation();
     setShowCamera(true);
-    alert(`Success - Your Note: ${note}`);
+
+    if (result != "fail") {
+      await updateParticipantCommentQRCode(oneTimeCode, userToken, note);
+    }
+
     setNote("");
     restartCamera();
-  };
 
-  // Handling sending notes in Registered Popup
-  const handleSubmitRegisteredScan = (
-    e: React.MouseEvent<Element, MouseEvent>
-  ) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setShowCamera(true);
-    alert(`Registered - Your Note: ${note}`);
-    setNote("");
-    restartCamera();
+    hidePageLoading();
+    setShowResultScanPopup(false);
   };
-
-  // Handling sending notes in Fail Popup
-  const handleSubmitFailScan = (e: React.MouseEvent<Element, MouseEvent>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setShowCamera(true);
-    alert(`Fail - Your Note: ${note}`);
-    setNote("");
-    restartCamera();
-  };
-
-  // Result/Popup control
-  useEffect(() => {
-    setShowSuccessScanPopup(result === "success");
-    setShowRegisteredScanPopup(result === "registered");
-    setShowFailScanPopup(result === "fail");
-  }, [result]);
 
   // Scanner box size on window resize
   useEffect(() => {
@@ -211,7 +255,7 @@ const ScanPage = () => {
   const restartCamera = () => {
     stopCamera();
     setTimeout(() => {
-      window.location.reload();
+      router.refresh();
     }, 100);
   };
 
@@ -308,7 +352,7 @@ const ScanPage = () => {
                   type="icon"
                   onClick={() => {
                     showPageLoading();
-                    router.push("/");
+                    router.push(`/${locale}`);
                   }}
                   className="w-full h-full rounded-full border-none bg-neutral-white"
                 >
@@ -322,6 +366,7 @@ const ScanPage = () => {
                   variant="outline"
                   type="icon"
                   onClick={() => {
+                    // TODO: Should be link of this event
                     navigator.clipboard.writeText(event?.name || "");
                     showMessage(tScan("copySuccess"));
                   }}
@@ -356,41 +401,47 @@ const ScanPage = () => {
             <p className="title-large-emphasized translate-y-1 truncate max-w-60">
               {event?.name || tEvent("notFoundTitle")}
             </p>
-            <ExpandMore
-              sx={{ width: 24, height: 24 }}
-              className={`cursor-pointer text-primary transition-transform duration-300 ${isToggleEvents ? "rotate-180" : ""}`}
-              onClick={() => setToggleEvents(prev => !prev)}
-            />
+            {myOtherFiveEvents && myOtherFiveEvents.length > 0 && (
+              <ExpandMore
+                sx={{ width: 24, height: 24 }}
+                className={`cursor-pointer text-primary transition-transform duration-300 ${isToggleEvents ? "rotate-180" : ""}`}
+                onClick={() => setToggleEvents(prev => !prev)}
+              />
+            )}
 
             {/* My Event Dropdown */}
-            {isToggleEvents && (
-              <div className="w-30 absolute bottom-full mb-1 right-0 bg-neutral-white rounded-lg shadow-elevation-1 p-2 z-10">
-                {myOtherFiveEvents?.map(event => {
-                  return (
-                    <button
-                      key={event.id}
-                      className={`text-ellipsis cursor-pointer block w-full body-small-primary text-left 
+            {isToggleEvents &&
+              myOtherFiveEvents &&
+              myOtherFiveEvents.length > 0 && (
+                <div className="w-30 absolute bottom-full mb-1 right-0 bg-neutral-white rounded-lg shadow-elevation-1 p-2 z-10">
+                  {myOtherFiveEvents.map(event => {
+                    return (
+                      <button
+                        key={event.id}
+                        className={`text-ellipsis cursor-pointer block w-full body-small-primary text-left 
                         py-1 text-neutral-600 hover:bg-neutral-300
                         truncate overflow-hidden whitespace-nowrap`}
-                      onClick={e => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        setToggleEvents(false);
-                        showPageLoading();
-                        router.push(`/scan/${event.id}`);
-                      }}
-                    >
-                      {event.name}
-                    </button>
-                  );
-                })}
-              </div>
-            )}
+                        onClick={e => {
+                          e.stopPropagation();
+                          e.preventDefault();
+                          setToggleEvents(false);
+                          showPageLoading();
+                          router.push(`/scan/${event.id}`);
+                        }}
+                      >
+                        {event.name}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
           </div>
 
           <div className="relative flex gap-2 items-center justify-center overflow-hidden">
             <Person sx={{ width: 24, height: 24 }} className="text-primary" />
-            <p className="label-large-emphasized translate-y-1">{eventRole}</p>
+            <p className="label-large-emphasized translate-y-1">
+              {event?.role ? tScan(event?.role) : "Unknown"}
+            </p>
           </div>
         </div>
 
@@ -440,37 +491,34 @@ const ScanPage = () => {
         />
       )}
 
-      {showSuccessScanPopup && (
-        <SuccessScanPopup
-          studentId={scannedID}
-          studentName={scannedName}
-          studentFaculty={scannedFaculty}
-          timeStamp={timeStamp}
-          note={note}
-          setNote={setNote}
-          handleSubmit={handleSubmitSuccessScan}
-        />
-      )}
-
-      {showRegisteredScanPopup && (
-        <RegisteredScanPopup
-          studentId={scannedID}
-          studentName={scannedName}
-          studentFaculty={scannedFaculty}
-          timeStamp={timeStamp}
-          note={note}
-          setNote={setNote}
-          handleSubmit={handleSubmitRegisteredScan}
-        />
-      )}
-
-      {showFailScanPopup && (
-        <FailScanPopup
-          note={note}
-          setNote={setNote}
-          handleSubmit={handleSubmitFailScan}
-        />
-      )}
+      {showScanResultPopup &&
+        (result == "success" ? (
+          <SuccessScanPopup
+            studentId={scannedID}
+            studentName={scannedName}
+            studentFaculty={scannedFaculty}
+            timeStamp={timeStamp}
+            note={note}
+            setNote={setNote}
+            handleSubmit={handleUpdateComment}
+          />
+        ) : result == "duplicate" ? (
+          <RegisteredScanPopup
+            studentId={scannedID}
+            studentName={scannedName}
+            studentFaculty={scannedFaculty}
+            timeStamp={timeStamp}
+            note={note}
+            setNote={setNote}
+            handleSubmit={handleUpdateComment}
+          />
+        ) : result == "fail" ? (
+          <FailScanPopup
+            note={note}
+            setNote={setNote}
+            handleSubmit={handleUpdateComment}
+          />
+        ) : null)}
 
       {showMessagePopup && (
         <div className="fixed top-24 left-1/2 -translate-x-1/2 bg-primary text-white px-4 py-2 rounded-full shadow-lg animate-fade-in-out z-50">
