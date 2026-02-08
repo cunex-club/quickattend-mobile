@@ -169,8 +169,6 @@ const ScanPage = () => {
     showPageLoading();
     if (isResettingRef.current || isScanningRef.current) return;
     isScanningRef.current = true;
-    setShowCamera(false);
-    stopCamera();
 
     const now = new Date();
     setTimeStamp(formatDateToTime(now));
@@ -217,10 +215,13 @@ const ScanPage = () => {
     }
 
     setNote("");
-    restartCamera();
 
     hidePageLoading();
     setShowResultScanPopup(false);
+    isScanningRef.current = false;
+    setShowCamera(true);
+    startCamera();
+    startTimeout();
   };
 
   // Scanner box size on window resize
@@ -251,48 +252,39 @@ const ScanPage = () => {
     setShowTimeoutPopup(true);
   };
 
-  // Restart camera for rescanning
-  const restartCamera = () => {
-    stopCamera();
-    setTimeout(() => {
-      router.refresh();
-    }, 100);
+  const startCamera = async () => {
+    try {
+      const mediaStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "environment" },
+      });
+
+      setStream(mediaStream);
+
+      if (qrRef.current) {
+        const html5Qr = new Html5Qrcode(qrRef.current.id, false);
+        setScanner(html5Qr);
+
+        timeoutRef.current = setTimeout(handleTimeout, scanTimeOutMs);
+
+        await html5Qr.start(
+          { facingMode: "environment" },
+          { fps: 2, qrbox: { width: scannerSize, height: scannerSize } },
+          decodedText => {
+            if (isResettingRef.current || isScanningRef.current) return;
+            handleScanned(decodedText);
+          },
+          errorMessage => {}
+        );
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   // Initial camera setup and clean-up
   useEffect(() => {
-    let mounted = true;
-    const startCamera = async () => {
-      try {
-        const mediaStream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: "environment" },
-        });
-        if (!mounted) return;
-        setStream(mediaStream);
-
-        if (qrRef.current) {
-          const html5Qr = new Html5Qrcode(qrRef.current.id, false);
-          setScanner(html5Qr);
-          timeoutRef.current = setTimeout(handleTimeout, scanTimeOutMs);
-
-          await html5Qr.start(
-            { facingMode: "environment" },
-            { fps: 2, qrbox: { width: scannerSize, height: scannerSize } },
-            decodedText => {
-              if (isResettingRef.current || isScanningRef.current) return;
-              handleScanned(decodedText);
-            },
-            errorMessage => {}
-          );
-        }
-      } catch (err: any) {}
-    };
     startCamera();
-    return () => {
-      mounted = false;
-      if (scanner) scanner.stop().catch(() => {});
-      stopCamera();
-    };
+    return () => stopCamera();
   }, [scannerSize]);
 
   // Toggle camera flash
@@ -454,26 +446,6 @@ const ScanPage = () => {
             width: 100% !important;
             height: 100% !important;
             object-fit: cover !important;
-          }
-
-          @keyframes fadeInOut {
-            0% {
-              opacity: 0;
-              transform: translateY(10px);
-            }
-            10%,
-            90% {
-              opacity: 1;
-              transform: translateY(0);
-            }
-            100% {
-              opacity: 0;
-              transform: translateY(-10px);
-            }
-          }
-
-          .animate-fade-in-out {
-            animation: fadeInOut 2s ease-in-out forwards;
           }
         `}</style>
       </div>
