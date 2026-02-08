@@ -38,6 +38,21 @@ const ScanPage = () => {
   const router = useRouter();
   const locale = useLocale();
 
+  const getInitialScannerSize = () => {
+    if (typeof window === "undefined") return 240;
+
+    const width = window.innerWidth;
+    return width <= 280
+      ? 120
+      : width <= 400
+        ? 180
+        : width <= 480 || width >= 640
+          ? 240
+          : width <= 600
+            ? 300
+            : 360;
+  };
+
   // Refs
   const qrRef = useRef<HTMLDivElement>(null);
   const isScanningRef = useRef(false);
@@ -59,7 +74,7 @@ const ScanPage = () => {
   const [showMessagePopup, setShowMessagePopup] = useState(false);
   const [message, setMessage] = useState("");
   const messageTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const [scannerSize, setScannerSize] = useState(50);
+  const [scannerSize, setScannerSize] = useState(getInitialScannerSize);
   const [showCamera, setShowCamera] = useState(true);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [note, setNote] = useState("");
@@ -170,6 +185,11 @@ const ScanPage = () => {
     if (isResettingRef.current || isScanningRef.current) return;
     isScanningRef.current = true;
 
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+
     const now = new Date();
     setTimeStamp(formatDateToTime(now));
 
@@ -226,29 +246,17 @@ const ScanPage = () => {
 
   // Scanner box size on window resize
   useEffect(() => {
-    if (typeof window === "undefined") return;
-
     const updateSize = () => {
-      const width = window.innerWidth;
-      setScannerSize(
-        width <= 280
-          ? 120
-          : width <= 400
-            ? 180
-            : width <= 480 || width >= 640
-              ? 240
-              : width <= 600
-                ? 300
-                : 360
-      );
+      setScannerSize(getInitialScannerSize());
     };
+
     window.addEventListener("resize", updateSize);
-    updateSize();
     return () => window.removeEventListener("resize", updateSize);
   }, []);
 
   // Timeout handler
   const handleTimeout = () => {
+    if (isScanningRef.current) return;
     setShowTimeoutPopup(true);
   };
 
