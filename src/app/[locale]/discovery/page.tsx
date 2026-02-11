@@ -42,7 +42,7 @@ export default function Discovery() {
         const fetched = await getEvents(
           userToken,
           undefined,
-          currentPageNumber,
+          currentPageNumber - 1,
           EVENTS_PER_PAGE
         );
 
