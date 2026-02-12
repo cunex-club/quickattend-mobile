@@ -11,12 +11,7 @@ import {
   Link,
   Person,
 } from "@mui/icons-material";
-import {
-  scannedName,
-  scannedID,
-  scanTimeOutMs,
-  scannedFaculty,
-} from "@/utils/const";
+import { scanTimeOutMs } from "@/utils/const";
 import QuickAttendButton from "@/components/QuickAttendButton";
 import ErrorPopup from "@/components/popup/ErrorPopup";
 import { formatDateToTime } from "@/utils/function";
@@ -30,6 +25,7 @@ import { useUser } from "@/providers/UserProvider";
 import {
   getParticipantInformationQRCode,
   updateParticipantCommentQRCode,
+  UserInformationQRCode,
 } from "@/service/participant";
 import { DEFAULT_CENTER } from "@/components/GoogleMapPreview";
 
@@ -92,6 +88,7 @@ const ScanPage = () => {
   const [myOtherFiveEvents, setMyOtherFiveEvents] = useState<Event[] | null>(
     null
   );
+  const [scannedUser, setScannedUser] = useState<UserInformationQRCode>();
 
   useEffect(() => {
     async function fetchEvent() {
@@ -211,7 +208,10 @@ const ScanPage = () => {
         location.lng
       );
 
+      console.log(code);
+
       setResult(response.status);
+      setScannedUser(response);
       setOneTimeCode(response.code);
     } catch (err) {
       setResult("fail");
@@ -472,22 +472,16 @@ const ScanPage = () => {
       )}
 
       {showScanResultPopup &&
-        (result == "success" ? (
+        (result == "success" && scannedUser ? (
           <SuccessScanPopup
-            studentId={scannedID}
-            studentName={scannedName}
-            studentFaculty={scannedFaculty}
-            timeStamp={timeStamp}
+            scannedUser={scannedUser}
             note={note}
             setNote={setNote}
             handleSubmit={handleUpdateComment}
           />
-        ) : result == "duplicate" ? (
+        ) : result == "duplicate" && scannedUser ? (
           <RegisteredScanPopup
-            studentId={scannedID}
-            studentName={scannedName}
-            studentFaculty={scannedFaculty}
-            timeStamp={timeStamp}
+            scannedUser={scannedUser}
             note={note}
             setNote={setNote}
             handleSubmit={handleUpdateComment}

@@ -6,29 +6,44 @@ import {
   WatchLater,
 } from "@mui/icons-material";
 import QuickAttendButton from "../QuickAttendButton";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { UserInformationQRCode } from "@/service/participant";
+import {
+  formatDateToLocaleDate,
+  formatDateToTime,
+  toTitleCaseExceptOf,
+} from "@/utils/function";
 
 interface RegisteredScanPopupProps {
-  studentId: string;
-  studentName: string;
-  studentFaculty: string;
-  timeStamp: string;
+  scannedUser: UserInformationQRCode;
   note: string;
   setNote: (s: string) => void;
   handleSubmit: (e: React.MouseEvent<Element, MouseEvent>) => void;
 }
 
 function RegisteredScanPopup({
-  studentId,
-  studentName,
-  studentFaculty,
-  timeStamp,
+  scannedUser,
   note,
   setNote,
   handleSubmit,
 }: RegisteredScanPopupProps) {
+  const locale = useLocale();
   const tScan = useTranslations("scan");
   const tCommon = useTranslations("common");
+
+  const today = new Date();
+
+  const firstName =
+    locale === "th-th" ? scannedUser.firstname_th : scannedUser.firstname_en;
+
+  const lastName =
+    locale === "th-th" ? scannedUser.surname_th : scannedUser.surname_en;
+
+  const faculty =
+    locale === "th-th"
+      ? scannedUser.organization_th
+      : scannedUser.organization_en;
+
   return (
     <PopupLayout className="relative bg-neutral-white w-[349px] rounded-4xl">
       {/* Header */}
@@ -61,10 +76,14 @@ function RegisteredScanPopup({
           <div className="flex gap-2">
             <Person className="text-primary" sx={{ width: 16, height: 16 }} />
             <div className="flex flex-col -translate-y-1">
-              <p className="body-medium-primary">{studentName}</p>
               <p className="body-medium-primary">
-                {tScan("studentId")} {studentId}
+                {firstName} {lastName}
               </p>
+              {scannedUser.ref_id && (
+                <p className="body-medium-primary">
+                  {tScan("studentId")} {scannedUser.ref_id}
+                </p>
+              )}
             </div>
           </div>
 
@@ -72,7 +91,7 @@ function RegisteredScanPopup({
           <div className="flex gap-2">
             <Business className="text-primary" sx={{ width: 16, height: 16 }} />
             <p className="body-medium-primary -translate-y-1">
-              {studentFaculty}
+              {toTitleCaseExceptOf(faculty ?? "")}
             </p>
           </div>
 
@@ -83,7 +102,7 @@ function RegisteredScanPopup({
               sx={{ width: 16, height: 16 }}
             />
             <p className="body-medium-primary -translate-y-1">
-              {tScan("registeredAt")} {timeStamp}
+              {tScan("registeredAt")} {formatDateToTime(today)}
             </p>
           </div>
         </div>
