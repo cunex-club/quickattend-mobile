@@ -230,7 +230,7 @@ const ScanPage = () => {
     e.stopPropagation();
     setShowCamera(true);
 
-    if (result == "success") {
+    if (result != "fail") {
       await updateParticipantCommentQRCode(oneTimeCode, userToken, note);
     }
 
