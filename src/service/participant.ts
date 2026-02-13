@@ -31,7 +31,7 @@ export async function getParticipantInformationQRCode(
   eventId: string,
   scanned_location_lat: number,
   scanned_location_long: number
-): Promise<UserInformationQRCode> {
+): Promise<{ status: number; data: UserInformationQRCode }> {
   const response = await Axios.post<ParticipantInformationQRCodeProps>(
     `/participant/${qrcode}`,
     {
@@ -46,7 +46,7 @@ export async function getParticipantInformationQRCode(
     }
   );
 
-  return response.data.data;
+  return { status: response.status, data: response.data.data };
 }
 
 export async function updateParticipantCommentQRCode(

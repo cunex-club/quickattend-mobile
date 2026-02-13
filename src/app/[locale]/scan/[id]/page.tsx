@@ -14,7 +14,6 @@ import {
 import { scanTimeOutMs } from "@/utils/const";
 import QuickAttendButton from "@/components/QuickAttendButton";
 import ErrorPopup from "@/components/popup/ErrorPopup";
-import { formatDateToTime } from "@/utils/function";
 import SuccessScanPopup from "@/components/popup/SuccessScanPopup";
 import RegisteredScanPopup from "@/components/popup/RegisteredScanPopup";
 import FailScanPopup from "@/components/popup/FailScanPopup";
@@ -27,7 +26,6 @@ import {
   updateParticipantCommentQRCode,
   UserInformationQRCode,
 } from "@/service/participant";
-import { DEFAULT_CENTER } from "@/components/GoogleMapPreview";
 
 const ScanPage = () => {
   const { id } = useParams();
@@ -66,7 +64,6 @@ const ScanPage = () => {
     null
   );
   const [showScanResultPopup, setShowResultScanPopup] = useState(false);
-  const [timeStamp, setTimeStamp] = useState("");
   const [showMessagePopup, setShowMessagePopup] = useState(false);
   const [message, setMessage] = useState("");
   const messageTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -75,10 +72,6 @@ const ScanPage = () => {
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [note, setNote] = useState("");
   const [showTimeoutPopup, setShowTimeoutPopup] = useState(false);
-  const [location, setLocation] = useState<{
-    lat: number;
-    lng: number;
-  }>({ lat: DEFAULT_CENTER.lat, lng: DEFAULT_CENTER.lng });
   const [oneTimeCode, setOneTimeCode] = useState("");
 
   const tScan = useTranslations("scan");
@@ -176,6 +169,19 @@ const ScanPage = () => {
     }
   };
 
+  const getCurrentLocation = () =>
+    new Promise<{ lat: number; lng: number }>((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          resolve({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+        error => reject(error)
+      );
+    });
+
   // Handling the scanned QR code
   const handleScanned = async (code: string) => {
     showPageLoading();
@@ -187,37 +193,32 @@ const ScanPage = () => {
       timeoutRef.current = null;
     }
 
-    const now = new Date();
-    setTimeStamp(formatDateToTime(now));
-
-    navigator.geolocation.getCurrentPosition(position => {
-      const { latitude, longitude } = position.coords;
-
-      setLocation({
-        lat: latitude,
-        lng: longitude,
-      });
-    });
-
     try {
+      const currentLocation = await getCurrentLocation();
+
       const response = await getParticipantInformationQRCode(
         code,
         userToken,
         id as string,
-        location.lat,
-        location.lng
+        currentLocation.lat,
+        currentLocation.lng
       );
 
-      console.log(code);
-
-      setResult(response.status);
-      setScannedUser(response);
-      setOneTimeCode(response.code);
+      if (response.status == 200) {
+        setResult(response.data.status);
+        setScannedUser(response.data);
+        setOneTimeCode(response.data.code);
+        setShowResultScanPopup(true);
+      } else if (response.status == 401) {
+        setResult("fail");
+        setShowResultScanPopup(true);
+      } else {
+        setShowTimeoutPopup(true);
+      }
     } catch (err) {
-      setResult("fail");
+      setShowTimeoutPopup(true);
     } finally {
       hidePageLoading();
-      setShowResultScanPopup(true);
     }
   };
 
@@ -235,7 +236,7 @@ const ScanPage = () => {
     }
 
     setNote("");
-    setOneTimeCode("")
+    setOneTimeCode("");
 
     hidePageLoading();
     setShowResultScanPopup(false);
@@ -367,8 +368,7 @@ const ScanPage = () => {
                   variant="outline"
                   type="icon"
                   onClick={() => {
-                    // TODO: Should be link of this event
-                    navigator.clipboard.writeText(event?.name || "");
+                    navigator.clipboard.writeText(window.location.href);
                     showMessage(tScan("copySuccess"));
                   }}
                   className="w-full h-full rounded-full border-none bg-neutral-white"
