@@ -22,13 +22,13 @@ export default function Discovery() {
   const [sortOption, setSortOption] = useState<0 | 1 | null>(null);
   const { userToken } = useUser();
   const locale = useLocale();
-  const [currentPageNumber, setCurrentPageNumber] = useState<number>(1);
+  const [currentDiscoveryPageNumber, setCurrentDiscoveryPageNumber] =
+    useState<number>(1);
   const [openSortDropdown, setOpenSortDropdown] = useState(false);
 
   const [events, setEvents] = useState<Event[]>([]);
-  const [paginationMeta, setPaginationMeta] = useState<PaginationMeta | null>(
-    null
-  );
+  const [discoveryPaginationMeta, setDiscoveryPaginationMeta] =
+    useState<PaginationMeta | null>(null);
 
   const tDiscovery = useTranslations("discovery");
   const tBreadCrumb = useTranslations("breadcrumb");
@@ -39,15 +39,15 @@ export default function Discovery() {
     const fetchDiscoveryEvents = async () => {
       showPageLoading();
       try {
-        const fetched = await getEvents(
+        const fetchedDiscoveryInformation = await getEvents(
           userToken,
           undefined,
-          currentPageNumber - 1,
+          currentDiscoveryPageNumber - 1,
           EVENTS_PER_PAGE
         );
 
-        setEvents(fetched.events);
-        setPaginationMeta(fetched.meta);
+        setEvents(fetchedDiscoveryInformation.events);
+        setDiscoveryPaginationMeta(fetchedDiscoveryInformation.meta);
       } catch (err) {
         console.error(err);
         setEvents([]);
@@ -57,7 +57,7 @@ export default function Discovery() {
     };
 
     if (userToken) fetchDiscoveryEvents();
-  }, [userToken, currentPageNumber]);
+  }, [userToken, currentDiscoveryPageNumber]);
 
   // When there's a change in sort option
   const sortedEvents = (() => {
@@ -75,9 +75,17 @@ export default function Discovery() {
     );
   })();
 
-  const maxPageNumber = paginationMeta
-    ? Math.ceil(
-        paginationMeta.pagination.total / paginationMeta.pagination.pageSize
+  useEffect(() => {
+    setCurrentDiscoveryPageNumber(1);
+  }, [sortOption]);
+
+  const maxPageNumber = discoveryPaginationMeta
+    ? Math.max(
+        1,
+        Math.ceil(
+          discoveryPaginationMeta.pagination.total /
+            discoveryPaginationMeta.pagination.pageSize
+        )
       )
     : 1;
 
@@ -186,7 +194,8 @@ export default function Discovery() {
         <button
           className="p-2 w-8 h-8 rounded-full bg-neutral-white border border-neutral-300 cursor-pointer"
           onClick={() => {
-            if (currentPageNumber > 1) setCurrentPageNumber(prev => prev - 1);
+            if (currentDiscoveryPageNumber > 1)
+              setCurrentDiscoveryPageNumber(prev => prev - 1);
           }}
         >
           <ChevronLeft
@@ -203,9 +212,9 @@ export default function Discovery() {
             if (maxPageNumber <= 5) {
               for (let i = 1; i <= maxPageNumber; i++) pages.push(i);
             } else {
-              if (currentPageNumber <= 2) {
+              if (currentDiscoveryPageNumber <= 2) {
                 pages.push(1, 2, 3, "...", maxPageNumber);
-              } else if (currentPageNumber >= maxPageNumber - 1) {
+              } else if (currentDiscoveryPageNumber >= maxPageNumber - 1) {
                 pages.push(
                   1,
                   "...",
@@ -214,12 +223,18 @@ export default function Discovery() {
                   maxPageNumber
                 );
               } else {
-                pages.push(1, "...", currentPageNumber, "...", maxPageNumber);
+                pages.push(
+                  1,
+                  "...",
+                  currentDiscoveryPageNumber,
+                  "...",
+                  maxPageNumber
+                );
               }
             }
 
             return pages.map((page, index) => {
-              const isActive = page === currentPageNumber;
+              const isActive = page === currentDiscoveryPageNumber;
               const isEllipsis = page === "...";
 
               return (
@@ -234,7 +249,8 @@ export default function Discovery() {
                   }`}
                   disabled={isEllipsis}
                   onClick={() =>
-                    typeof page === "number" && setCurrentPageNumber(page)
+                    typeof page === "number" &&
+                    setCurrentDiscoveryPageNumber(page)
                   }
                 >
                   {page}
@@ -248,8 +264,8 @@ export default function Discovery() {
         <button
           className="p-2 w-8 h-8 rounded-full bg-neutral-white border border-neutral-300 cursor-pointer"
           onClick={() => {
-            if (currentPageNumber < maxPageNumber) {
-              setCurrentPageNumber(prev => prev + 1);
+            if (currentDiscoveryPageNumber < maxPageNumber) {
+              setCurrentDiscoveryPageNumber(prev => prev + 1);
             }
           }}
         >

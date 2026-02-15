@@ -1,6 +1,7 @@
 interface QuickAttendButtonProps {
   variant: "filled" | "outline";
   type?: "text" | "icon";
+  disabled?: boolean;
   className?: string;
   onClick?: React.MouseEventHandler;
   children: React.ReactNode;
@@ -9,6 +10,7 @@ interface QuickAttendButtonProps {
 export default function QuickAttendButton({
   variant,
   className = "",
+  disabled = false,
   type = "text",
   onClick,
   children,
@@ -26,8 +28,8 @@ export default function QuickAttendButton({
   return (
     <button
       onClick={onClick}
-      className={`flex items-center justify-center gap-1 rounded-2xl px-3 py-1
-        border cursor-pointer label-large-primary ${baseColor} ${layout} ${className}`}
+      disabled={disabled}
+      className={`flex items-center justify-center gap-1 rounded-2xl px-3 py-1 border cursor-pointer disabled:cursor-default label-large-primary ${baseColor} ${layout} ${className}`}
     >
       {children}
     </button>

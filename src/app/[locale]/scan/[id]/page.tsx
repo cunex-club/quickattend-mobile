@@ -54,7 +54,7 @@ const ScanPage = () => {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const { userToken } = useUser();
-  const { showPageLoading, hidePageLoading } = usePageLoading();
+  const { showPageLoading, hidePageLoading, pageLoading } = usePageLoading();
 
   // States
   const [event, setEvent] = useState<Event | null>(null);
@@ -352,6 +352,7 @@ const ScanPage = () => {
                 <QuickAttendButton
                   variant="outline"
                   type="icon"
+                  disabled={pageLoading}
                   onClick={() => {
                     showPageLoading();
                     router.push(`/${locale}`);
@@ -367,6 +368,7 @@ const ScanPage = () => {
                 <QuickAttendButton
                   variant="outline"
                   type="icon"
+                  disabled={pageLoading}
                   onClick={() => {
                     navigator.clipboard.writeText(window.location.href);
                     showMessage(tScan("copySuccess"));
@@ -383,6 +385,7 @@ const ScanPage = () => {
               <QuickAttendButton
                 variant="outline"
                 type="icon"
+                disabled={pageLoading}
                 onClick={toggleFlash}
                 className="w-full h-full rounded-full border-none bg-neutral-white"
               >
@@ -418,6 +421,7 @@ const ScanPage = () => {
                   {myOtherFiveEvents.map(event => {
                     return (
                       <button
+                        disabled={pageLoading}
                         key={event.id}
                         className={`text-ellipsis cursor-pointer block w-full body-small-primary text-left 
                         py-1 text-neutral-600 hover:bg-neutral-300
