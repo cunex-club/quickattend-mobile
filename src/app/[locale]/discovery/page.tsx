@@ -16,7 +16,7 @@ import {
 } from "@mui/icons-material";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export default function Discovery() {
   const [sortOption, setSortOption] = useState<0 | 1 | null>(null);
@@ -60,24 +60,19 @@ export default function Discovery() {
   }, [userToken, currentDiscoveryPageNumber]);
 
   // When there's a change in sort option
-  const sortedEvents = (() => {
-    // Oldest -> Newest
+  const sortedEvents = useMemo(() => {
     if (sortOption === 1) {
       return [...events].sort(
         (a, b) =>
-          new Date(a.end_time).getTime() - new Date(b.end_time).getTime()
+          new Date(a.start_time).getTime() - new Date(b.start_time).getTime()
       );
     }
 
-    // Newest -> Oldest
     return [...events].sort(
-      (a, b) => new Date(b.end_time).getTime() - new Date(a.end_time).getTime()
+      (a, b) =>
+        new Date(b.start_time).getTime() - new Date(a.start_time).getTime()
     );
-  })();
-
-  useEffect(() => {
-    setCurrentDiscoveryPageNumber(1);
-  }, [sortOption]);
+  }, [events, sortOption]);
 
   const maxPageNumber = discoveryPaginationMeta
     ? Math.max(

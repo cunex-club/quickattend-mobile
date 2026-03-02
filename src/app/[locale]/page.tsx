@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import MyEventCard from "@/components/card/MyEventCard";
 import QuickAttendButton from "@/components/QuickAttendButton";
 import PastEventCard from "@/components/card/PastEventCard";
@@ -65,24 +65,19 @@ export default function Home() {
   }, [userToken, currentPastEventsPageNumber]);
 
   // When there's a change in sort option
-  const sortedPastEvents = (() => {
-    // Oldest -> Newest
+  const sortedPastEvents = useMemo(() => {
     if (sortOption === 1) {
       return [...pastEvents].sort(
         (a, b) =>
-          new Date(a.end_time).getTime() - new Date(b.end_time).getTime()
+          new Date(a.start_time).getTime() - new Date(b.start_time).getTime()
       );
     }
 
-    // Newest -> Oldest
     return [...pastEvents].sort(
-      (a, b) => new Date(b.end_time).getTime() - new Date(a.end_time).getTime()
+      (a, b) =>
+        new Date(b.start_time).getTime() - new Date(a.start_time).getTime()
     );
-  })();
-
-  useEffect(() => {
-    setCurrentPastEventsPageNumber(1);
-  }, [sortOption]);
+  }, [pastEvents, sortOption]);
 
   const maxPageNumber = pastEventsPaginationMeta
     ? Math.max(
@@ -93,11 +88,6 @@ export default function Home() {
         )
       )
     : 1;
-
-  const paginatedPastEvents = sortedPastEvents.slice(
-    (currentPastEventsPageNumber - 1) * EVENTS_PER_PAGE,
-    currentPastEventsPageNumber * EVENTS_PER_PAGE
-  );
 
   return (
     <div className="h-screen flex flex-col bg-neutral-white">
@@ -251,8 +241,8 @@ export default function Home() {
 
             {/* Events */}
             <div className="flex flex-col gap-4">
-              {paginatedPastEvents.length > 0 ? (
-                paginatedPastEvents.map(event => (
+              {sortedPastEvents.length > 0 ? (
+                sortedPastEvents.map(event => (
                   <PastEventCard
                     key={event.id}
                     id={event.id}

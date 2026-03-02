@@ -470,6 +470,7 @@ const ScanPage = () => {
           onNext={e => {
             e.preventDefault();
             e.stopPropagation();
+            window.location.reload();
             setShowTimeoutPopup(false);
             startTimeout();
           }}
