@@ -108,6 +108,9 @@ export default function Home() {
                   variant="outline"
                   onClick={() => {
                     setOpenLLEPopup(true);
+                    setToHref(
+                      `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/events`
+                    );
                   }}
                 >
                   <AddCircleOutline
@@ -144,6 +147,9 @@ export default function Home() {
                 className="flex items-center gap-2 cursor-pointer"
                 onClick={() => {
                   setOpenLLEPopup(true);
+                  setToHref(
+                    `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/events`
+                  );
                 }}
               >
                 <p className="label-large-primary text-neutral-600">
@@ -185,7 +191,12 @@ export default function Home() {
               <QuickAttendButton
                 variant="filled"
                 type="text"
-                onClick={() => setOpenLLEPopup(true)}
+                onClick={() => {
+                  setOpenLLEPopup(true);
+                  setToHref(
+                    `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/events`
+                  );
+                }}
               >
                 <p className="translate-y-1">{tHome("manageEvents")}</p>
               </QuickAttendButton>

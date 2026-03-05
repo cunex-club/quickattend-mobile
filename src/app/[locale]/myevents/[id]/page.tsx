@@ -227,6 +227,9 @@ function MyEventDetail() {
                     e.stopPropagation();
                     e.preventDefault();
                     setOpenLLEPopup(true);
+                    setToHref(
+                      `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/dashboard`
+                    );
                   }}
                 >
                   <TrendingUp sx={{ width: 20, height: 20 }} />
