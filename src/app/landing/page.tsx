@@ -55,11 +55,7 @@ const Landing = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const token =
-        tokenQuery ||
-        process.env.NEXT_PUBLIC_CUNEX_TOKEN ||
-        process.env.NEXT_PUBLIC_MOCK_JWT_TOKEN ||
-        "";
+      const token = tokenQuery || process.env.NEXT_PUBLIC_CUNEX_TOKEN || "";
 
       if (!token) {
         setUser(null);
