@@ -42,11 +42,18 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const savedToken = localStorage.getItem("cunex_jwt_token");
-    if (savedToken) {
-      setToken(savedToken);
-    }
-  }, []);
 
+    if (!savedToken) {
+      setUser(null);
+      setUserLoading(false);
+      return;
+    }
+
+    setToken(savedToken);
+
+    setUser({} as User);
+    setUserLoading(false);
+  }, []);
   return (
     <UserContext.Provider
       value={{

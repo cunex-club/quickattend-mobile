@@ -42,7 +42,10 @@
     "notEligible": "Not eligible to register for this event",
     "flashlightNotSupport": "This device does not support flashlight.",
     "flashlightToggleFail": "Unable to turn the flashlight on or off.",
-    "invalidQR": "Invalid QR code.<br/>Please check and try again."
+    "invalidQR": "Invalid QR code.<br/>Please check and try again.",
+    "OWNER": "Owner",
+    "MANAGER": "Manager",
+    "STAFF": "Staff"
   },
   "lle": {
     "externalServiceTitle": "Alert",

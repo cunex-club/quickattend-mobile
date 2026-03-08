@@ -157,6 +157,9 @@ export default function PastEventCard({
                   e.stopPropagation();
                   hidePageLoading();
                   setOpenLLEPopup(true);
+                  setToHref(
+                    `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/dashboard`
+                  );
                   e.preventDefault();
                 }}
               >
@@ -175,6 +178,9 @@ export default function PastEventCard({
                     e.stopPropagation();
                     hidePageLoading();
                     setOpenLLEPopup(true);
+                    setToHref(
+                      `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/events`
+                    );
                     e.preventDefault();
                   }}
                 >
@@ -191,6 +197,9 @@ export default function PastEventCard({
                     e.stopPropagation();
                     hidePageLoading();
                     setOpenLLEPopup(true);
+                    setToHref(
+                      `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/events`
+                    );
                     e.preventDefault();
                   }}
                 >
@@ -205,26 +214,25 @@ export default function PastEventCard({
 
           {/* Second Row */}
           <div className="flex gap-2 flex-wrap items-center">
-            <QuickAttendButton
-              type="text"
-              variant="filled"
-              onClick={e => {
-                e.stopPropagation();
-                hidePageLoading();
-                setOpenLLEPopup(true);
-                if (evaluationFormPath) {
+            {evaluationFormPath && (
+              <QuickAttendButton
+                type="text"
+                variant="filled"
+                onClick={e => {
+                  e.stopPropagation();
+                  hidePageLoading();
                   setOpenLLEPopup(true);
                   setToHref(evaluationFormPath);
-                }
-                e.preventDefault();
-              }}
-            >
-              <Feed
-                sx={{ width: 20, height: 20 }}
-                className="text-neutral-white"
-              />
-              <p className="translate-y-1">{tEvent("evaluationForm")}</p>
-            </QuickAttendButton>
+                  e.preventDefault();
+                }}
+              >
+                <Feed
+                  sx={{ width: 20, height: 20 }}
+                  className="text-neutral-white"
+                />
+                <p className="translate-y-1">{tEvent("evaluationForm")}</p>
+              </QuickAttendButton>
+            )}
           </div>
         </div>
       </Link>

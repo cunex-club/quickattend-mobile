@@ -1,3 +1,14 @@
+export function toTitleCaseExceptOf(str: string): string {
+  return str
+    .toLowerCase()
+    .split(" ")
+    .map((word, index) => {
+      if (word === "of") return "of";
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    })
+    .join(" ");
+}
+
 export function formatDateToTime(date: Date): string {
   const hours = date.getHours().toString().padStart(2, "0");
   const minutes = date.getMinutes().toString().padStart(2, "0");

@@ -2,7 +2,7 @@ import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter, usePathname } from "@/i18n/routing";
 import { languageCode, LanguageCode, languageLabel } from "@/utils/const";
-import { Instagram, Phone, PhoneOutlined } from "@mui/icons-material";
+import { Instagram, PhoneOutlined } from "@mui/icons-material";
 import { useState } from "react";
 import LLEPopup from "./popup/LLEPopup";
 

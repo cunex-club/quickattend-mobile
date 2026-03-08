@@ -31,14 +31,16 @@ interface EventsResponse {
 
 export async function getEvents(
   token: string,
-  isManaged: boolean | undefined,
+  isMyEventSection: boolean | undefined,
   page: number = 1,
   pageSize: number = 8
 ): Promise<{ events: Event[]; meta: PaginationMeta | null }> {
   const path =
-    isManaged == undefined
+    isMyEventSection == undefined
       ? `/events?page=${page}&pageSize=${pageSize}`
-      : `/events?page=${page}&managed=${isManaged}&pageSize=${pageSize}`;
+      : isMyEventSection == false
+        ? `/events?page=${page}&myevents=${isMyEventSection}&pageSize=${pageSize}`
+        : `/events?myevents=${isMyEventSection}`;
   const response = await Axios.get<EventsResponse>(path, {
     headers: {
       Authorization: `Bearer ${token}`,

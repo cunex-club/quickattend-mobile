@@ -9,6 +9,7 @@ import { PageLoadingProvider } from "@/context/PageLoadingContext";
 import { getHealth } from "@/service/health";
 import { APP_ENV } from "@/utils/env";
 import { UserProvider } from "@/providers/UserProvider";
+import AuthGuard from "@/middleware/AuthGuard";
 
 const chulaBoldFont = localFont({
   src: "../../../public/font/CHULALONGKORNBold.otf",
@@ -53,9 +54,11 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={messages}>
           <PageLoadingProvider>
             <UserProvider>
-              <div className="w-full sm:max-w-[390px] h-screen overflow-auto bg-neutral-white relative">
-                {children}
-              </div>
+              <AuthGuard>
+                <div className="w-full sm:max-w-[390px] h-screen overflow-auto bg-neutral-white relative">
+                  {children}
+                </div>
+              </AuthGuard>
             </UserProvider>
           </PageLoadingProvider>
         </NextIntlClientProvider>

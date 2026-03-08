@@ -42,7 +42,10 @@
     "notEligible": "ไม่ได้อยู่ในรายชื่อผู้มีสิทธิ์ลงทะเบียนเข้าร่วมกิจกรรม",
     "flashlightNotSupport": "อุปกรณ์นี้ไม่รองรับไฟฉาย",
     "flashlightToggleFail": "ไม่สามารถเปิด/ปิดไฟฉายได้",
-    "invalidQR": "ข้อมูล QR ไม่ถูกต้อง<br/>กรุณาตรวจสอบและลองใหม่อีกครั้ง"
+    "invalidQR": "ข้อมูล QR ไม่ถูกต้อง<br/>กรุณาตรวจสอบและลองใหม่อีกครั้ง",
+    "OWNER": "Owner",
+    "MANAGER": "Manager",
+    "STAFF": "Staff"
   },
   "lle": {
     "externalServiceTitle": "แจ้งเตือน",

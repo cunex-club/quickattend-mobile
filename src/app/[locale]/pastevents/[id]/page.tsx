@@ -203,6 +203,9 @@ function PastEventDetail() {
                 onClick={e => {
                   e.stopPropagation();
                   setOpenLLEPopup(true);
+                  setToHref(
+                    `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/dashboard`
+                  );
                   e.preventDefault();
                 }}
               >
@@ -220,6 +223,9 @@ function PastEventDetail() {
                   onClick={e => {
                     e.stopPropagation();
                     setOpenLLEPopup(true);
+                    setToHref(
+                      `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/events`
+                    );
                     e.preventDefault();
                   }}
                 >
@@ -235,6 +241,9 @@ function PastEventDetail() {
                   onClick={e => {
                     e.stopPropagation();
                     setOpenLLEPopup(true);
+                    setToHref(
+                      `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/events`
+                    );
                     e.preventDefault();
                   }}
                 >
@@ -247,23 +256,26 @@ function PastEventDetail() {
             </div>
 
             {/* Second Row */}
-            <div className="flex gap-2 flex-wrap items-center">
-              <QuickAttendButton
-                type="text"
-                variant="filled"
-                onClick={e => {
-                  e.stopPropagation();
-                  setOpenLLEPopup(true);
-                  e.preventDefault();
-                }}
-              >
-                <Feed
-                  sx={{ width: 20, height: 20 }}
-                  className="text-neutral-white"
-                />
-                <p className="translate-y-1">{tEvent("evaluationForm")}</p>
-              </QuickAttendButton>
-            </div>
+            {event.evaluation_form && (
+              <div className="flex gap-2 flex-wrap items-center">
+                <QuickAttendButton
+                  type="text"
+                  variant="filled"
+                  onClick={e => {
+                    e.stopPropagation();
+                    setOpenLLEPopup(true);
+                    setToHref(event.evaluation_form);
+                    e.preventDefault();
+                  }}
+                >
+                  <Feed
+                    sx={{ width: 20, height: 20 }}
+                    className="text-neutral-white"
+                  />
+                  <p className="translate-y-1">{tEvent("evaluationForm")}</p>
+                </QuickAttendButton>
+              </div>
+            )}
           </div>
         </div>
       </div>

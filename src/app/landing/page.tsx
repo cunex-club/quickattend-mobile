@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useUser } from "@/providers/UserProvider";
 import { getUserProfile } from "@/service/auth";
 import { useRouter } from "@/i18n/routing";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { APP_ENV } from "@/utils/env";
 import { getHealth } from "@/service/health";
 import { useSearchParams } from "next/navigation";
@@ -42,6 +42,8 @@ const Landing = () => {
   const tokenQuery = searchParams.get("token");
   const langQuery = searchParams.get("lang");
 
+  const locale = useLocale();
+
   useEffect(() => {
     async function checkHealth() {
       if (APP_ENV === "development") {
@@ -55,11 +57,7 @@ const Landing = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const token =
-        tokenQuery ||
-        process.env.NEXT_PUBLIC_CUNEX_TOKEN ||
-        process.env.NEXT_PUBLIC_MOCK_JWT_TOKEN ||
-        "";
+      const token = tokenQuery || process.env.NEXT_PUBLIC_CUNEX_TOKEN || "";
 
       if (!token) {
         setUser(null);
@@ -72,8 +70,10 @@ const Landing = () => {
         setUser(fetchedUser);
         setUserToken(token);
 
-        const locale = langQuery === "th" ? "th-th" : "en-us";
-        router.replace("/", { locale });
+        const redirect_locale =
+          langQuery === "th" ? "th-th" : langQuery === "en" ? "en-us" : locale;
+
+        router.replace("/", { locale: redirect_locale });
       } catch {
         setUser(null);
       } finally {

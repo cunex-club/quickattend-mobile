@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import MyEventCard from "@/components/card/MyEventCard";
 import QuickAttendButton from "@/components/QuickAttendButton";
 import PastEventCard from "@/components/card/PastEventCard";
@@ -17,17 +17,20 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { usePageLoading } from "@/context/PageLoadingContext";
 import Footer from "@/components/Footer";
-import { Event, getEvents } from "@/service/event";
+import { Event, getEvents, PaginationMeta } from "@/service/event";
 import { useUser } from "@/providers/UserProvider";
 import { EVENTS_PER_PAGE } from "@/utils/const";
 
 export default function Home() {
   const [sortOption, setSortOption] = useState<0 | 1 | null>(null);
-  const [currentPageNumber, setCurrentPageNumber] = useState<number>(1);
+  const [currentPastEventsPageNumber, setCurrentPastEventsPageNumber] =
+    useState<number>(1);
   const [openLLEPopup, setOpenLLEPopup] = useState(false);
   const [openSortDropdown, setOpenSortDropdown] = useState(false);
   const [currentEvents, setCurrentEvents] = useState<Event[]>([]);
   const [pastEvents, setPastEvents] = useState<Event[]>([]);
+  const [pastEventsPaginationMeta, setPastEventsPaginationMeta] =
+    useState<PaginationMeta | null>(null);
   const [tohref, setToHref] = useState("");
 
   const { userToken } = useUser();
@@ -39,22 +42,18 @@ export default function Home() {
     const fetchEvents = async () => {
       showPageLoading();
       try {
-        const { events } = await getEvents(userToken, true);
+        const fetchedMyEventsInformation = await getEvents(userToken, true);
+        const fetchedPastEventsInformation = await getEvents(
+          userToken,
+          false,
+          currentPastEventsPageNumber - 1,
+          EVENTS_PER_PAGE
+        );
 
-        const now = new Date();
-
-        const current = events.filter(e => new Date(e.end_time) >= now);
-        const past = events
-          .filter(e => new Date(e.end_time) < now)
-          .sort(
-            (a, b) =>
-              new Date(b.end_time).getTime() - new Date(a.end_time).getTime()
-          );
-
-        setCurrentEvents(current);
-        setPastEvents(past);
+        setCurrentEvents(fetchedMyEventsInformation.events);
+        setPastEvents(fetchedPastEventsInformation.events);
+        setPastEventsPaginationMeta(fetchedPastEventsInformation.meta);
       } catch (err) {
-        console.error(err);
         setCurrentEvents([]);
         setPastEvents([]);
       } finally {
@@ -63,37 +62,32 @@ export default function Home() {
     };
 
     if (userToken) fetchEvents();
-  }, [userToken, currentPageNumber]);
+  }, [userToken, currentPastEventsPageNumber]);
 
   // When there's a change in sort option
-  const sortedPastEvents = (() => {
-    // Oldest -> Newest
+  const sortedPastEvents = useMemo(() => {
     if (sortOption === 1) {
       return [...pastEvents].sort(
         (a, b) =>
-          new Date(a.end_time).getTime() - new Date(b.end_time).getTime()
+          new Date(a.start_time).getTime() - new Date(b.start_time).getTime()
       );
     }
 
-    // Newest -> Oldest
     return [...pastEvents].sort(
-      (a, b) => new Date(b.end_time).getTime() - new Date(a.end_time).getTime()
+      (a, b) =>
+        new Date(b.start_time).getTime() - new Date(a.start_time).getTime()
     );
-  })();
+  }, [pastEvents, sortOption]);
 
-  useEffect(() => {
-    setCurrentPageNumber(1);
-  }, [sortOption]);
-
-  const maxPageNumber = Math.max(
-    1,
-    Math.ceil(pastEvents.length / EVENTS_PER_PAGE)
-  );
-
-  const paginatedPastEvents = sortedPastEvents.slice(
-    (currentPageNumber - 1) * EVENTS_PER_PAGE,
-    currentPageNumber * EVENTS_PER_PAGE
-  );
+  const maxPageNumber = pastEventsPaginationMeta
+    ? Math.max(
+        1,
+        Math.ceil(
+          pastEventsPaginationMeta.pagination.total /
+            pastEventsPaginationMeta.pagination.pageSize
+        )
+      )
+    : 1;
 
   return (
     <div className="h-screen flex flex-col bg-neutral-white">
@@ -114,6 +108,9 @@ export default function Home() {
                   variant="outline"
                   onClick={() => {
                     setOpenLLEPopup(true);
+                    setToHref(
+                      `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/events`
+                    );
                   }}
                 >
                   <AddCircleOutline
@@ -150,6 +147,9 @@ export default function Home() {
                 className="flex items-center gap-2 cursor-pointer"
                 onClick={() => {
                   setOpenLLEPopup(true);
+                  setToHref(
+                    `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/events`
+                  );
                 }}
               >
                 <p className="label-large-primary text-neutral-600">
@@ -191,7 +191,12 @@ export default function Home() {
               <QuickAttendButton
                 variant="filled"
                 type="text"
-                onClick={() => setOpenLLEPopup(true)}
+                onClick={() => {
+                  setOpenLLEPopup(true);
+                  setToHref(
+                    `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/events`
+                  );
+                }}
               >
                 <p className="translate-y-1">{tHome("manageEvents")}</p>
               </QuickAttendButton>
@@ -247,8 +252,8 @@ export default function Home() {
 
             {/* Events */}
             <div className="flex flex-col gap-4">
-              {paginatedPastEvents.length > 0 ? (
-                paginatedPastEvents.map(event => (
+              {sortedPastEvents.length > 0 ? (
+                sortedPastEvents.map(event => (
                   <PastEventCard
                     key={event.id}
                     id={event.id}
@@ -278,7 +283,8 @@ export default function Home() {
         <button
           className="p-2 w-8 h-8 rounded-full bg-neutral-white border border-neutral-300 cursor-pointer"
           onClick={() => {
-            if (currentPageNumber > 1) setCurrentPageNumber(prev => prev - 1);
+            if (currentPastEventsPageNumber > 1)
+              setCurrentPastEventsPageNumber(prev => prev - 1);
           }}
         >
           <ChevronLeft
@@ -295,9 +301,9 @@ export default function Home() {
             if (maxPageNumber <= 5) {
               for (let i = 1; i <= maxPageNumber; i++) pages.push(i);
             } else {
-              if (currentPageNumber <= 2) {
+              if (currentPastEventsPageNumber <= 2) {
                 pages.push(1, 2, 3, "...", maxPageNumber);
-              } else if (currentPageNumber >= maxPageNumber - 1) {
+              } else if (currentPastEventsPageNumber >= maxPageNumber - 1) {
                 pages.push(
                   1,
                   "...",
@@ -306,12 +312,18 @@ export default function Home() {
                   maxPageNumber
                 );
               } else {
-                pages.push(1, "...", currentPageNumber, "...", maxPageNumber);
+                pages.push(
+                  1,
+                  "...",
+                  currentPastEventsPageNumber,
+                  "...",
+                  maxPageNumber
+                );
               }
             }
 
             return pages.map((page, index) => {
-              const isActive = page === currentPageNumber;
+              const isActive = page === currentPastEventsPageNumber;
               const isEllipsis = page === "...";
 
               return (
@@ -326,7 +338,8 @@ export default function Home() {
                   }`}
                   disabled={isEllipsis}
                   onClick={() =>
-                    typeof page === "number" && setCurrentPageNumber(page)
+                    typeof page === "number" &&
+                    setCurrentPastEventsPageNumber(page)
                   }
                 >
                   {page}
@@ -340,8 +353,8 @@ export default function Home() {
         <button
           className="p-2 w-8 h-8 rounded-full bg-neutral-white border border-neutral-300 cursor-pointer"
           onClick={() => {
-            if (currentPageNumber < maxPageNumber) {
-              setCurrentPageNumber(prev => prev + 1);
+            if (currentPastEventsPageNumber < maxPageNumber) {
+              setCurrentPastEventsPageNumber(prev => prev + 1);
             }
           }}
         >
