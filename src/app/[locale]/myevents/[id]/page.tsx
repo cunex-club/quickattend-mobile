@@ -35,14 +35,11 @@ function MyEventDetail() {
 
   const [tohref, setToHref] = useState("");
 
-  const { showPageLoading, hidePageLoading } = usePageLoading();
+  const { showPageLoading, hidePageLoading, pageLoading } = usePageLoading();
 
   const tEvent = useTranslations("event");
   const tBreadCrumb = useTranslations("breadcrumb");
   const tScan = useTranslations("scan");
-
-  const topRef = useRef<HTMLDivElement>(null);
-  const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     async function fetchEvent() {
@@ -65,11 +62,8 @@ function MyEventDetail() {
 
   if (!event) {
     return (
-      <div
-        ref={topRef}
-        className="w-full min-h-screen flex flex-col bg-neutral-white"
-      >
-        <EventNotFound />
+      <div className="w-full min-h-screen flex flex-col bg-neutral-white">
+        {!pageLoading && <EventNotFound />}
 
         <Footer />
       </div>
@@ -83,7 +77,7 @@ function MyEventDetail() {
   );
 
   return (
-    <div ref={topRef} className="min-h-screen flex flex-col bg-neutral-white">
+    <div className="min-h-screen flex flex-col bg-neutral-white">
       {/* Content */}
       <div className="flex-1 w-full overflow-auto">
         <div className="w-full flex flex-col px-8 pt-8 pb-12">
@@ -102,23 +96,16 @@ function MyEventDetail() {
               </p>
             </Link>
             <ChevronRightOutlined fontSize="small" className="text-primary" />
-            <Link
-              className="flex gap-1 items-center"
-              href={`/${locale}/myevents/${id}`}
-              onClick={() => {
-                showPageLoading();
-                window.location.reload();
-              }}
-            >
+            <Link className="flex gap-1 items-center" href={`/myevents/${id}`}>
               <p className="body-small-primary text-neutral-500 truncate max-w-[120px]">
-                {event?.name}
+                {event.name}
               </p>
             </Link>
           </div>
 
           {/* Event Name */}
           <h1 className="headline-large-emphasized text-neutral-600 mb-4 break-all">
-            {event?.name}
+            {event.name}
           </h1>
 
           {/* Event Information */}
@@ -174,23 +161,29 @@ function MyEventDetail() {
             </h2>
 
             <div className="grid grid-cols-2 gap-x-2 gap-y-1">
-              {event.agenda.map((e, i) => {
-                const { timeRange } = formatEventDateTime(
-                  e.start_time,
-                  e.end_time,
-                  locale as "th-TH" | "en-US"
-                );
-                return (
-                  <Fragment key={i}>
-                    <p className="body-medium-primary text-neutral-600 break-all">
-                      {e.activity_name}
-                    </p>
-                    <p className="body-medium-primary text-neutral-600 text-right break-all">
-                      {timeRange}
-                    </p>
-                  </Fragment>
-                );
-              })}
+              {event.agenda.length > 0 ? (
+                event.agenda.map((e, i) => {
+                  const { timeRange } = formatEventDateTime(
+                    e.start_time,
+                    e.end_time,
+                    locale as "th-TH" | "en-US"
+                  );
+                  return (
+                    <Fragment key={i}>
+                      <p className="body-medium-primary text-neutral-600 break-all">
+                        {e.activity_name}
+                      </p>
+                      <p className="body-medium-primary text-neutral-600 text-right break-all">
+                        {timeRange}
+                      </p>
+                    </Fragment>
+                  );
+                })
+              ) : (
+                <p className="body-medium-primary text-neutral-600 break-all">
+                  -
+                </p>
+              )}
             </div>
           </div>
 
@@ -205,7 +198,7 @@ function MyEventDetail() {
           </div>
 
           {/* Buttons */}
-          <div className="flex flex-wrap gap-2" ref={bottomRef}>
+          <div className="flex flex-wrap gap-2">
             {/* Scan Button */}
             <QuickAttendButton
               type="text"

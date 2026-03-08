@@ -14,7 +14,8 @@
   "discovery": {
     "explore": "Explore Events",
     "sortNewestOldest": "Event Date: Newest-Oldest",
-    "sortOldestNewest": "Event Date: Oldest-Newest"
+    "sortOldestNewest": "Event Date: Oldest-Newest",
+    "noEvents": "No events"
   },
   "event": {
     "details": "Event Details",
