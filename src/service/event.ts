@@ -45,8 +45,6 @@ export async function getEvents(
     },
   });
 
-  console.log(response.data.meta);
-
   return {
     events: response.data.data,
     meta: response.data.meta,
