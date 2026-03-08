@@ -11,7 +11,6 @@ import {
   maxPageNumber,
   discoveryEvents,
 } from "@/utils/const";
-import { EventInterface } from "@/utils/interface";
 import {
   ArrowUpward,
   ChevronLeft,

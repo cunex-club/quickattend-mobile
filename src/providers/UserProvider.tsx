@@ -1,6 +1,12 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 
 export interface User {
   id: string;
@@ -16,8 +22,10 @@ export interface User {
 interface UserContextType {
   user: User | null | undefined;
   userLoading: boolean;
+  userToken: string;
   setUser: (user: User | null) => void;
   setUserLoading: (loading: boolean) => void;
+  setUserToken: (token: string) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -25,10 +33,30 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null | undefined>(undefined);
   const [userLoading, setUserLoading] = useState(true);
+  const [userToken, setToken] = useState("");
+
+  const setUserToken = (token: string) => {
+    setToken(token);
+    localStorage.setItem("cunex_jwt_token", token);
+  };
+
+  useEffect(() => {
+    const savedToken = localStorage.getItem("cunex_jwt_token");
+    if (savedToken) {
+      setToken(savedToken);
+    }
+  }, []);
 
   return (
     <UserContext.Provider
-      value={{ user, userLoading, setUser, setUserLoading }}
+      value={{
+        user,
+        userLoading,
+        setUser,
+        setUserLoading,
+        userToken,
+        setUserToken,
+      }}
     >
       {children}
     </UserContext.Provider>

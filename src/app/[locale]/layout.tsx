@@ -53,7 +53,7 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={messages}>
           <PageLoadingProvider>
             <UserProvider>
-              <div className="w-full sm:max-w-[390px] min-h-screen bg-neutral-white relative">
+              <div className="w-full sm:max-w-[390px] h-screen overflow-auto bg-neutral-white relative">
                 {children}
               </div>
             </UserProvider>

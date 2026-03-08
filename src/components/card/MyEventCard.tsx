@@ -14,24 +14,25 @@ import QuickAttendButton from "../QuickAttendButton";
 import LLEPopup from "../popup/LLEPopup";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { usePageLoading } from "@/context/PageLoadingContext";
+import { formatEventDateTime } from "@/utils/function";
 
 interface MyEventCardProps {
   id: string;
   name: string;
-  date: string;
-  timeRange: string;
+  startTime: string;
+  endTime: string;
   location: string;
-  description: string;
+  description?: string;
   owner: string;
 }
 
 export default function MyEventCard({
   id,
   name,
-  date,
-  timeRange,
+  startTime,
+  endTime,
   location,
   description,
   owner,
@@ -44,6 +45,14 @@ export default function MyEventCard({
 
   const { showPageLoading, hidePageLoading } = usePageLoading();
 
+  const locale = useLocale();
+
+  const { date, timeRange } = formatEventDateTime(
+    startTime,
+    endTime,
+    locale as "th-TH" | "en-US"
+  );
+
   const tEvent = useTranslations("event");
   const tScan = useTranslations("scan");
 
@@ -51,7 +60,7 @@ export default function MyEventCard({
     <Link
       key={id}
       className="w-full min-h-30 h-fit bg-neutral-100 rounded-4xl flex flex-col px-4 py-6 cursor-pointer overflow-visible"
-      href={`/myevents/${id}`}
+      href={`/${locale}/myevents/${id}`}
       onClick={() => {
         showPageLoading();
       }}
@@ -114,7 +123,7 @@ export default function MyEventCard({
           {tEvent("details")}
         </h2>
         <p className="body-small-primary text-neutral-600 break-all line-clamp-5 whitespace-pre-wrap">
-          {description}
+          {description ?? "-"}
         </p>
       </div>
 
