@@ -6,7 +6,16 @@ interface MapPreviewProps {
   lng: number;
 }
 
-export const DEFAULT_CENTER = { lat: 13.7386, lng: 100.5321 };
+export type LocationPoint = {
+  location_lat: number;
+  location_long: number;
+};
+
+export const DEFAULT_CENTER: LocationPoint = {
+  location_lat: 13.7386,
+  location_long: 100.5321,
+};
+
 const GoogleMapContainerStyle = { width: "100%", height: "180px" };
 
 export const MapPreviewComponent = ({ lat, lng }: MapPreviewProps) => {

@@ -66,9 +66,9 @@ export interface EventDetail {
   start_time: string;
   end_time: string;
   location: string;
+  location_lat: number;
+  location_long: number;
   role: Role;
-  lat: number;
-  lng: number;
   evaluation_form: string;
   agenda: Agenda[];
 }

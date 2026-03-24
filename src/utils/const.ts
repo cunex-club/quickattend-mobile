@@ -8,8 +8,4 @@ export const languageLabel: Record<string, string> = {
 
 export const scanTimeOutMs = 10000;
 
-export const scannedName = "นายสมชาย ใจดี";
-export const scannedID = "6501234567";
-export const scannedFaculty = "วิศวกรรมศาสตร์";
-
 export const EVENTS_PER_PAGE = 5;

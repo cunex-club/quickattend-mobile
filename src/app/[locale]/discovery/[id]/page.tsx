@@ -214,8 +214,8 @@ function DiscoveryEventDetail() {
           </h2>
 
           <GoogleMapPreview
-            lat={event.lat ?? DEFAULT_CENTER.lat}
-            lng={event.lng ?? DEFAULT_CENTER.lng}
+            lat={event.location_lat ?? DEFAULT_CENTER.location_lat}
+            lng={event.location_long ?? DEFAULT_CENTER.location_long}
           />
         </div>
       </div>
