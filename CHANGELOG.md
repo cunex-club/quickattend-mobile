@@ -1,3 +1,10 @@
+# [1.0.0-dev.2](https://github.com/cunex-club/quickattend-mobile/compare/v1.0.0-dev.1...v1.0.0-dev.2) (2026-03-27)
+
+
+### Bug Fixes
+
+* clear events from last pagination ([7640ecd](https://github.com/cunex-club/quickattend-mobile/commit/7640ecddceae1f23b70e5b433b4b431972f5f67a))
+
 # 1.0.0-dev.1 (2026-03-27)
 
 
