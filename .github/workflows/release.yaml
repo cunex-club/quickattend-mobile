@@ -25,7 +25,7 @@ jobs:
     name: Semantic Release
 
     outputs:
-      release_version: ${{ steps.semantic_release.outputs.release_version }}
+      release_version: ${{ steps.semantic_release.outputs.version }}
 
     steps:
       - name: Checkout code
