@@ -1,3 +1,10 @@
+# [1.0.0-dev.6](https://github.com/cunex-club/quickattend-mobile/compare/v1.0.0-dev.5...v1.0.0-dev.6) (2026-03-27)
+
+
+### Bug Fixes
+
+* routing + mobile ([e38ec39](https://github.com/cunex-club/quickattend-mobile/commit/e38ec392dc9080404a722d73ced6347bf5ba1eef))
+
 # [1.0.0-dev.5](https://github.com/cunex-club/quickattend-mobile/compare/v1.0.0-dev.4...v1.0.0-dev.5) (2026-03-27)
 
 
