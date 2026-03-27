@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useUser } from "@/providers/UserProvider";
-import { getUserProfile } from "@/service/auth";
+import { getUserProfile, loginWithLLEToken } from "@/service/auth";
 import { useRouter } from "@/i18n/routing";
 import { useLocale, useTranslations } from "next-intl";
 import { APP_ENV } from "@/utils/env";
@@ -66,9 +66,10 @@ const Landing = () => {
       }
 
       try {
-        const fetchedUser = await getUserProfile(token);
+        const accessToken = await loginWithLLEToken(token);
+        const fetchedUser = await getUserProfile(accessToken);
         setUser(fetchedUser);
-        setUserToken(token);
+        setUserToken(accessToken);
 
         const redirect_locale =
           langQuery === "th" ? "th-th" : langQuery === "en" ? "en-us" : locale;
