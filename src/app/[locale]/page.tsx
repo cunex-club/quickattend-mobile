@@ -60,6 +60,7 @@ export default function Home() {
   useEffect(() => {
     const fetchPastEvents = async () => {
       showPageLoading();
+      setPastEvents([]);
       try {
         const fetchedPastEventsInformation = await getEvents(
           userToken,
@@ -127,7 +128,7 @@ export default function Home() {
                   onClick={() => {
                     setOpenLLEPopup(true);
                     setToHref(
-                      `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/events`
+                      `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/events/create`
                     );
                   }}
                 >

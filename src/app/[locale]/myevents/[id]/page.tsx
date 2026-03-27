@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 
 import {
   CalendarMonth,
@@ -32,6 +32,9 @@ function MyEventDetail() {
   const [openLLEPopup, setOpenLLEPopup] = useState(false);
   const [openShareDropdown, setOpenShareDropdown] = useState(false);
   const [event, setEvent] = useState<EventDetail | null>(null);
+  const [showMessagePopup, setShowMessagePopup] = useState(false);
+  const [message, setMessage] = useState("");
+  const messageTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const [tohref, setToHref] = useState("");
 
@@ -59,6 +62,31 @@ function MyEventDetail() {
 
     fetchEvent();
   }, [id, userToken]);
+
+  const showMessage = (msg: string) => {
+    if (messageTimeoutRef.current) {
+      clearTimeout(messageTimeoutRef.current);
+    }
+
+    setShowMessagePopup(false);
+
+    setTimeout(() => {
+      setMessage(msg);
+      setShowMessagePopup(true);
+
+      messageTimeoutRef.current = setTimeout(() => {
+        setShowMessagePopup(false);
+      }, 2500);
+    }, 50);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (messageTimeoutRef.current) {
+        clearTimeout(messageTimeoutRef.current);
+      }
+    };
+  }, []);
 
   if (!event) {
     return (
@@ -261,8 +289,10 @@ function MyEventDetail() {
                       onClick={e => {
                         e.stopPropagation();
                         e.preventDefault();
-                        showPageLoading();
-                        router.push(`/scan/${id}`);
+                        navigator.clipboard.writeText(
+                          `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/scan/${id}`
+                        );
+                        showMessage(tScan("copySuccess"));
                         setOpenShareDropdown(false);
                       }}
                     >
@@ -273,7 +303,10 @@ function MyEventDetail() {
                       onClick={e => {
                         e.stopPropagation();
                         e.preventDefault();
-                        setOpenShareDropdown(false);
+                        navigator.clipboard.writeText(
+                          `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/dashboard`
+                        );
+                        showMessage(tScan("copySuccess"));
                       }}
                     >
                       {tScan("dashboard")}
@@ -290,6 +323,12 @@ function MyEventDetail() {
 
       {openLLEPopup && (
         <LLEPopup setOpenLLEPopup={setOpenLLEPopup} tohref={tohref} />
+      )}
+
+      {showMessagePopup && (
+        <div className="fixed top-16 left-1/2 -translate-x-1/2 bg-primary text-white px-4 py-2 rounded-full shadow-lg animate-fade-in-out z-50">
+          <p className="label-large-primary translate-y-1">{message}</p>
+        </div>
       )}
     </div>
   );

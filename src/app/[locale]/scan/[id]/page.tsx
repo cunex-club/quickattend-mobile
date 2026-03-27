@@ -33,18 +33,16 @@ const ScanPage = () => {
   const locale = useLocale();
 
   const getInitialScannerSize = () => {
-    if (typeof window === "undefined") return 240;
+    if (typeof window === "undefined") return 300;
 
     const width = window.innerWidth;
     return width <= 280
-      ? 120
+      ? 200
       : width <= 400
-        ? 180
+        ? 280
         : width <= 480 || width >= 640
-          ? 240
-          : width <= 600
-            ? 300
-            : 360;
+          ? 320
+          : 360;
   };
 
   // Refs
@@ -337,10 +335,10 @@ const ScanPage = () => {
     <>
       <div className="w-full min-w-60 h-screen overflow-auto relative flex flex-col px-8 pt-8 pb-12 bg-white">
         {/* Scanner */}
-        <div className="relative w-full h-full bg-neutral-500 rounded-2xl mb-8">
+        <div className="relative w-full h-full bg-transparent rounded-2xl mb-8">
           {showCamera && (
             <div
-              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 justify-center items-center overflow-hidden rounded-2xl border-primary"
+              className="absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/3 justify-center items-center overflow-hidden rounded-2xl border-primary"
               style={{ width: scannerSize, height: scannerSize }}
             >
               {/* Camera */}
@@ -361,7 +359,7 @@ const ScanPage = () => {
           )}
 
           {/* Buttons */}
-          <div className="absolute w-full flex justify-between gap-4 bottom-4 px-4 flex-wrap">
+          <div className="absolute w-full flex justify-between gap-2 bottom-4 px-4 flex-wrap">
             <div className="flex gap-2">
               {/* Home */}
               <div className="w-fit h-fit">
@@ -373,7 +371,7 @@ const ScanPage = () => {
                     showPageLoading();
                     router.push(`/${locale}`);
                   }}
-                  className="w-full h-full rounded-full border-none bg-neutral-white"
+                  className="w-full h-full rounded-full border-2 border-primary bg-neutral-white"
                 >
                   <Home className="w-6 h-6" />
                 </QuickAttendButton>
@@ -389,7 +387,7 @@ const ScanPage = () => {
                     navigator.clipboard.writeText(window.location.href);
                     showMessage(tScan("copySuccess"));
                   }}
-                  className="w-full h-full rounded-full border-none bg-neutral-white"
+                  className="w-full h-full rounded-full border-2 border-primary bg-neutral-white"
                 >
                   <Link className="w-6 h-6" />
                 </QuickAttendButton>
@@ -403,7 +401,7 @@ const ScanPage = () => {
                 type="icon"
                 disabled={pageLoading}
                 onClick={toggleFlash}
-                className="w-full h-full rounded-full border-none bg-neutral-white"
+                className="w-full h-full rounded-full border-2 border-primary bg-neutral-white"
               >
                 {isFlashOn ? (
                   <FlashOn className="w-6 h-6" />
@@ -418,7 +416,7 @@ const ScanPage = () => {
         {/* Bottom */}
         <div className="w-full px-6 flex flex-col justify-center items-center gap-1 z-10 flex-wrap">
           <div className="relative flex gap-2 items-center">
-            <p className="title-large-emphasized translate-y-1 truncate max-w-60">
+            <p className="title-large-emphasized translate-y-1 truncate max-w-36">
               {event?.name || tEvent("notFoundTitle")}
             </p>
             {myOtherFiveEvents && myOtherFiveEvents.length > 0 && (
@@ -517,7 +515,7 @@ const ScanPage = () => {
         ) : null)}
 
       {showMessagePopup && (
-        <div className="fixed top-24 left-1/2 -translate-x-1/2 bg-primary text-white px-4 py-2 rounded-full shadow-lg animate-fade-in-out z-50">
+        <div className="fixed top-16 left-1/2 -translate-x-1/2 bg-primary text-white px-4 py-2 rounded-full shadow-lg animate-fade-in-out z-50">
           <p className="label-large-primary translate-y-1">{message}</p>
         </div>
       )}

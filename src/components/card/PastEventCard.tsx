@@ -176,12 +176,8 @@ export default function PastEventCard({
                   variant="outline"
                   onClick={e => {
                     e.stopPropagation();
-                    hidePageLoading();
-                    setOpenLLEPopup(true);
-                    setToHref(
-                      `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/events`
-                    );
                     e.preventDefault();
+                    // TODO: Download event report file from backend
                   }}
                 >
                   <SaveAlt
@@ -198,7 +194,7 @@ export default function PastEventCard({
                     hidePageLoading();
                     setOpenLLEPopup(true);
                     setToHref(
-                      `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/events`
+                      `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/events/${id}`
                     );
                     e.preventDefault();
                   }}

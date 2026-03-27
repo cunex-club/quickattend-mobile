@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import {
   CalendarMonth,
@@ -40,6 +40,9 @@ export default function MyEventCard({
   const router = useRouter();
   const [openLLEPopup, setOpenLLEPopup] = useState(false);
   const [openShareDropdown, setOpenShareDropdown] = useState(false);
+  const [showMessagePopup, setShowMessagePopup] = useState(false);
+  const [message, setMessage] = useState("");
+  const messageTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const [tohref, setToHref] = useState("");
 
@@ -55,6 +58,31 @@ export default function MyEventCard({
 
   const tEvent = useTranslations("event");
   const tScan = useTranslations("scan");
+
+  const showMessage = (msg: string) => {
+    if (messageTimeoutRef.current) {
+      clearTimeout(messageTimeoutRef.current);
+    }
+
+    setShowMessagePopup(false);
+
+    setTimeout(() => {
+      setMessage(msg);
+      setShowMessagePopup(true);
+
+      messageTimeoutRef.current = setTimeout(() => {
+        setShowMessagePopup(false);
+      }, 2500);
+    }, 50);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (messageTimeoutRef.current) {
+        clearTimeout(messageTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <Link
@@ -77,7 +105,9 @@ export default function MyEventCard({
             e.stopPropagation();
             e.preventDefault();
             setOpenLLEPopup(true);
-            setToHref(`${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/events`);
+            setToHref(
+              `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/events/${id}`
+            );
           }}
         />
       </div>
@@ -208,9 +238,11 @@ export default function MyEventCard({
                   onClick={e => {
                     e.stopPropagation();
                     e.preventDefault();
-                    showPageLoading();
+                    navigator.clipboard.writeText(
+                      `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/scan/${id}`
+                    );
+                    showMessage(tScan("copySuccess"));
                     setOpenShareDropdown(false);
-                    router.push(`/scan/${id}`);
                   }}
                 >
                   {tScan("scannerQR")}
@@ -221,6 +253,10 @@ export default function MyEventCard({
                     e.stopPropagation();
                     e.preventDefault();
                     setOpenShareDropdown(false);
+                    navigator.clipboard.writeText(
+                      `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/dashboard`
+                    );
+                    showMessage(tScan("copySuccess"));
                   }}
                 >
                   {tScan("dashboard")}
@@ -232,6 +268,12 @@ export default function MyEventCard({
 
         {openLLEPopup && (
           <LLEPopup setOpenLLEPopup={setOpenLLEPopup} tohref={tohref} />
+        )}
+
+        {showMessagePopup && (
+          <div className="fixed top-16 left-1/2 -translate-x-1/2 bg-primary text-white px-4 py-2 rounded-full shadow-lg animate-fade-in-out z-50">
+            <p className="label-large-primary translate-y-1">{message}</p>
+          </div>
         )}
       </div>
     </Link>
