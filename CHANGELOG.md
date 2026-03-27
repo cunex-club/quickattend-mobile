@@ -1,3 +1,12 @@
+# [1.0.0-dev.4](https://github.com/cunex-club/quickattend-mobile/compare/v1.0.0-dev.3...v1.0.0-dev.4) (2026-03-27)
+
+
+### Bug Fixes
+
+* my event page path ([2b57b45](https://github.com/cunex-club/quickattend-mobile/commit/2b57b4532dbd898404107f4406e722c4c7859401))
+* past event page path ([0cfc6cc](https://github.com/cunex-club/quickattend-mobile/commit/0cfc6cca23f72bd6f399fa5623474450ac995b78))
+* path in main page and cards ([add0f14](https://github.com/cunex-club/quickattend-mobile/commit/add0f14f3abd9542bf7cd2327d97ab05300c3bb5))
+
 # [1.0.0-dev.3](https://github.com/cunex-club/quickattend-mobile/compare/v1.0.0-dev.2...v1.0.0-dev.3) (2026-03-27)
 
 
