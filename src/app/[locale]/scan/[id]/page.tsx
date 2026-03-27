@@ -302,14 +302,19 @@ const ScanPage = () => {
     if (!stream) return;
     try {
       const track = stream.getVideoTracks()[0];
-      const capabilities = (track.getCapabilities?.() as any) || {};
+      const capabilities =
+        (track.getCapabilities?.() as MediaTrackCapabilities & {
+          torch?: boolean;
+        }) || {};
       if (!capabilities.torch) {
         showMessage(tScan("flashlightNotSupport"));
         return;
       }
 
       await track.applyConstraints({
-        advanced: [{ torch: !isFlashOn } as any],
+        advanced: [
+          { torch: !isFlashOn } as MediaTrackConstraintSet & { torch: boolean },
+        ],
       });
       setIsFlashOn(!isFlashOn);
     } catch (err) {
