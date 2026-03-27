@@ -176,10 +176,8 @@ export default function PastEventCard({
                   variant="outline"
                   onClick={e => {
                     e.stopPropagation();
-                    hidePageLoading();
-                    // TODO: Download event report file from backend
-
                     e.preventDefault();
+                    // TODO: Download event report file from backend
                   }}
                 >
                   <SaveAlt

@@ -221,11 +221,8 @@ function PastEventDetail() {
                   variant="outline"
                   onClick={e => {
                     e.stopPropagation();
-                    setOpenLLEPopup(true);
-                    setToHref(
-                      `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/events`
-                    );
                     e.preventDefault();
+                    // TODO: Download event report file from backend
                   }}
                 >
                   <SaveAlt
@@ -241,7 +238,7 @@ function PastEventDetail() {
                     e.stopPropagation();
                     setOpenLLEPopup(true);
                     setToHref(
-                      `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/events`
+                      `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/events/${id}`
                     );
                     e.preventDefault();
                   }}
