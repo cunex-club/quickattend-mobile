@@ -1,3 +1,10 @@
+# [1.0.0-dev.5](https://github.com/cunex-club/quickattend-mobile/compare/v1.0.0-dev.4...v1.0.0-dev.5) (2026-03-27)
+
+
+### Bug Fixes
+
+* docker build ([de9a430](https://github.com/cunex-club/quickattend-mobile/commit/de9a430ec1ed651bddd4b19325a928ca7881eb7e))
+
 # [1.0.0-dev.4](https://github.com/cunex-club/quickattend-mobile/compare/v1.0.0-dev.3...v1.0.0-dev.4) (2026-03-27)
 
 
