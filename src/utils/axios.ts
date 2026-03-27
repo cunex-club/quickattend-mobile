@@ -9,22 +9,6 @@ const Axios = axios.create({
   },
 });
 
-// Request interceptor
-Axios.interceptors.request.use(
-  config => {
-    const clientId = process.env.NEXT_PUBLIC_LLE_CLIENT_ID;
-    const clientSecret = process.env.NEXT_PUBLIC_LLE_CLIENT_SECRET;
-
-    if (clientId && clientSecret) {
-      config.headers["ClientId"] = clientId;
-      config.headers["ClientSecret"] = clientSecret;
-    }
-
-    return config;
-  },
-  error => Promise.reject(error)
-);
-
 // Response interceptor
 Axios.interceptors.response.use(
   response => response,
