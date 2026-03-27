@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - develop
+      - dev
     tags:
       - "v*"
   workflow_dispatch:
@@ -82,7 +82,7 @@ jobs:
             type=raw,value=${{ needs.release.outputs.release_version }}
             type=raw,value=latest
             ${{ github.ref_name == 'main' && 'type=raw,value=prod' || '' }}
-            ${{ github.ref_name == 'develop' && 'type=raw,value=devel' || '' }}
+            ${{ github.ref_name == 'dev' && 'type=raw,value=devel' || '' }}
 
       - name: Build and push
         uses: docker/build-push-action@v4
