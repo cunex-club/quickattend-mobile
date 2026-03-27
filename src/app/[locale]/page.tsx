@@ -128,7 +128,7 @@ export default function Home() {
                   onClick={() => {
                     setOpenLLEPopup(true);
                     setToHref(
-                      `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/events`
+                      `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/events/create`
                     );
                   }}
                 >

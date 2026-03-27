@@ -177,10 +177,8 @@ export default function PastEventCard({
                   onClick={e => {
                     e.stopPropagation();
                     hidePageLoading();
-                    setOpenLLEPopup(true);
-                    setToHref(
-                      `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/events`
-                    );
+                    // TODO: Download event report file from backend
+
                     e.preventDefault();
                   }}
                 >
@@ -198,7 +196,7 @@ export default function PastEventCard({
                     hidePageLoading();
                     setOpenLLEPopup(true);
                     setToHref(
-                      `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/events`
+                      `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/events/${id}`
                     );
                     e.preventDefault();
                   }}
