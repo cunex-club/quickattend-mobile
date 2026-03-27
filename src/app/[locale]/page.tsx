@@ -60,6 +60,7 @@ export default function Home() {
   useEffect(() => {
     const fetchPastEvents = async () => {
       showPageLoading();
+      setPastEvents([]);
       try {
         const fetchedPastEventsInformation = await getEvents(
           userToken,

@@ -38,6 +38,7 @@ export default function Discovery() {
   useEffect(() => {
     const fetchDiscoveryEvents = async () => {
       showPageLoading();
+      setEvents([]);
       try {
         const fetchedDiscoveryInformation = await getEvents(
           userToken,
