@@ -5,6 +5,8 @@ import path from "path";
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
 const nextConfig: NextConfig = {
+  /* config options here */
+  output: "standalone",
   turbopack: {
     root: path.resolve(__dirname),
   },
