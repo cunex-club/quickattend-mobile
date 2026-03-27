@@ -8,11 +8,8 @@ import {
 import QuickAttendButton from "../QuickAttendButton";
 import { useLocale, useTranslations } from "next-intl";
 import { UserInformationQRCode } from "@/service/participant";
-import {
-  formatDateToLocaleDate,
-  formatDateToTime,
-  toTitleCaseExceptOf,
-} from "@/utils/function";
+import { formatDateToTime, toTitleCaseExceptOf } from "@/utils/function";
+import Image from "next/image";
 
 interface RegisteredScanPopupProps {
   scannedUser: UserInformationQRCode;
@@ -58,8 +55,10 @@ function RegisteredScanPopup({
       </div>
 
       {/* Image */}
-      <img
-        src="/mock/scan_placeholder.png"
+      <Image
+        width={120}
+        height={150}
+        src={"/scan_placeholder.png"}
         alt="Scan Placeholder"
         className="mx-auto mb-4"
       />
@@ -91,7 +90,7 @@ function RegisteredScanPopup({
           <div className="flex gap-2">
             <Business className="text-primary" sx={{ width: 16, height: 16 }} />
             <p className="body-medium-primary -translate-y-1">
-              {toTitleCaseExceptOf(faculty ?? "")}
+              {toTitleCaseExceptOf(faculty ?? "-")}
             </p>
           </div>
 

@@ -2,10 +2,9 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 
 import {
-  ArrowUpward,
   CalendarMonth,
   ChevronRightOutlined,
   DifferenceOutlined,
@@ -57,7 +56,7 @@ function PastEventDetail() {
     }
 
     fetchEvent();
-  }, [id]);
+  }, [id, userToken]);
 
   if (!event) {
     return (

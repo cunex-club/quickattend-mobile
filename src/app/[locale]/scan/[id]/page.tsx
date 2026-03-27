@@ -100,7 +100,7 @@ const ScanPage = () => {
     }
 
     fetchEvent();
-  }, [id]);
+  }, [id, userToken]);
 
   useEffect(() => {
     const fetchMyEvents = async () => {
@@ -114,6 +114,7 @@ const ScanPage = () => {
           current.filter(e => e.id != (id as string)).slice(0, 5)
         );
       } catch (err) {
+        console.error("Fetch my events failed:", err);
         setMyOtherFiveEvents([]);
       } finally {
         hidePageLoading();
@@ -121,7 +122,7 @@ const ScanPage = () => {
     };
 
     if (userToken) fetchMyEvents();
-  }, [id]);
+  }, [id, userToken]);
 
   // Timeout logic
   const startTimeout = () => {
@@ -216,6 +217,7 @@ const ScanPage = () => {
         setShowTimeoutPopup(true);
       }
     } catch (err) {
+      console.error("Scan failed:", err);
       setShowTimeoutPopup(true);
     } finally {
       hidePageLoading();
@@ -283,7 +285,15 @@ const ScanPage = () => {
             if (isResettingRef.current || isScanningRef.current) return;
             handleScanned(decodedText);
           },
-          errorMessage => {}
+          errorMessage => {
+            if (
+              typeof errorMessage === "string" &&
+              errorMessage.includes("NotFoundException")
+            ) {
+              return;
+            }
+            console.warn("QR scan error:", errorMessage);
+          }
         );
       }
     } catch (err) {
@@ -318,6 +328,7 @@ const ScanPage = () => {
       });
       setIsFlashOn(!isFlashOn);
     } catch (err) {
+      console.error("Flash toggle failed:", err);
       showMessage(tScan("flashlightToggleFail"));
     }
   };

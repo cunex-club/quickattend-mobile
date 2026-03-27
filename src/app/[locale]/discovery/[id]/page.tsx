@@ -50,7 +50,7 @@ function DiscoveryEventDetail() {
     }
 
     fetchEvent();
-  }, [id]);
+  }, [id, userToken]);
 
   if (!event) {
     return (
