@@ -1,3 +1,10 @@
+# [1.0.0-dev.3](https://github.com/cunex-club/quickattend-mobile/compare/v1.0.0-dev.2...v1.0.0-dev.3) (2026-03-27)
+
+
+### Bug Fixes
+
+* scan ui ([0bad111](https://github.com/cunex-club/quickattend-mobile/commit/0bad111e08f0cf45c8f67c7f16f2e8b650a9cbce))
+
 # [1.0.0-dev.2](https://github.com/cunex-club/quickattend-mobile/compare/v1.0.0-dev.1...v1.0.0-dev.2) (2026-03-27)
 
 
