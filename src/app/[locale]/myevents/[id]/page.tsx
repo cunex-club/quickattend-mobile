@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 
 import {
   CalendarMonth,
@@ -58,7 +58,7 @@ function MyEventDetail() {
     }
 
     fetchEvent();
-  }, [id]);
+  }, [id, userToken]);
 
   if (!event) {
     return (

@@ -6,8 +6,6 @@ import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { PageLoadingProvider } from "@/context/PageLoadingContext";
-import { getHealth } from "@/service/health";
-import { APP_ENV } from "@/utils/env";
 import { UserProvider } from "@/providers/UserProvider";
 import AuthGuard from "@/middleware/AuthGuard";
 

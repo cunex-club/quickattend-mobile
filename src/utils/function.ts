@@ -2,7 +2,7 @@ export function toTitleCaseExceptOf(str: string): string {
   return str
     .toLowerCase()
     .split(" ")
-    .map((word, index) => {
+    .map(word => {
       if (word === "of") return "of";
       return word.charAt(0).toUpperCase() + word.slice(1);
     })

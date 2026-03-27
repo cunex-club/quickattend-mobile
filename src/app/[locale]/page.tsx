@@ -38,11 +38,29 @@ export default function Home() {
 
   const tHome = useTranslations("home");
 
+  // Fetch My Events
   useEffect(() => {
-    const fetchEvents = async () => {
+    const fetchMyEvents = async () => {
       showPageLoading();
       try {
         const fetchedMyEventsInformation = await getEvents(userToken, true);
+        setCurrentEvents(fetchedMyEventsInformation.events);
+      } catch (err) {
+        console.error("Fetch my events failed:", err);
+        setCurrentEvents([]);
+      } finally {
+        hidePageLoading();
+      }
+    };
+
+    if (userToken) fetchMyEvents();
+  }, [userToken]);
+
+  // Fetch Past Events
+  useEffect(() => {
+    const fetchPastEvents = async () => {
+      showPageLoading();
+      try {
         const fetchedPastEventsInformation = await getEvents(
           userToken,
           false,
@@ -50,18 +68,18 @@ export default function Home() {
           EVENTS_PER_PAGE
         );
 
-        setCurrentEvents(fetchedMyEventsInformation.events);
         setPastEvents(fetchedPastEventsInformation.events);
         setPastEventsPaginationMeta(fetchedPastEventsInformation.meta);
       } catch (err) {
-        setCurrentEvents([]);
+        console.error("Fetch past events failed:", err);
         setPastEvents([]);
+        setPastEventsPaginationMeta(null);
       } finally {
         hidePageLoading();
       }
     };
 
-    if (userToken) fetchEvents();
+    if (userToken) fetchPastEvents();
   }, [userToken, currentPastEventsPageNumber]);
 
   // When there's a change in sort option
