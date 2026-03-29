@@ -1,3 +1,10 @@
+# [1.0.0-dev.11](https://github.com/cunex-club/quickattend-mobile/compare/v1.0.0-dev.10...v1.0.0-dev.11) (2026-03-29)
+
+
+### Bug Fixes
+
+* footer and pagination ([d590469](https://github.com/cunex-club/quickattend-mobile/commit/d590469bd1884eb2ac2b2c57b47e156d3c6d4f0c))
+
 # [1.0.0-dev.10](https://github.com/cunex-club/quickattend-mobile/compare/v1.0.0-dev.9...v1.0.0-dev.10) (2026-03-29)
 
 
