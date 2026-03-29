@@ -1,3 +1,10 @@
+# [1.0.0-dev.7](https://github.com/cunex-club/quickattend-mobile/compare/v1.0.0-dev.6...v1.0.0-dev.7) (2026-03-29)
+
+
+### Bug Fixes
+
+* config ([a2350a2](https://github.com/cunex-club/quickattend-mobile/commit/a2350a259cd4e9155dfaa5e5c1d3fe4253c2bd58))
+
 # [1.0.0-dev.6](https://github.com/cunex-club/quickattend-mobile/compare/v1.0.0-dev.5...v1.0.0-dev.6) (2026-03-27)
 
 
