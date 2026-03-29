@@ -232,7 +232,11 @@ const ScanPage = () => {
     setShowCamera(true);
 
     if (result != "fail") {
-      await updateParticipantCommentQRCode(oneTimeCode, userToken, note);
+      try {
+        await updateParticipantCommentQRCode(oneTimeCode, userToken, note);
+      } catch (err) {
+        console.error("Update comment failed:", err);
+      }
     }
 
     setNote("");
@@ -295,6 +299,19 @@ const ScanPage = () => {
             console.warn("QR scan error:", errorMessage);
           }
         );
+
+        setTimeout(() => {
+          const video = document.querySelector(
+            "#qr-reader video"
+          ) as HTMLVideoElement;
+          if (video) {
+            video.controls = false;
+            video.setAttribute("playsinline", "true");
+            video.setAttribute("muted", "true");
+            video.setAttribute("disablepictureinpicture", "true");
+            video.setAttribute("disableremoteplayback", "true");
+          }
+        }, 300);
       }
     } catch (err) {
       console.error(err);
@@ -466,7 +483,7 @@ const ScanPage = () => {
           </div>
         </div>
 
-        {/* Styles */}
+        {/* Custom Styles */}
         <style jsx global>{`
           #qr-reader video {
             position: absolute !important;
@@ -475,6 +492,26 @@ const ScanPage = () => {
             width: 100% !important;
             height: 100% !important;
             object-fit: cover !important;
+          }
+
+          #qr-reader {
+            border: none !important;
+            padding: 0 !important;
+          }
+
+          #qr-reader__dashboard {
+            display: none !important;
+          }
+
+          #qr-reader__scan_region {
+            min-height: unset !important;
+          }
+
+          #qr-reader video::-webkit-media-controls,
+          #qr-reader video::-webkit-media-controls-enclosure,
+          #qr-reader video::-webkit-media-controls-panel {
+            display: none !important;
+            -webkit-appearance: none !important;
           }
         `}</style>
       </div>
