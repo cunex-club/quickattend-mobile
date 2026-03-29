@@ -266,7 +266,10 @@ const ScanPage = () => {
       <div className="w-full min-w-60 h-screen overflow-auto relative flex flex-col px-8 pt-8 pb-12 bg-white">
         {/* Scanner */}
         <div className="relative w-full h-full bg-transparent rounded-2xl mb-8 flex items-start justify-center pt-[10%]">
-          <div className="relative" style={{ width: 320, height: 320 }}>
+          <div
+            className="absolute top-1/3 -translate-y-1/3"
+            style={{ width: 320, height: 320 }}
+          >
             {/* Scanner Component */}
             <Scanner
               onScan={handleScanQrCode}
@@ -283,7 +286,6 @@ const ScanPage = () => {
                 container: {
                   width: "320px",
                   height: "320px",
-                  padding: "0px",
                   border: "0px none",
                   borderRadius: "16px",
                   overflow: "hidden",
@@ -313,48 +315,54 @@ const ScanPage = () => {
           <div className="absolute w-full flex justify-between gap-2 bottom-4 px-4 flex-wrap">
             <div className="flex gap-2">
               {/* Home */}
-              <QuickAttendButton
-                variant="outline"
-                type="icon"
-                disabled={pageLoading}
-                onClick={() => {
-                  showPageLoading();
-                  router.push(`/${locale}`);
-                }}
-                className="rounded-full border-2 border-primary bg-neutral-white"
-              >
-                <Home className="w-6 h-6" />
-              </QuickAttendButton>
+              <div className="w-fit h-fit">
+                <QuickAttendButton
+                  variant="outline"
+                  type="icon"
+                  disabled={pageLoading}
+                  onClick={() => {
+                    showPageLoading();
+                    router.push(`/${locale}`);
+                  }}
+                  className="w-full h-full rounded-full border-2 border-primary bg-neutral-white"
+                >
+                  <Home className="w-6 h-6" />
+                </QuickAttendButton>
+              </div>
 
-              {/* Copy Link */}
-              <QuickAttendButton
-                variant="outline"
-                type="icon"
-                disabled={pageLoading}
-                onClick={() => {
-                  navigator.clipboard.writeText(window.location.href);
-                  showMessage(tScan("copySuccess"));
-                }}
-                className="rounded-full border-2 border-primary bg-neutral-white"
-              >
-                <Link className="w-6 h-6" />
-              </QuickAttendButton>
+              {/* Link */}
+              <div className="w-fit h-fit">
+                <QuickAttendButton
+                  variant="outline"
+                  type="icon"
+                  disabled={pageLoading}
+                  onClick={() => {
+                    navigator.clipboard.writeText(window.location.href);
+                    showMessage(tScan("copySuccess"));
+                  }}
+                  className="w-full h-full rounded-full border-2 border-primary bg-neutral-white"
+                >
+                  <Link className="w-6 h-6" />
+                </QuickAttendButton>
+              </div>
             </div>
 
             {/* Flash */}
-            <QuickAttendButton
-              variant="outline"
-              type="icon"
-              disabled={pageLoading}
-              onClick={toggleFlash}
-              className="rounded-full border-2 border-primary bg-neutral-white"
-            >
-              {isFlashOn ? (
-                <FlashOn className="w-6 h-6" />
-              ) : (
-                <FlashOff className="w-6 h-6" />
-              )}
-            </QuickAttendButton>
+            <div className="w-fit h-fit">
+              <QuickAttendButton
+                variant="outline"
+                type="icon"
+                disabled={pageLoading}
+                onClick={toggleFlash}
+                className="w-full h-full rounded-full border-2 border-primary bg-neutral-white"
+              >
+                {isFlashOn ? (
+                  <FlashOn className="w-6 h-6" />
+                ) : (
+                  <FlashOff className="w-6 h-6" />
+                )}
+              </QuickAttendButton>
+            </div>
           </div>
         </div>
 
