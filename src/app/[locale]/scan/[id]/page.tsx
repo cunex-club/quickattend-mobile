@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Html5Qrcode } from "html5-qrcode";
+import { IDetectedBarcode, outline, Scanner } from "@yudiel/react-qr-scanner";
 import {
   ExpandMore,
   FlashOff,
@@ -32,59 +32,40 @@ const ScanPage = () => {
   const router = useRouter();
   const locale = useLocale();
 
-  const getInitialScannerSize = () => {
-    if (typeof window === "undefined") return 300;
-
-    const width = window.innerWidth;
-    return width <= 280
-      ? 200
-      : width <= 400
-        ? 280
-        : width <= 480 || width >= 640
-          ? 320
-          : 360;
-  };
-
   // Refs
-  const qrRef = useRef<HTMLDivElement>(null);
-  const isScanningRef = useRef(false);
-  const isResettingRef = useRef(false);
+  const scanLockRef = useRef(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const messageTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const { userToken } = useUser();
   const { showPageLoading, hidePageLoading, pageLoading } = usePageLoading();
 
   // States
   const [event, setEvent] = useState<Event | null>(null);
-  const [scanner, setScanner] = useState<Html5Qrcode | null>(null);
-  const [isFlashOn, setIsFlashOn] = useState(false);
   const [result, setResult] = useState<"success" | "duplicate" | "fail" | null>(
     null
   );
   const [showScanResultPopup, setShowResultScanPopup] = useState(false);
   const [showMessagePopup, setShowMessagePopup] = useState(false);
   const [message, setMessage] = useState("");
-  const messageTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const [scannerSize, setScannerSize] = useState(getInitialScannerSize);
-  const [showCamera, setShowCamera] = useState(true);
-  const [stream, setStream] = useState<MediaStream | null>(null);
   const [note, setNote] = useState("");
   const [showTimeoutPopup, setShowTimeoutPopup] = useState(false);
   const [oneTimeCode, setOneTimeCode] = useState("");
-
-  const tScan = useTranslations("scan");
-  const tEvent = useTranslations("event");
-
   const [isToggleEvents, setToggleEvents] = useState(false);
   const [myOtherFiveEvents, setMyOtherFiveEvents] = useState<Event[] | null>(
     null
   );
   const [scannedUser, setScannedUser] = useState<UserInformationQRCode>();
+  const [isPaused, setIsPaused] = useState(false);
+  const [isFlashOn, setIsFlashOn] = useState(false);
+  const [stream, setStream] = useState<MediaStream | null>(null);
+
+  const tScan = useTranslations("scan");
+  const tEvent = useTranslations("event");
 
   useEffect(() => {
     async function fetchEvent() {
       if (!userToken || !id) return;
-
       showPageLoading();
       try {
         const thisEvent = await getEventById(userToken, id as string);
@@ -96,7 +77,6 @@ const ScanPage = () => {
         hidePageLoading();
       }
     }
-
     fetchEvent();
   }, [id, userToken]);
 
@@ -107,7 +87,6 @@ const ScanPage = () => {
         const { events } = await getEvents(userToken, true);
         const now = new Date();
         const current = events.filter(e => new Date(e.end_time) >= now);
-
         setMyOtherFiveEvents(
           current.filter(e => e.id != (id as string)).slice(0, 5)
         );
@@ -118,81 +97,85 @@ const ScanPage = () => {
         hidePageLoading();
       }
     };
-
     if (userToken) fetchMyEvents();
   }, [id, userToken]);
 
   // Timeout logic
   const startTimeout = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(handleTimeout, scanTimeOutMs);
+    timeoutRef.current = setTimeout(() => {
+      if (!scanLockRef.current) setShowTimeoutPopup(true);
+    }, scanTimeOutMs);
   };
 
-  const showMessage = (msg: string) => {
-    if (messageTimeoutRef.current) {
-      clearTimeout(messageTimeoutRef.current);
+  const grabStream = async () => {
+    try {
+      setTimeout(() => {
+        const video = document.querySelector("video") as HTMLVideoElement;
+        if (video?.srcObject) {
+          setStream(video.srcObject as MediaStream);
+        }
+      }, 1000);
+    } catch (err) {
+      console.error("Failed to get stream:", err);
     }
+  };
 
+  useEffect(() => {
+    grabStream();
+    startTimeout();
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      if (messageTimeoutRef.current) clearTimeout(messageTimeoutRef.current);
+    };
+  }, []);
+
+  useEffect(() => {
+    startTimeout();
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      if (messageTimeoutRef.current) clearTimeout(messageTimeoutRef.current);
+    };
+  }, []);
+
+  const showMessage = (msg: string) => {
+    if (messageTimeoutRef.current) clearTimeout(messageTimeoutRef.current);
     setShowMessagePopup(false);
-
     setTimeout(() => {
       setMessage(msg);
       setShowMessagePopup(true);
-
       messageTimeoutRef.current = setTimeout(() => {
         setShowMessagePopup(false);
       }, 2500);
     }, 50);
   };
 
-  useEffect(() => {
-    return () => {
-      if (messageTimeoutRef.current) {
-        clearTimeout(messageTimeoutRef.current);
-      }
-    };
-  }, []);
-
-  // Camera control logic
-  const stopCamera = () => {
-    if (scanner) {
-      scanner.stop().catch(() => {});
-      setScanner(null);
-    }
-    if (stream) {
-      stream.getTracks().forEach(track => track.stop());
-      setStream(null);
-    }
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-  };
-
   const getCurrentLocation = () =>
     new Promise<{ lat: number; lng: number }>((resolve, reject) => {
       navigator.geolocation.getCurrentPosition(
-        position => {
+        position =>
           resolve({
             lat: position.coords.latitude,
             lng: position.coords.longitude,
-          });
-        },
+          }),
         error => reject(error)
       );
     });
 
-  // Handling the scanned QR code
-  const handleScanned = async (code: string) => {
-    showPageLoading();
-    if (isResettingRef.current || isScanningRef.current) return;
-    isScanningRef.current = true;
+  const handleScanQrCode = async (data: IDetectedBarcode[]) => {
+    if (scanLockRef.current || !data || data.length === 0) return;
+    scanLockRef.current = true;
 
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
     }
 
+    showPageLoading();
+    setIsPaused(true);
+
     try {
+      const code = data[0].rawValue;
       const currentLocation = await getCurrentLocation();
 
       const response = await getParticipantInformationQRCode(
@@ -203,35 +186,43 @@ const ScanPage = () => {
         currentLocation.lng
       );
 
-      if (response.status == 200) {
+      if (response.status === 200) {
         setResult(response.data.status);
         setScannedUser(response.data);
         setOneTimeCode(response.data.code);
         setShowResultScanPopup(true);
-      } else if (response.status == 401) {
+      } else if (response.status === 401) {
         setResult("fail");
         setShowResultScanPopup(true);
       } else {
         setShowTimeoutPopup(true);
+        resetScanner();
       }
     } catch (err) {
       console.error("Scan failed:", err);
       setShowTimeoutPopup(true);
+      resetScanner();
     } finally {
       hidePageLoading();
     }
   };
 
-  // Handling sending notes in Success Popup
+  const resetScanner = () => {
+    setTimeout(() => {
+      scanLockRef.current = false;
+      setIsPaused(false);
+      startTimeout();
+    }, 300);
+  };
+
   const handleUpdateComment = async (
     e: React.MouseEvent<Element, MouseEvent>
   ) => {
     showPageLoading();
     e.preventDefault();
     e.stopPropagation();
-    setShowCamera(true);
 
-    if (result != "fail") {
+    if (result !== "fail") {
       try {
         await updateParticipantCommentQRCode(oneTimeCode, userToken, note);
       } catch (err) {
@@ -241,90 +232,11 @@ const ScanPage = () => {
 
     setNote("");
     setOneTimeCode("");
-
     hidePageLoading();
     setShowResultScanPopup(false);
-    isScanningRef.current = false;
-    setShowCamera(true);
-    startCamera();
-    startTimeout();
+    resetScanner();
   };
 
-  // Scanner box size on window resize
-  useEffect(() => {
-    const updateSize = () => {
-      setScannerSize(getInitialScannerSize());
-    };
-
-    window.addEventListener("resize", updateSize);
-    return () => window.removeEventListener("resize", updateSize);
-  }, []);
-
-  // Timeout handler
-  const handleTimeout = () => {
-    if (isScanningRef.current) return;
-    setShowTimeoutPopup(true);
-  };
-
-  const startCamera = async () => {
-    try {
-      const mediaStream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          facingMode: { ideal: "environment" },
-        },
-      });
-
-      setStream(mediaStream);
-
-      if (qrRef.current) {
-        const html5Qr = new Html5Qrcode(qrRef.current.id, false);
-        setScanner(html5Qr);
-
-        timeoutRef.current = setTimeout(handleTimeout, scanTimeOutMs);
-
-        await html5Qr.start(
-          { facingMode: "environment" },
-          { fps: 2, qrbox: { width: scannerSize, height: scannerSize } },
-          decodedText => {
-            if (isResettingRef.current || isScanningRef.current) return;
-            handleScanned(decodedText);
-          },
-          errorMessage => {
-            if (
-              typeof errorMessage === "string" &&
-              errorMessage.includes("NotFoundException")
-            ) {
-              return;
-            }
-            console.warn("QR scan error:", errorMessage);
-          }
-        );
-
-        setTimeout(() => {
-          const video = document.querySelector(
-            "#qr-reader video"
-          ) as HTMLVideoElement;
-          if (video) {
-            video.controls = false;
-            video.setAttribute("playsinline", "true");
-            video.setAttribute("muted", "true");
-            video.setAttribute("disablepictureinpicture", "true");
-            video.setAttribute("disableremoteplayback", "true");
-          }
-        }, 300);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  // Initial camera setup and clean-up
-  useEffect(() => {
-    startCamera();
-    return () => stopCamera();
-  }, [scannerSize]);
-
-  // Toggle camera flash
   const toggleFlash = async () => {
     if (!stream) return;
     try {
@@ -337,7 +249,6 @@ const ScanPage = () => {
         showMessage(tScan("flashlightNotSupport"));
         return;
       }
-
       await track.applyConstraints({
         advanced: [
           { torch: !isFlashOn } as MediaTrackConstraintSet & { torch: boolean },
@@ -354,81 +265,96 @@ const ScanPage = () => {
     <>
       <div className="w-full min-w-60 h-screen overflow-auto relative flex flex-col px-8 pt-8 pb-12 bg-white">
         {/* Scanner */}
-        <div className="relative w-full h-full bg-transparent rounded-2xl mb-8">
-          {showCamera && (
-            <div
-              className="absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/3 justify-center items-center overflow-hidden rounded-2xl border-primary"
-              style={{ width: scannerSize, height: scannerSize }}
-            >
-              {/* Camera */}
-              <div
-                ref={qrRef}
-                id="qr-reader"
-                className="absolute inset-0 w-full h-full"
-              />
+        <div className="relative w-full h-full bg-transparent rounded-2xl mb-8 flex items-start justify-center pt-[10%]">
+          <div className="relative" style={{ width: 320, height: 320 }}>
+            {/* Scanner Component */}
+            <Scanner
+              onScan={handleScanQrCode}
+              onError={() => console.error("Scanner error")}
+              paused={isPaused}
+              components={{
+                onOff: false,
+                torch: false,
+                zoom: false,
+                finder: false,
+                tracker: outline,
+              }}
+              styles={{
+                container: {
+                  width: "320px",
+                  height: "320px",
+                  padding: "0px",
+                  border: "0px none",
+                  borderRadius: "16px",
+                  overflow: "hidden",
+                },
+                video: {
+                  borderRadius: "16px",
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                },
+              }}
+              scanDelay={1000}
+              allowMultiple={false}
+              sound={false}
+            />
 
-              {/* Border */}
-              <div className="absolute inset-0 pointer-events-none border-none z-10">
-                <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-primary rounded-tl-2xl"></div>
-                <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-primary rounded-tr-2xl"></div>
-                <div className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-primary rounded-bl-2xl"></div>
-                <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-primary rounded-br-2xl"></div>
-              </div>
+            {/* Custom Corner Borders */}
+            <div className="absolute inset-0 pointer-events-none z-10">
+              <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-primary rounded-tl-2xl" />
+              <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-primary rounded-tr-2xl" />
+              <div className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-primary rounded-bl-2xl" />
+              <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-primary rounded-br-2xl" />
             </div>
-          )}
+          </div>
 
           {/* Buttons */}
           <div className="absolute w-full flex justify-between gap-2 bottom-4 px-4 flex-wrap">
             <div className="flex gap-2">
               {/* Home */}
-              <div className="w-fit h-fit">
-                <QuickAttendButton
-                  variant="outline"
-                  type="icon"
-                  disabled={pageLoading}
-                  onClick={() => {
-                    showPageLoading();
-                    router.push(`/${locale}`);
-                  }}
-                  className="w-full h-full rounded-full border-2 border-primary bg-neutral-white"
-                >
-                  <Home className="w-6 h-6" />
-                </QuickAttendButton>
-              </div>
-
-              {/* Link */}
-              <div className="w-fit h-fit">
-                <QuickAttendButton
-                  variant="outline"
-                  type="icon"
-                  disabled={pageLoading}
-                  onClick={() => {
-                    navigator.clipboard.writeText(window.location.href);
-                    showMessage(tScan("copySuccess"));
-                  }}
-                  className="w-full h-full rounded-full border-2 border-primary bg-neutral-white"
-                >
-                  <Link className="w-6 h-6" />
-                </QuickAttendButton>
-              </div>
-            </div>
-
-            {/* Flash */}
-            <div className="w-fit h-fit">
               <QuickAttendButton
                 variant="outline"
                 type="icon"
                 disabled={pageLoading}
-                onClick={toggleFlash}
-                className="w-full h-full rounded-full border-2 border-primary bg-neutral-white"
+                onClick={() => {
+                  showPageLoading();
+                  router.push(`/${locale}`);
+                }}
+                className="rounded-full border-2 border-primary bg-neutral-white"
               >
-                {isFlashOn ? (
-                  <FlashOn className="w-6 h-6" />
-                ) : (
-                  <FlashOff className="w-6 h-6" />
-                )}
+                <Home className="w-6 h-6" />
+              </QuickAttendButton>
+
+              {/* Copy Link */}
+              <QuickAttendButton
+                variant="outline"
+                type="icon"
+                disabled={pageLoading}
+                onClick={() => {
+                  navigator.clipboard.writeText(window.location.href);
+                  showMessage(tScan("copySuccess"));
+                }}
+                className="rounded-full border-2 border-primary bg-neutral-white"
+              >
+                <Link className="w-6 h-6" />
               </QuickAttendButton>
             </div>
+
+            {/* Flash */}
+            <QuickAttendButton
+              variant="outline"
+              type="icon"
+              disabled={pageLoading}
+              onClick={toggleFlash}
+              className="rounded-full border-2 border-primary bg-neutral-white"
+            >
+              {isFlashOn ? (
+                <FlashOn className="w-6 h-6" />
+              ) : (
+                <FlashOff className="w-6 h-6" />
+              )}
+            </QuickAttendButton>
           </div>
         </div>
 
@@ -445,32 +371,27 @@ const ScanPage = () => {
                 onClick={() => setToggleEvents(prev => !prev)}
               />
             )}
-
             {/* My Event Dropdown */}
             {isToggleEvents &&
               myOtherFiveEvents &&
               myOtherFiveEvents.length > 0 && (
                 <div className="w-30 absolute bottom-full mb-1 right-0 bg-neutral-white rounded-lg shadow-elevation-1 p-2 z-10">
-                  {myOtherFiveEvents.map(event => {
-                    return (
-                      <button
-                        disabled={pageLoading}
-                        key={event.id}
-                        className={`text-ellipsis cursor-pointer block w-full body-small-primary text-left 
-                        py-1 text-neutral-600 hover:bg-neutral-300
-                        truncate overflow-hidden whitespace-nowrap`}
-                        onClick={e => {
-                          e.stopPropagation();
-                          e.preventDefault();
-                          setToggleEvents(false);
-                          showPageLoading();
-                          router.push(`/scan/${event.id}`);
-                        }}
-                      >
-                        {event.name}
-                      </button>
-                    );
-                  })}
+                  {myOtherFiveEvents.map(event => (
+                    <button
+                      disabled={pageLoading}
+                      key={event.id}
+                      className="text-ellipsis cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-300 truncate overflow-hidden whitespace-nowrap"
+                      onClick={e => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        setToggleEvents(false);
+                        showPageLoading();
+                        router.push(`/scan/${event.id}`);
+                      }}
+                    >
+                      {event.name}
+                    </button>
+                  ))}
                 </div>
               )}
           </div>
@@ -482,38 +403,6 @@ const ScanPage = () => {
             </p>
           </div>
         </div>
-
-        {/* Custom Styles */}
-        <style jsx global>{`
-          #qr-reader video {
-            position: absolute !important;
-            top: 0 !important;
-            left: 0 !important;
-            width: 100% !important;
-            height: 100% !important;
-            object-fit: cover !important;
-          }
-
-          #qr-reader {
-            border: none !important;
-            padding: 0 !important;
-          }
-
-          #qr-reader__dashboard {
-            display: none !important;
-          }
-
-          #qr-reader__scan_region {
-            min-height: unset !important;
-          }
-
-          #qr-reader video::-webkit-media-controls,
-          #qr-reader video::-webkit-media-controls-enclosure,
-          #qr-reader video::-webkit-media-controls-panel {
-            display: none !important;
-            -webkit-appearance: none !important;
-          }
-        `}</style>
       </div>
 
       {/* POPUPS */}
@@ -523,29 +412,28 @@ const ScanPage = () => {
           onNext={e => {
             e.preventDefault();
             e.stopPropagation();
-            window.location.reload();
             setShowTimeoutPopup(false);
-            startTimeout();
+            resetScanner();
           }}
         />
       )}
 
       {showScanResultPopup &&
-        (result == "success" && scannedUser ? (
+        (result === "success" && scannedUser ? (
           <SuccessScanPopup
             scannedUser={scannedUser}
             note={note}
             setNote={setNote}
             handleSubmit={handleUpdateComment}
           />
-        ) : result == "duplicate" && scannedUser ? (
+        ) : result === "duplicate" && scannedUser ? (
           <RegisteredScanPopup
             scannedUser={scannedUser}
             note={note}
             setNote={setNote}
             handleSubmit={handleUpdateComment}
           />
-        ) : result == "fail" ? (
+        ) : result === "fail" ? (
           <FailScanPopup
             note={note}
             setNote={setNote}
