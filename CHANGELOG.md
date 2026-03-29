@@ -1,3 +1,10 @@
+# [1.0.0-dev.13](https://github.com/cunex-club/quickattend-mobile/compare/v1.0.0-dev.12...v1.0.0-dev.13) (2026-03-29)
+
+
+### Bug Fixes
+
+* responsive scanner ([fa29c6a](https://github.com/cunex-club/quickattend-mobile/commit/fa29c6a14a1ddd2d0c5dbef3c0e2f68331ae6775))
+
 # [1.0.0-dev.12](https://github.com/cunex-club/quickattend-mobile/compare/v1.0.0-dev.11...v1.0.0-dev.12) (2026-03-29)
 
 
