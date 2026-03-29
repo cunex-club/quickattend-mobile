@@ -1,3 +1,10 @@
+# [1.0.0-dev.10](https://github.com/cunex-club/quickattend-mobile/compare/v1.0.0-dev.9...v1.0.0-dev.10) (2026-03-29)
+
+
+### Bug Fixes
+
+* qr-scanner ([#23](https://github.com/cunex-club/quickattend-mobile/issues/23)) ([8150492](https://github.com/cunex-club/quickattend-mobile/commit/81504922e017780af3679d34a3b8a88ce32a83b8))
+
 # [1.0.0-dev.9](https://github.com/cunex-club/quickattend-mobile/compare/v1.0.0-dev.8...v1.0.0-dev.9) (2026-03-29)
 
 
