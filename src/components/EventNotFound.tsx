@@ -20,7 +20,7 @@ const EventNotFound = () => {
           type="text"
           onClick={() => router.replace(`/${locale}`)}
         >
-          <p className="translate-y-1">{tCommon("home")}</p>
+          <p>{tCommon("home")}</p>
         </QuickAttendButton>
       </div>
     </div>

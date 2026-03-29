@@ -242,7 +242,7 @@ function MyEventDetail() {
                 sx={{ width: 20, height: 20 }}
                 className="text-neutral-white"
               />
-              <p className="translate-y-1">{tEvent("scanParticipants")}</p>
+              <p>{tEvent("scanParticipants")}</p>
             </QuickAttendButton>
 
             <div className="flex gap-2 flex-1 items-center">

@@ -41,9 +41,7 @@ function ErrorPopup({
             variant="outline"
             onClick={e => onCancel(e)}
           >
-            <p className="translate-y-1">
-              {onCancelMessage || tCommon("cancel")}
-            </p>
+            <p>{onCancelMessage || tCommon("cancel")}</p>
           </QuickAttendButton>
         )}
         <QuickAttendButton
@@ -51,7 +49,7 @@ function ErrorPopup({
           variant="filled"
           onClick={e => onNext(e)}
         >
-          <p className="translate-y-1">{onNextMessage || tCommon("confirm")}</p>
+          <p>{onNextMessage || tCommon("confirm")}</p>
         </QuickAttendButton>
       </div>
     </PopupLayout>

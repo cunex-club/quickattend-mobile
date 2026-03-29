@@ -167,7 +167,7 @@ export default function PastEventCard({
                   sx={{ width: 20, height: 20 }}
                   className="text-neutral-white"
                 />
-                <p className="translate-y-1">{tEvent("registrationStats")}</p>
+                <p>{tEvent("registrationStats")}</p>
               </QuickAttendButton>
 
               <div className="flex gap-2 flex-1">
@@ -226,7 +226,7 @@ export default function PastEventCard({
                   sx={{ width: 20, height: 20 }}
                   className="text-neutral-white"
                 />
-                <p className="translate-y-1">{tEvent("evaluationForm")}</p>
+                <p>{tEvent("evaluationForm")}</p>
               </QuickAttendButton>
             )}
           </div>

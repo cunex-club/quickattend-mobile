@@ -136,9 +136,7 @@ export default function Home() {
                     sx={{ width: 14, height: 14 }}
                     className="text-primary"
                   />
-                  <p className="translate-y-1 label-large-primary">
-                    {tHome("createEvent")}
-                  </p>
+                  <p className="label-large-primary">{tHome("createEvent")}</p>
                 </QuickAttendButton>
                 <Link
                   href={"/discovery"}
@@ -217,7 +215,7 @@ export default function Home() {
                   );
                 }}
               >
-                <p className="translate-y-1">{tHome("manageEvents")}</p>
+                <p>{tHome("manageEvents")}</p>
               </QuickAttendButton>
               <p className="label-small-primary text-neutral-400">
                 {tHome("backofficeNote")}

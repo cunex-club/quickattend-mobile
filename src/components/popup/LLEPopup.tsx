@@ -29,7 +29,7 @@ function LLEPopup({ setOpenLLEPopup, tohref, description }: LLEPopupProps) {
             setOpenLLEPopup(false);
           }}
         >
-          <p className="translate-y-1">{tCommon("cancel")}</p>
+          <p>{tCommon("cancel")}</p>
         </QuickAttendButton>
         <QuickAttendButton
           type="text"
@@ -43,7 +43,7 @@ function LLEPopup({ setOpenLLEPopup, tohref, description }: LLEPopupProps) {
             setOpenLLEPopup(false);
           }}
         >
-          <p className="translate-y-1">{tCommon("confirm")}</p>
+          <p>{tCommon("confirm")}</p>
         </QuickAttendButton>
       </div>
     </PopupLayout>

@@ -116,7 +116,7 @@ function SuccessScanPopup({
             variant="filled"
             onClick={e => handleSubmit(e)}
           >
-            <p className="translate-y-1">{tCommon("confirm")}</p>
+            <p>{tCommon("confirm")}</p>
           </QuickAttendButton>
         </div>
       </div>
