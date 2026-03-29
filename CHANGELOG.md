@@ -1,3 +1,10 @@
+# [1.0.0-dev.9](https://github.com/cunex-club/quickattend-mobile/compare/v1.0.0-dev.8...v1.0.0-dev.9) (2026-03-29)
+
+
+### Bug Fixes
+
+* scanner as video ([00986a7](https://github.com/cunex-club/quickattend-mobile/commit/00986a754648f925fb72f00830cc981fd166eead))
+
 # [1.0.0-dev.8](https://github.com/cunex-club/quickattend-mobile/compare/v1.0.0-dev.7...v1.0.0-dev.8) (2026-03-29)
 
 
