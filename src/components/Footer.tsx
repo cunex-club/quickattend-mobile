@@ -27,11 +27,11 @@ const LanguageButtons = () => {
             disabled={locale === code}
             className={`label-large-emphasized ${
               locale === code
-                ? "font-semibold text-primary cursor-default"
-                : "text-neutral-500 hover:text-primary cursor-pointer"
+                ? "text-neutral-500 hover:text-primary cursor-pointer"
+                : "font-semibold text-primary cursor-default"
             }`}
           >
-            {languageLabel[code]}
+            <p>{languageLabel[code]}</p>
           </button>
           {idx !== languageCode.length - 1 && (
             <span className="mx-1 text-neutral-400">|</span>
@@ -56,7 +56,12 @@ const Footer = () => {
       <div className="w-full h-fit px-4 py-6 bg-neutral-200 flex justify-between gap-4">
         {/* Left Side */}
         <div className="flex flex-col gap-4">
-          <Image src="/cunex.svg" alt="CUNEX Logo" width={100} height={20} />
+          <Image
+            src="/lle/cunex.svg"
+            alt="CUNEX Logo"
+            width={100}
+            height={20}
+          />
           <LanguageButtons />
         </div>
 
