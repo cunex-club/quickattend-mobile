@@ -66,23 +66,17 @@ const ScanPage = () => {
   useEffect(() => {
     async function fetchEvent() {
       if (!userToken || !id) return;
-      showPageLoading();
+
       try {
         const thisEvent = await getEventById(userToken, id as string);
         setEvent(thisEvent);
       } catch (err) {
         console.error(err);
         setEvent(null);
-      } finally {
-        hidePageLoading();
       }
     }
-    fetchEvent();
-  }, [id, userToken]);
 
-  useEffect(() => {
     const fetchMyEvents = async () => {
-      showPageLoading();
       try {
         const { events } = await getEvents(userToken, true);
         const now = new Date();
@@ -93,11 +87,13 @@ const ScanPage = () => {
       } catch (err) {
         console.error("Fetch my events failed:", err);
         setMyOtherFiveEvents([]);
-      } finally {
-        hidePageLoading();
       }
     };
-    if (userToken) fetchMyEvents();
+
+    showPageLoading();
+    fetchEvent();
+    fetchMyEvents();
+    hidePageLoading();
   }, [id, userToken]);
 
   // Timeout logic
@@ -264,13 +260,10 @@ const ScanPage = () => {
   return (
     <>
       <div className="w-full min-w-60 h-screen overflow-auto relative flex flex-col px-8 pt-8 pb-12 bg-white">
-        {/* Scanner */}
-        <div className="relative w-full h-full bg-transparent rounded-2xl mb-8 flex items-start justify-center pt-[10%]">
-          <div
-            className="absolute top-1/3 -translate-y-1/3"
-            style={{ width: 320, height: 320 }}
-          >
-            {/* Scanner Component */}
+        {/* Main */}
+        <div className="relative w-full h-full bg-transparent rounded-2xl mb-8 flex items-start justify-center">
+          {/* Scanner */}
+          <div className="absolute top-1/3 -translate-y-1/3 max-h-80 max-w-80">
             <Scanner
               onScan={handleScanQrCode}
               onError={() => console.error("Scanner error")}
@@ -284,8 +277,6 @@ const ScanPage = () => {
               }}
               styles={{
                 container: {
-                  width: "320px",
-                  height: "320px",
                   border: "0px none",
                   borderRadius: "16px",
                   overflow: "hidden",
@@ -450,7 +441,7 @@ const ScanPage = () => {
         ) : null)}
 
       {showMessagePopup && (
-        <div className="fixed top-16 left-1/2 -translate-x-1/2 bg-primary text-white px-4 py-2 rounded-full shadow-lg animate-fade-in-out z-50">
+        <div className="fixed top-16 left-1/2 -translate-x-1/2 bg-primary text-white px-4 py-2 rounded-full shadow-lg animate-fade-in-out text-center z-50">
           <p className="label-large-primary translate-y-1">{message}</p>
         </div>
       )}
