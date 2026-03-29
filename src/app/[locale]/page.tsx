@@ -306,7 +306,7 @@ export default function Home() {
         >
           <ChevronLeft
             sx={{ width: 16, height: 16 }}
-            className="text-primary -translate-y-0.5"
+            className="text-primary -translate-y-1"
           />
         </button>
 
@@ -359,7 +359,7 @@ export default function Home() {
                     setCurrentPastEventsPageNumber(page)
                   }
                 >
-                  {page}
+                  <span className="-translate-y-1">{page}</span>
                 </button>
               );
             });
@@ -377,7 +377,7 @@ export default function Home() {
         >
           <ChevronRight
             sx={{ width: 16, height: 16 }}
-            className="text-primary -translate-y-0.5"
+            className="text-primary -translate-y-1"
           />
         </button>
       </div>
