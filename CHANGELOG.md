@@ -1,3 +1,10 @@
+# [1.0.0-dev.12](https://github.com/cunex-club/quickattend-mobile/compare/v1.0.0-dev.11...v1.0.0-dev.12) (2026-03-29)
+
+
+### Bug Fixes
+
+* camera and button position ([2988bd2](https://github.com/cunex-club/quickattend-mobile/commit/2988bd286d9ad35cb9c312243031e2b7c7cfbede))
+
 # [1.0.0-dev.11](https://github.com/cunex-club/quickattend-mobile/compare/v1.0.0-dev.10...v1.0.0-dev.11) (2026-03-29)
 
 
