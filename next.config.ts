@@ -7,11 +7,8 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 const nextConfig: NextConfig = {
   /* config options here */
   output: "standalone",
-  basePath: "/lle",
-  allowedDevOrigins: [
-    "quickattend.cunex.club",
-    "*.quickattend.cunex.club",
-  ],
+  basePath: process.env.NODE_ENV === "production" ? "/lle" : "",
+  allowedDevOrigins: ["quickattend.cunex.club", "*.quickattend.cunex.club"],
   turbopack: {
     root: path.resolve(__dirname),
   },
