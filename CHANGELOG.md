@@ -1,3 +1,10 @@
+# [1.0.0-dev.8](https://github.com/cunex-club/quickattend-mobile/compare/v1.0.0-dev.7...v1.0.0-dev.8) (2026-03-29)
+
+
+### Bug Fixes
+
+* remove some translate-y-1 ([081aced](https://github.com/cunex-club/quickattend-mobile/commit/081aced7d776dffd8fd5ab7409c64170cd3a1040))
+
 # [1.0.0-dev.7](https://github.com/cunex-club/quickattend-mobile/compare/v1.0.0-dev.6...v1.0.0-dev.7) (2026-03-29)
 
 
