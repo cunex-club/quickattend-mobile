@@ -32,7 +32,7 @@ interface EventsResponse {
 export async function getEvents(
   token: string,
   isMyEventSection: boolean | undefined,
-  page: number = 1,
+  page: number = 0,
   pageSize: number = 8
 ): Promise<{ events: Event[]; meta: PaginationMeta | null }> {
   const path =

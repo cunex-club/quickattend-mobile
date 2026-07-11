@@ -22,13 +22,12 @@ const LanguageButtons = () => {
       {languageCode.map((code, idx) => (
         <div className="flex items-center gap-0.5" key={code}>
           <button
-            key={code}
             onClick={() => changeLocale(code)}
             disabled={locale === code}
             className={`label-large-emphasized ${
               locale === code
-                ? "text-neutral-500 hover:text-primary cursor-pointer"
-                : "font-semibold text-primary cursor-default"
+                ? "font-semibold text-primary cursor-default"
+                : "text-neutral-500 hover:text-primary cursor-pointer"
             }`}
           >
             <p>{languageLabel[code]}</p>

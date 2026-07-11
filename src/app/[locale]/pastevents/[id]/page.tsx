@@ -7,11 +7,9 @@ import { Fragment, useEffect, useState } from "react";
 import {
   CalendarMonth,
   ChevronRightOutlined,
-  DifferenceOutlined,
   Feed,
   HomeOutlined,
   LocationOn,
-  SaveAlt,
   TrendingUp,
   WatchLater,
 } from "@mui/icons-material";
@@ -188,8 +186,8 @@ function PastEventDetail() {
             <h2 className="title-large-emphasized text-neutral-600">
               {tEvent("organizer")}
             </h2>
-            <p className="body-medium-primary text-neutral-600 break-all">
-              {event.organizer}
+            <p className="body-medium-primary text-neutral-600 truncate">
+              {event.organizer || "-"}
             </p>
           </div>
           {/* Buttons */}
@@ -203,7 +201,7 @@ function PastEventDetail() {
                   e.stopPropagation();
                   setOpenLLEPopup(true);
                   setToHref(
-                    `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/dashboard`
+                    `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/dashboard/${id}`
                   );
                   e.preventDefault();
                 }}
@@ -214,41 +212,6 @@ function PastEventDetail() {
                 />
                 <p>{tEvent("registrationStats")}</p>
               </QuickAttendButton>
-
-              <div className="flex gap-2 flex-1">
-                <QuickAttendButton
-                  type="icon"
-                  variant="outline"
-                  onClick={e => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    // TODO: Download event report file from backend
-                  }}
-                >
-                  <SaveAlt
-                    sx={{ width: 20, height: 20 }}
-                    className="text-primary"
-                  />
-                </QuickAttendButton>
-
-                <QuickAttendButton
-                  type="icon"
-                  variant="outline"
-                  onClick={e => {
-                    e.stopPropagation();
-                    setOpenLLEPopup(true);
-                    setToHref(
-                      `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/events/${id}`
-                    );
-                    e.preventDefault();
-                  }}
-                >
-                  <DifferenceOutlined
-                    sx={{ width: 20, height: 20 }}
-                    className="text-primary"
-                  />
-                </QuickAttendButton>
-              </div>
             </div>
 
             {/* Second Row */}

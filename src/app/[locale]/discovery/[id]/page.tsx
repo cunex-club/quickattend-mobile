@@ -13,9 +13,7 @@ import {
 } from "@mui/icons-material";
 import { useLocale, useTranslations } from "next-intl";
 import { usePageLoading } from "@/context/PageLoadingContext";
-import GoogleMapPreview, {
-  DEFAULT_CENTER,
-} from "@/components/GoogleMapPreview";
+import MapPreview, { DEFAULT_CENTER } from "@/components/MapPreview";
 import Footer from "@/components/Footer";
 import { EventDetail, getEventById } from "@/service/event";
 import { formatEventDateTime } from "@/utils/function";
@@ -202,8 +200,8 @@ function DiscoveryEventDetail() {
           <h2 className="title-large-emphasized text-neutral-600">
             {tEvent("organizer")}
           </h2>
-          <p className="body-medium-primary text-neutral-600 break-all">
-            {event.organizer}
+          <p className="body-medium-primary text-neutral-600 truncate">
+            {event.organizer || "-"}
           </p>
         </div>
 
@@ -213,7 +211,7 @@ function DiscoveryEventDetail() {
             {tEvent("viewMap")}
           </h2>
 
-          <GoogleMapPreview
+          <MapPreview
             lat={event.location_lat ?? DEFAULT_CENTER.location_lat}
             lng={event.location_long ?? DEFAULT_CENTER.location_long}
           />

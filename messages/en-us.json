@@ -40,9 +40,8 @@
     "note": "Note",
     "notePlaceholder": "Enter additional information (if any)",
     "notEligible": "Not eligible to register for this event",
-    "flashlightNotSupport": "This device does not support flashlight.",
-    "flashlightToggleFail": "Unable to turn the flashlight on or off.",
     "invalidQR": "Invalid QR code.<br/>Please check and try again.",
+    "systemError": "System error.<br/>Please try again.",
     "OWNER": "Owner",
     "MANAGER": "Manager",
     "STAFF": "Staff"
@@ -61,7 +60,6 @@
     "loading": "Loading",
     "alert": "Alert",
     "error": "Error",
-    "userNotFound": "User not found",
     "eventNotFound": "Event not found",
     "home": "Home"
   },
