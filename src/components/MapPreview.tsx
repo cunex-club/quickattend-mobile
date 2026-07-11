@@ -1,4 +1,4 @@
-import { Map, MapMarker } from "@/components/map/Map";
+import { Map, MapMarker, MarkerContent } from "@/components/map/Map";
 
 interface MapPreviewProps {
   lat: number;
@@ -24,7 +24,9 @@ const MapPreview = ({ lat, lng }: MapPreviewProps) => {
         interactive={false}
         attributionControl={false}
       >
-        <MapMarker longitude={lng} latitude={lat} />
+        <MapMarker longitude={lng} latitude={lat}>
+          <MarkerContent />
+        </MapMarker>
       </Map>
     </div>
   );
