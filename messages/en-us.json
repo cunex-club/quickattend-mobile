@@ -61,7 +61,6 @@
     "loading": "Loading",
     "alert": "Alert",
     "error": "Error",
-    "userNotFound": "User not found",
     "eventNotFound": "Event not found",
     "home": "Home"
   },

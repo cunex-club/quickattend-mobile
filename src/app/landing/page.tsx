@@ -21,18 +21,6 @@ const UserLoading = () => {
   );
 };
 
-const UserNotFound = () => {
-  const tCommon = useTranslations("common");
-
-  return (
-    <div className="w-full sm:max-w-[390px] fixed min-h-screen bg-neutral-white flex items-center justify-center z-50">
-      <p className="text-xl animate-pulse headline-large-primary">
-        {tCommon("userNotFound")}
-      </p>
-    </div>
-  );
-};
-
 const Landing = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -57,7 +45,7 @@ const Landing = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const token = tokenQuery || process.env.NEXT_PUBLIC_CUNEX_TOKEN || "";
+      const token = tokenQuery || "";
 
       if (!token) {
         setUser(null);
@@ -87,10 +75,6 @@ const Landing = () => {
 
   if (userLoading || user === undefined) {
     return <UserLoading />;
-  }
-
-  if (user === null) {
-    return <UserNotFound />;
   }
 
   return null;

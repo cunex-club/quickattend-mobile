@@ -7,6 +7,8 @@ import React, {
   ReactNode,
   useEffect,
 } from "react";
+import { APP_ENV } from "@/utils/env";
+import { getUserProfile } from "@/service/auth";
 
 export interface User {
   id: string;
@@ -43,15 +45,30 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const savedToken = localStorage.getItem("cunex_jwt_token");
 
-    if (!savedToken) {
-      setUser(null);
+    if (savedToken) {
+      setToken(savedToken);
+      setUser({} as User);
       setUserLoading(false);
       return;
     }
 
-    setToken(savedToken);
+    const devToken = process.env.NEXT_PUBLIC_LOG_IN_TOKEN;
+    if (APP_ENV === "development" && devToken) {
+      getUserProfile(devToken)
+        .then(devUser => {
+          setUserToken(devToken);
+          setUser(devUser);
+        })
+        .catch(() => {
+          setUser(null);
+        })
+        .finally(() => {
+          setUserLoading(false);
+        });
+      return;
+    }
 
-    setUser({} as User);
+    setUser(null);
     setUserLoading(false);
   }, []);
   return (
