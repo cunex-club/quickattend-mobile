@@ -7,10 +7,8 @@ import {
   WatchLater,
   LocationOn,
   Person,
-  SaveAlt,
   TrendingUp,
   Feed,
-  DifferenceOutlined,
 } from "@mui/icons-material";
 import QuickAttendButton from "../QuickAttendButton";
 import LLEPopup from "../popup/LLEPopup";

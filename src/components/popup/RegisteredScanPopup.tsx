@@ -28,7 +28,7 @@ function RegisteredScanPopup({
   const tScan = useTranslations("scan");
   const tCommon = useTranslations("common");
 
-  const today = new Date();
+  const checkInTime = new Date(scannedUser.check_in_time);
 
   const firstName =
     locale === "th-th" ? scannedUser.firstname_th : scannedUser.firstname_en;
@@ -101,7 +101,7 @@ function RegisteredScanPopup({
               sx={{ width: 16, height: 16 }}
             />
             <p className="body-medium-primary -translate-y-1">
-              {tScan("registeredAt")} {formatDateToTime(today)}
+              {tScan("registeredAt")} {formatDateToTime(checkInTime)}
             </p>
           </div>
         </div>

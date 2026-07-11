@@ -50,6 +50,9 @@ const ScanPage = () => {
   const [message, setMessage] = useState("");
   const [note, setNote] = useState("");
   const [showTimeoutPopup, setShowTimeoutPopup] = useState(false);
+  const [scanErrorMessageKey, setScanErrorMessageKey] = useState<
+    "invalidQR" | "systemError"
+  >("invalidQR");
   const [oneTimeCode, setOneTimeCode] = useState("");
   const [isToggleEvents, setToggleEvents] = useState(false);
   const [myOtherFiveEvents, setMyOtherFiveEvents] = useState<Event[] | null>(
@@ -165,11 +168,13 @@ const ScanPage = () => {
         setResult("fail");
         setShowResultScanPopup(true);
       } else {
+        setScanErrorMessageKey("invalidQR");
         setShowTimeoutPopup(true);
         resetScanner();
       }
     } catch (err) {
       console.error("Scan failed:", err);
+      setScanErrorMessageKey("systemError");
       setShowTimeoutPopup(true);
       resetScanner();
     } finally {
@@ -370,7 +375,7 @@ const ScanPage = () => {
       {/* POPUPS */}
       {showTimeoutPopup && (
         <ErrorPopup
-          errorMessage={tScan("invalidQR")}
+          errorMessage={tScan(scanErrorMessageKey)}
           onNext={e => {
             e.preventDefault();
             e.stopPropagation();

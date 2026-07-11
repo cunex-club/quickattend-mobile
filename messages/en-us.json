@@ -41,6 +41,7 @@
     "notePlaceholder": "Enter additional information (if any)",
     "notEligible": "Not eligible to register for this event",
     "invalidQR": "Invalid QR code.<br/>Please check and try again.",
+    "systemError": "System error.<br/>Please try again.",
     "OWNER": "Owner",
     "MANAGER": "Manager",
     "STAFF": "Staff"
