@@ -190,7 +190,7 @@ function MyEventDetail() {
             <h2 className="title-large-emphasized text-neutral-600">
               {tEvent("organizer")}
             </h2>
-            <p className="body-medium-primary text-neutral-600 break-all">
+            <p className="body-medium-primary text-neutral-600 truncate">
               {event.organizer || "-"}
             </p>
           </div>

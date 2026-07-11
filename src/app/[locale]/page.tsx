@@ -69,7 +69,13 @@ export default function Home() {
           EVENTS_PER_PAGE
         );
 
-        setPastEvents(fetchedPastEventsInformation.events);
+        const dedupedEvents = Array.from(
+          new Map(
+            fetchedPastEventsInformation.events.map(event => [event.id, event])
+          ).values()
+        );
+
+        setPastEvents(dedupedEvents);
         setPastEventsPaginationMeta(fetchedPastEventsInformation.meta);
       } catch (err) {
         console.error("Fetch past events failed:", err);

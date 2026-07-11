@@ -360,8 +360,8 @@ const ScanPage = () => {
 
           <div className="relative flex gap-2 items-center justify-center overflow-hidden">
             <Person sx={{ width: 24, height: 24 }} className="text-primary" />
-            <p className="label-large-emphasized translate-y-1">
-              {event?.role ? tScan(event?.role) : "Unknown"}
+            <p className="label-large-emphasized translate-y-1 truncate line-clamp-1">
+              {event?.organizer || "Unknown"}
             </p>
           </div>
         </div>
