@@ -2,11 +2,15 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { IDetectedBarcode, outline, Scanner } from "@yudiel/react-qr-scanner";
+import {
+  IDetectedBarcode,
+  outline,
+  Scanner,
+  useDevices,
+} from "@yudiel/react-qr-scanner";
 import {
   ExpandMore,
-  FlashOff,
-  FlashOn,
+  FlipCameraIos,
   Home,
   Link,
   Person,
@@ -57,8 +61,15 @@ const ScanPage = () => {
   );
   const [scannedUser, setScannedUser] = useState<UserInformationQRCode>();
   const [isPaused, setIsPaused] = useState(false);
-  const [isFlashOn, setIsFlashOn] = useState(false);
-  const [stream, setStream] = useState<MediaStream | null>(null);
+  const [selectedDeviceIndex, setSelectedDeviceIndex] = useState(0);
+
+  const devices = useDevices();
+  const activeDeviceId = devices[selectedDeviceIndex]?.deviceId;
+
+  const handleSwitchCamera = () => {
+    if (devices.length < 2) return;
+    setSelectedDeviceIndex(prev => (prev + 1) % devices.length);
+  };
 
   const tScan = useTranslations("scan");
   const tEvent = useTranslations("event");
@@ -104,21 +115,7 @@ const ScanPage = () => {
     }, scanTimeOutMs);
   };
 
-  const grabStream = async () => {
-    try {
-      setTimeout(() => {
-        const video = document.querySelector("video") as HTMLVideoElement;
-        if (video?.srcObject) {
-          setStream(video.srcObject as MediaStream);
-        }
-      }, 1000);
-    } catch (err) {
-      console.error("Failed to get stream:", err);
-    }
-  };
-
   useEffect(() => {
-    grabStream();
     startTimeout();
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -233,30 +230,6 @@ const ScanPage = () => {
     resetScanner();
   };
 
-  const toggleFlash = async () => {
-    if (!stream) return;
-    try {
-      const track = stream.getVideoTracks()[0];
-      const capabilities =
-        (track.getCapabilities?.() as MediaTrackCapabilities & {
-          torch?: boolean;
-        }) || {};
-      if (!capabilities.torch) {
-        showMessage(tScan("flashlightNotSupport"));
-        return;
-      }
-      await track.applyConstraints({
-        advanced: [
-          { torch: !isFlashOn } as MediaTrackConstraintSet & { torch: boolean },
-        ],
-      });
-      setIsFlashOn(!isFlashOn);
-    } catch (err) {
-      console.error("Flash toggle failed:", err);
-      showMessage(tScan("flashlightToggleFail"));
-    }
-  };
-
   return (
     <>
       <div className="w-full min-w-60 h-screen overflow-auto relative flex flex-col px-8 pt-8 pb-12 bg-white">
@@ -268,6 +241,9 @@ const ScanPage = () => {
               onScan={handleScanQrCode}
               onError={() => console.error("Scanner error")}
               paused={isPaused}
+              constraints={
+                activeDeviceId ? { deviceId: activeDeviceId } : undefined
+              }
               components={{
                 onOff: false,
                 torch: false,
@@ -338,22 +314,20 @@ const ScanPage = () => {
               </div>
             </div>
 
-            {/* Flash */}
-            <div className="w-fit h-fit">
-              <QuickAttendButton
-                variant="outline"
-                type="icon"
-                disabled={pageLoading}
-                onClick={toggleFlash}
-                className="w-full h-full rounded-full border-2 border-primary bg-neutral-white"
-              >
-                {isFlashOn ? (
-                  <FlashOn className="w-6 h-6" />
-                ) : (
-                  <FlashOff className="w-6 h-6" />
-                )}
-              </QuickAttendButton>
-            </div>
+            {/* Switch Camera */}
+            {devices.length > 1 && (
+              <div className="w-fit h-fit">
+                <QuickAttendButton
+                  variant="outline"
+                  type="icon"
+                  disabled={pageLoading}
+                  onClick={handleSwitchCamera}
+                  className="w-full h-full rounded-full border-2 border-primary bg-neutral-white"
+                >
+                  <FlipCameraIos className="w-6 h-6" />
+                </QuickAttendButton>
+              </div>
+            )}
           </div>
         </div>
 
@@ -374,7 +348,7 @@ const ScanPage = () => {
             {isToggleEvents &&
               myOtherFiveEvents &&
               myOtherFiveEvents.length > 0 && (
-                <div className="w-30 absolute bottom-full mb-1 right-0 bg-neutral-white rounded-lg shadow-elevation-1 p-2 z-10">
+                <div className="w-30 absolute bottom-full mb-1 right-0 bg-neutral-white rounded-lg shadow-elevation-1 p-2 z-10 max-h-[90px] overflow-y-auto">
                   {myOtherFiveEvents.map(event => (
                     <button
                       disabled={pageLoading}
