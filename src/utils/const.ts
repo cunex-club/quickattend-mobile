@@ -6,6 +6,4 @@ export const languageLabel: Record<string, string> = {
   "en-us": "English",
 };
 
-export const scanTimeOutMs = 10000;
-
 export const EVENTS_PER_PAGE = 5;

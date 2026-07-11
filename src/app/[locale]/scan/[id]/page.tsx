@@ -3,19 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
-  IDetectedBarcode,
-  outline,
-  Scanner,
-  useDevices,
-} from "@yudiel/react-qr-scanner";
-import {
   ExpandMore,
   FlipCameraIos,
   Home,
   Link,
   Person,
 } from "@mui/icons-material";
-import { scanTimeOutMs } from "@/utils/const";
+import { ZXingScanner } from "@/utils/scanner";
 import QuickAttendButton from "@/components/QuickAttendButton";
 import ErrorPopup from "@/components/popup/ErrorPopup";
 import SuccessScanPopup from "@/components/popup/SuccessScanPopup";
@@ -38,8 +32,10 @@ const ScanPage = () => {
 
   // Refs
   const scanLockRef = useRef(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const messageTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const lastScannedTextRef = useRef<string | null>(null);
+  const onScanRef = useRef<(text: string) => void>(() => {});
 
   const { userToken } = useUser();
   const { showPageLoading, hidePageLoading, pageLoading } = usePageLoading();
@@ -61,14 +57,19 @@ const ScanPage = () => {
   );
   const [scannedUser, setScannedUser] = useState<UserInformationQRCode>();
   const [isPaused, setIsPaused] = useState(false);
-  const [selectedDeviceIndex, setSelectedDeviceIndex] = useState(0);
+  const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
+  const [selectedDeviceIndex, setSelectedDeviceIndex] = useState(-1);
 
-  const devices = useDevices();
-  const activeDeviceId = devices[selectedDeviceIndex]?.deviceId;
+  const activeDeviceId =
+    selectedDeviceIndex >= 0
+      ? devices[selectedDeviceIndex]?.deviceId
+      : undefined;
 
   const handleSwitchCamera = () => {
     if (devices.length < 2) return;
-    setSelectedDeviceIndex(prev => (prev + 1) % devices.length);
+    setSelectedDeviceIndex(
+      prev => ((prev < 0 ? 0 : prev) + 1) % devices.length
+    );
   };
 
   const tScan = useTranslations("scan");
@@ -107,26 +108,8 @@ const ScanPage = () => {
     hidePageLoading();
   }, [id, userToken]);
 
-  // Timeout logic
-  const startTimeout = () => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => {
-      if (!scanLockRef.current) setShowTimeoutPopup(true);
-    }, scanTimeOutMs);
-  };
-
   useEffect(() => {
-    startTimeout();
     return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      if (messageTimeoutRef.current) clearTimeout(messageTimeoutRef.current);
-    };
-  }, []);
-
-  useEffect(() => {
-    startTimeout();
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
       if (messageTimeoutRef.current) clearTimeout(messageTimeoutRef.current);
     };
   }, []);
@@ -155,20 +138,14 @@ const ScanPage = () => {
       );
     });
 
-  const handleScanQrCode = async (data: IDetectedBarcode[]) => {
-    if (scanLockRef.current || !data || data.length === 0) return;
+  const handleScanQrCode = async (code: string) => {
+    if (scanLockRef.current || !code) return;
     scanLockRef.current = true;
-
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-      timeoutRef.current = null;
-    }
 
     showPageLoading();
     setIsPaused(true);
 
     try {
-      const code = data[0].rawValue;
       const currentLocation = await getCurrentLocation();
 
       const response = await getParticipantInformationQRCode(
@@ -203,10 +180,46 @@ const ScanPage = () => {
   const resetScanner = () => {
     setTimeout(() => {
       scanLockRef.current = false;
+      lastScannedTextRef.current = null;
       setIsPaused(false);
-      startTimeout();
     }, 300);
   };
+
+  onScanRef.current = handleScanQrCode;
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || isPaused) return;
+
+    let cancelled = false;
+    const scanner = new ZXingScanner();
+    scanner
+      .start({
+        videoElement: video,
+        deviceId: activeDeviceId,
+        delayBetweenScanSuccess: 1000,
+        onDecode: ({ text }) => {
+          if (lastScannedTextRef.current === text) return;
+          lastScannedTextRef.current = text;
+          onScanRef.current(text);
+        },
+        onError: () => console.error("Scanner error"),
+      })
+      .then(() => {
+        if (activeDeviceId !== undefined || cancelled) return;
+        return ZXingScanner.listVideoInputDevices().then(list => {
+          if (!cancelled) setDevices(list);
+        });
+      })
+      .catch(() => {
+        if (!cancelled) setDevices([]);
+      });
+
+    return () => {
+      cancelled = true;
+      scanner.stop();
+    };
+  }, [activeDeviceId, isPaused]);
 
   const handleUpdateComment = async (
     e: React.MouseEvent<Element, MouseEvent>
@@ -236,37 +249,12 @@ const ScanPage = () => {
         {/* Main */}
         <div className="relative w-full h-full bg-transparent rounded-2xl mb-8 flex items-start justify-center">
           {/* Scanner */}
-          <div className="absolute top-1/3 -translate-y-1/3 max-h-80 max-w-80">
-            <Scanner
-              onScan={handleScanQrCode}
-              onError={() => console.error("Scanner error")}
-              paused={isPaused}
-              constraints={
-                activeDeviceId ? { deviceId: activeDeviceId } : undefined
-              }
-              components={{
-                onOff: false,
-                torch: false,
-                zoom: false,
-                finder: false,
-                tracker: outline,
-              }}
-              styles={{
-                container: {
-                  border: "0px none",
-                  borderRadius: "16px",
-                  overflow: "hidden",
-                },
-                video: {
-                  borderRadius: "16px",
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                },
-              }}
-              scanDelay={1000}
-              allowMultiple={false}
-              sound={false}
+          <div className="absolute top-1/3 -translate-y-1/3 max-h-80 max-w-80 h-80 w-80 rounded-2xl overflow-hidden">
+            <video
+              ref={videoRef}
+              className="w-full h-full object-cover"
+              playsInline
+              muted
             />
 
             {/* Custom Corner Borders */}
@@ -304,7 +292,8 @@ const ScanPage = () => {
                   type="icon"
                   disabled={pageLoading}
                   onClick={() => {
-                    navigator.clipboard.writeText(window.location.href);
+                    const path = `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/events/${id}`;
+                    navigator.clipboard.writeText(path);
                     showMessage(tScan("copySuccess"));
                   }}
                   className="w-full h-full rounded-full border-2 border-primary bg-neutral-white"

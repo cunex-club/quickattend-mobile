@@ -256,7 +256,7 @@ function MyEventDetail() {
                     e.preventDefault();
                     setOpenLLEPopup(true);
                     setToHref(
-                      `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/dashboard`
+                      `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/events/${id}`
                     );
                   }}
                 >
