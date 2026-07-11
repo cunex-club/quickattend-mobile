@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 
 import {
   CalendarMonth,
@@ -11,7 +11,6 @@ import {
   HomeOutlined,
   LocationOn,
   TrendingUp,
-  UploadFile,
   WatchLater,
 } from "@mui/icons-material";
 import QuickAttendButton from "@/components/QuickAttendButton";
@@ -30,11 +29,8 @@ function MyEventDetail() {
   const router = useRouter();
   const locale = useLocale();
   const [openLLEPopup, setOpenLLEPopup] = useState(false);
-  const [openShareDropdown, setOpenShareDropdown] = useState(false);
+
   const [event, setEvent] = useState<EventDetail | null>(null);
-  const [showMessagePopup, setShowMessagePopup] = useState(false);
-  const [message, setMessage] = useState("");
-  const messageTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const [tohref, setToHref] = useState("");
 
@@ -42,7 +38,6 @@ function MyEventDetail() {
 
   const tEvent = useTranslations("event");
   const tBreadCrumb = useTranslations("breadcrumb");
-  const tScan = useTranslations("scan");
 
   useEffect(() => {
     async function fetchEvent() {
@@ -62,31 +57,6 @@ function MyEventDetail() {
 
     fetchEvent();
   }, [id, userToken]);
-
-  const showMessage = (msg: string) => {
-    if (messageTimeoutRef.current) {
-      clearTimeout(messageTimeoutRef.current);
-    }
-
-    setShowMessagePopup(false);
-
-    setTimeout(() => {
-      setMessage(msg);
-      setShowMessagePopup(true);
-
-      messageTimeoutRef.current = setTimeout(() => {
-        setShowMessagePopup(false);
-      }, 2500);
-    }, 50);
-  };
-
-  useEffect(() => {
-    return () => {
-      if (messageTimeoutRef.current) {
-        clearTimeout(messageTimeoutRef.current);
-      }
-    };
-  }, []);
 
   if (!event) {
     return (
@@ -221,7 +191,7 @@ function MyEventDetail() {
               {tEvent("organizer")}
             </h2>
             <p className="body-medium-primary text-neutral-600 break-all">
-              {event.organizer}
+              {event.organizer || "-"}
             </p>
           </div>
 
@@ -256,63 +226,13 @@ function MyEventDetail() {
                     e.preventDefault();
                     setOpenLLEPopup(true);
                     setToHref(
-                      `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/events/${id}`
+                      `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/dashboard/${id}`
                     );
                   }}
                 >
                   <TrendingUp sx={{ width: 20, height: 20 }} />
+                  {tEvent("registrationStats")}
                 </QuickAttendButton>
-              </div>
-
-              {/* Share Button */}
-              <div className="relative flex-1">
-                <QuickAttendButton
-                  type="icon"
-                  variant="outline"
-                  onClick={e => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    setOpenShareDropdown(prev => !prev);
-                  }}
-                >
-                  <UploadFile
-                    sx={{ width: 20, height: 20 }}
-                    className="text-primary"
-                  />
-                </QuickAttendButton>
-
-                {/* Share Dropdown */}
-                {openShareDropdown && (
-                  <div className="w-30 absolute bottom-full mb-1 right-0 bg-neutral-white rounded-lg shadow-elevation-1 p-2 z-10">
-                    <button
-                      className="cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-300"
-                      onClick={e => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        navigator.clipboard.writeText(
-                          `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/scan/${id}`
-                        );
-                        showMessage(tScan("copySuccess"));
-                        setOpenShareDropdown(false);
-                      }}
-                    >
-                      {tScan("scannerQR")}
-                    </button>
-                    <button
-                      className="cursor-pointer block w-full body-small-primary text-left py-1 text-neutral-600 hover:bg-neutral-300"
-                      onClick={e => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        navigator.clipboard.writeText(
-                          `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/dashboard`
-                        );
-                        showMessage(tScan("copySuccess"));
-                      }}
-                    >
-                      {tScan("dashboard")}
-                    </button>
-                  </div>
-                )}
               </div>
             </div>
           </div>
@@ -323,12 +243,6 @@ function MyEventDetail() {
 
       {openLLEPopup && (
         <LLEPopup setOpenLLEPopup={setOpenLLEPopup} tohref={tohref} />
-      )}
-
-      {showMessagePopup && (
-        <div className="fixed top-16 left-1/2 -translate-x-1/2 bg-primary text-white px-4 py-2 rounded-full shadow-lg animate-fade-in-out z-50">
-          <p className="label-large-primary translate-y-1">{message}</p>
-        </div>
       )}
     </div>
   );

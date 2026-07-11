@@ -88,7 +88,7 @@ export default function DiscoveryEventCard({
           {tEvent("details")}
         </h2>
         <p className="body-small-primary text-neutral-600 break-all line-clamp-5 whitespace-pre-wrap">
-          {description}
+          {description || "-"}
         </p>
       </div>
     </Link>

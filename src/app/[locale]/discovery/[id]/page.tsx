@@ -201,7 +201,7 @@ function DiscoveryEventDetail() {
             {tEvent("organizer")}
           </h2>
           <p className="body-medium-primary text-neutral-600 break-all">
-            {event.organizer}
+            {event.organizer || "-"}
           </p>
         </div>
 

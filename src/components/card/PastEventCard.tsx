@@ -158,7 +158,7 @@ export default function PastEventCard({
                   hidePageLoading();
                   setOpenLLEPopup(true);
                   setToHref(
-                    `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/dashboard`
+                    `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/dashboard/${id}`
                   );
                   e.preventDefault();
                 }}
@@ -169,42 +169,6 @@ export default function PastEventCard({
                 />
                 <p>{tEvent("registrationStats")}</p>
               </QuickAttendButton>
-
-              <div className="flex gap-2 flex-1">
-                <QuickAttendButton
-                  type="icon"
-                  variant="outline"
-                  onClick={e => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    // TODO: Download event report file from backend
-                  }}
-                >
-                  <SaveAlt
-                    sx={{ width: 20, height: 20 }}
-                    className="text-primary"
-                  />
-                </QuickAttendButton>
-
-                <QuickAttendButton
-                  type="icon"
-                  variant="outline"
-                  onClick={e => {
-                    e.stopPropagation();
-                    hidePageLoading();
-                    setOpenLLEPopup(true);
-                    setToHref(
-                      `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/events/${id}`
-                    );
-                    e.preventDefault();
-                  }}
-                >
-                  <DifferenceOutlined
-                    sx={{ width: 20, height: 20 }}
-                    className="text-primary"
-                  />
-                </QuickAttendButton>
-              </div>
             </div>
           )}
 

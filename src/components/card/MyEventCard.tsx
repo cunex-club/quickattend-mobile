@@ -170,7 +170,7 @@ export default function MyEventCard({
                 hidePageLoading();
                 setOpenLLEPopup(true);
                 setToHref(
-                  `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/events/${id}`
+                  `${process.env.NEXT_PUBLIC_BACKOFFICE_PATH}/dashboard/${id}`
                 );
               }}
             >
