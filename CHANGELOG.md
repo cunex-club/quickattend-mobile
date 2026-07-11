@@ -1,3 +1,10 @@
+# [1.0.0-dev.14](https://github.com/cunex-club/quickattend-mobile/compare/v1.0.0-dev.13...v1.0.0-dev.14) (2026-07-11)
+
+
+### Bug Fixes
+
+* hotfix ([#24](https://github.com/cunex-club/quickattend-mobile/issues/24)) ([84e0d1b](https://github.com/cunex-club/quickattend-mobile/commit/84e0d1b63bb271a5776739789e6395f1c256337c))
+
 # [1.0.0-dev.13](https://github.com/cunex-club/quickattend-mobile/compare/v1.0.0-dev.12...v1.0.0-dev.13) (2026-03-29)
 
 
