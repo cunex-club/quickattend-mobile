@@ -1,3 +1,10 @@
+# [1.0.0-dev.15](https://github.com/cunex-club/quickattend-mobile/compare/v1.0.0-dev.14...v1.0.0-dev.15) (2026-07-14)
+
+
+### Bug Fixes
+
+* lat lng swap ([39de512](https://github.com/cunex-club/quickattend-mobile/commit/39de5125db3b1c2892e7c30a4c1b38eeececdcd5))
+
 # [1.0.0-dev.14](https://github.com/cunex-club/quickattend-mobile/compare/v1.0.0-dev.13...v1.0.0-dev.14) (2026-07-11)
 
 
