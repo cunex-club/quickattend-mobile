@@ -42,6 +42,9 @@
     "notEligible": "Not eligible to register for this event",
     "invalidQR": "Invalid QR code.<br/>Please check and try again.",
     "systemError": "System error.<br/>Please try again.",
+    "eventNotFoundError": "This event could not be found.",
+    "scannerNoPermissionError": "You don't have permission to scan for this event.",
+    "serverErrorWithDetail": "Something went wrong:<br/>{message}",
     "OWNER": "Owner",
     "MANAGER": "Manager",
     "STAFF": "Staff"

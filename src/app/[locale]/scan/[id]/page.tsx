@@ -50,9 +50,7 @@ const ScanPage = () => {
   const [message, setMessage] = useState("");
   const [note, setNote] = useState("");
   const [showTimeoutPopup, setShowTimeoutPopup] = useState(false);
-  const [scanErrorMessageKey, setScanErrorMessageKey] = useState<
-    "invalidQR" | "systemError"
-  >("invalidQR");
+  const [scanErrorMessage, setScanErrorMessage] = useState("");
   const [oneTimeCode, setOneTimeCode] = useState("");
   const [isToggleEvents, setToggleEvents] = useState(false);
   const [myOtherFiveEvents, setMyOtherFiveEvents] = useState<Event[] | null>(
@@ -141,6 +139,23 @@ const ScanPage = () => {
       );
     });
 
+  const getScanErrorMessage = (code?: string, backendMessage?: string) => {
+    switch (code) {
+      case "INVALID_QR":
+        return tScan("invalidQR");
+      case "SCANNER_NO_PERMISSION":
+        return tScan("scannerNoPermissionError");
+      case "EVENT_NOT_FOUND":
+        return tScan("eventNotFoundError");
+    }
+
+    if (backendMessage) {
+      return tScan("serverErrorWithDetail", { message: backendMessage });
+    }
+
+    return tScan("systemError");
+  };
+
   const handleScanQrCode = async (code: string) => {
     if (scanLockRef.current || !code) return;
     scanLockRef.current = true;
@@ -159,24 +174,24 @@ const ScanPage = () => {
         currentLocation.lng
       );
 
-      if (response.status === 200) {
-        setResult(response.data.status);
-        setScannedUser(response.data);
-        setOneTimeCode(response.data.code);
-        setShowResultScanPopup(true);
-      } else if (response.status === 401) {
+      setResult(response.data.status);
+      setScannedUser(response.data);
+      setOneTimeCode(response.data.code);
+      setShowResultScanPopup(true);
+    } catch (err) {
+      console.error("Scan failed:", err);
+
+      const apiError = err as { error?: { code?: string; message?: string } };
+      const code = apiError?.error?.code;
+
+      if (code === "PARTICIPANT_NO_PERMISSION") {
         setResult("fail");
         setShowResultScanPopup(true);
       } else {
-        setScanErrorMessageKey("invalidQR");
+        setScanErrorMessage(getScanErrorMessage(code, apiError?.error?.message));
         setShowTimeoutPopup(true);
         resetScanner();
       }
-    } catch (err) {
-      console.error("Scan failed:", err);
-      setScanErrorMessageKey("systemError");
-      setShowTimeoutPopup(true);
-      resetScanner();
     } finally {
       hidePageLoading();
     }
@@ -375,7 +390,7 @@ const ScanPage = () => {
       {/* POPUPS */}
       {showTimeoutPopup && (
         <ErrorPopup
-          errorMessage={tScan(scanErrorMessageKey)}
+          errorMessage={scanErrorMessage}
           onNext={e => {
             e.preventDefault();
             e.stopPropagation();

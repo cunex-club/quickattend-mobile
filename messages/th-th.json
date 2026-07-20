@@ -42,6 +42,9 @@
     "notEligible": "ไม่ได้อยู่ในรายชื่อผู้มีสิทธิ์ลงทะเบียนเข้าร่วมกิจกรรม",
     "invalidQR": "ข้อมูล QR ไม่ถูกต้อง<br/>กรุณาตรวจสอบและลองใหม่อีกครั้ง",
     "systemError": "ระบบมีปัญหา<br/>กรุณาลองใหม่อีกครั้ง",
+    "eventNotFoundError": "ไม่พบกิจกรรมนี้",
+    "scannerNoPermissionError": "คุณไม่มีสิทธิ์สแกนสำหรับกิจกรรมนี้",
+    "serverErrorWithDetail": "เกิดข้อผิดพลาด:<br/>{message}",
     "OWNER": "Owner",
     "MANAGER": "Manager",
     "STAFF": "Staff"
