@@ -53,7 +53,11 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     }
 
     const devToken = process.env.NEXT_PUBLIC_LOG_IN_TOKEN;
-    if (APP_ENV === "development" && devToken) {
+    if (
+      APP_ENV === "development" &&
+      process.env.NODE_ENV !== "production" &&
+      devToken
+    ) {
       getUserProfile(devToken)
         .then(devUser => {
           setUserToken(devToken);

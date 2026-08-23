@@ -34,7 +34,7 @@ const Landing = () => {
 
   useEffect(() => {
     async function checkHealth() {
-      if (APP_ENV === "development") {
+      if (APP_ENV === "development" && process.env.NODE_ENV !== "production") {
         const health = await getHealth();
         console.log("Health check:", health);
       }

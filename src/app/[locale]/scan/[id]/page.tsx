@@ -188,7 +188,9 @@ const ScanPage = () => {
         setResult("fail");
         setShowResultScanPopup(true);
       } else {
-        setScanErrorMessage(getScanErrorMessage(code, apiError?.error?.message));
+        setScanErrorMessage(
+          getScanErrorMessage(code, apiError?.error?.message)
+        );
         setShowTimeoutPopup(true);
         resetScanner();
       }

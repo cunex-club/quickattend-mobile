@@ -218,25 +218,25 @@ function PastEventDetail() {
             {/* Second Row */}
             {event.evaluation_form &&
               isSafeExternalUrl(event.evaluation_form) && (
-              <div className="flex gap-2 flex-wrap items-center">
-                <QuickAttendButton
-                  type="text"
-                  variant="filled"
-                  onClick={e => {
-                    e.stopPropagation();
-                    setOpenLLEPopup(true);
-                    setToHref(event.evaluation_form);
-                    e.preventDefault();
-                  }}
-                >
-                  <Feed
-                    sx={{ width: 20, height: 20 }}
-                    className="text-neutral-white"
-                  />
-                  <p>{tEvent("evaluationForm")}</p>
-                </QuickAttendButton>
-              </div>
-            )}
+                <div className="flex gap-2 flex-wrap items-center">
+                  <QuickAttendButton
+                    type="text"
+                    variant="filled"
+                    onClick={e => {
+                      e.stopPropagation();
+                      setOpenLLEPopup(true);
+                      setToHref(event.evaluation_form);
+                      e.preventDefault();
+                    }}
+                  >
+                    <Feed
+                      sx={{ width: 20, height: 20 }}
+                      className="text-neutral-white"
+                    />
+                    <p>{tEvent("evaluationForm")}</p>
+                  </QuickAttendButton>
+                </div>
+              )}
           </div>
         </div>
       </div>
