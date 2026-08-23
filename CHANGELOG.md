@@ -1,3 +1,10 @@
+# [1.0.0-dev.17](https://github.com/cunex-club/quickattend-mobile/compare/v1.0.0-dev.16...v1.0.0-dev.17) (2026-08-23)
+
+
+### Bug Fixes
+
+* example env ([2c785f4](https://github.com/cunex-club/quickattend-mobile/commit/2c785f446eaf4808b1804293604d25fa0323a6bc))
+
 # [1.0.0-dev.16](https://github.com/cunex-club/quickattend-mobile/compare/v1.0.0-dev.15...v1.0.0-dev.16) (2026-08-23)
 
 
