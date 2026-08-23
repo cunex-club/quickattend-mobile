@@ -1,6 +1,6 @@
 {
   "name": "quickattend-mobile",
-  "version": "1.0.0-dev.15",
+  "version": "1.0.0-dev.16",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",

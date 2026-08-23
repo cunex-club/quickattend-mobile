@@ -1,3 +1,13 @@
+# [1.0.0-dev.16](https://github.com/cunex-club/quickattend-mobile/compare/v1.0.0-dev.15...v1.0.0-dev.16) (2026-08-23)
+
+
+### Bug Fixes
+
+* auth ([5ea354d](https://github.com/cunex-club/quickattend-mobile/commit/5ea354d7ac09da9f6fe44ccf7cc402980ba8eb3c))
+* events ([c0557c3](https://github.com/cunex-club/quickattend-mobile/commit/c0557c32dfec341574c8c138084ff5c5e0830f6a))
+* format ([ff3ecc0](https://github.com/cunex-club/quickattend-mobile/commit/ff3ecc0b82c3ed6d98442760c6ff493e13302167))
+* scan wording ([d8bb0bc](https://github.com/cunex-club/quickattend-mobile/commit/d8bb0bc4ef16d4617c5eab94497a9a392e271cbc))
+
 # [1.0.0-dev.15](https://github.com/cunex-club/quickattend-mobile/compare/v1.0.0-dev.14...v1.0.0-dev.15) (2026-07-14)
 
 ### Bug Fixes
