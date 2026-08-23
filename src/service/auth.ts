@@ -16,12 +16,7 @@ interface UserProfileResponse {
 }
 
 export async function loginWithLLEToken(token: string): Promise<string> {
-  console.log("token:", token);
-  const response = await Axios.post<LoginResponse>(
-    `/auth/cunex?token=${token}`,
-    {}
-  );
-  console.log("response:", response.data);
+  const response = await Axios.post<LoginResponse>("/auth/cunex", { token });
   return response.data.data.access_token;
 }
 
