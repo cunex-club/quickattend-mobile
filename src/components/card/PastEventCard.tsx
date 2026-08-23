@@ -16,6 +16,7 @@ import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import { usePageLoading } from "@/context/PageLoadingContext";
 import { formatEventDateTime } from "@/utils/function";
+import { isSafeExternalUrl } from "@/utils/url";
 
 interface PastEventCardProps {
   id: string;
@@ -172,7 +173,7 @@ export default function PastEventCard({
 
           {/* Second Row */}
           <div className="flex gap-2 flex-wrap items-center">
-            {evaluationFormPath && (
+            {evaluationFormPath && isSafeExternalUrl(evaluationFormPath) && (
               <QuickAttendButton
                 type="text"
                 variant="filled"

@@ -18,6 +18,7 @@ import LLEPopup from "@/components/popup/LLEPopup";
 import { useLocale, useTranslations } from "next-intl";
 import { usePageLoading } from "@/context/PageLoadingContext";
 import Footer from "@/components/Footer";
+import { isSafeExternalUrl } from "@/utils/url";
 import { EventDetail, getEventById } from "@/service/event";
 import { useUser } from "@/providers/UserProvider";
 import EventNotFound from "@/components/EventNotFound";
@@ -215,7 +216,8 @@ function PastEventDetail() {
             </div>
 
             {/* Second Row */}
-            {event.evaluation_form && (
+            {event.evaluation_form &&
+              isSafeExternalUrl(event.evaluation_form) && (
               <div className="flex gap-2 flex-wrap items-center">
                 <QuickAttendButton
                   type="text"

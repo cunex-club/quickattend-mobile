@@ -89,12 +89,5 @@ export async function getEventById(
     },
   });
 
-  const event = response.data.data;
-
-  return {
-    ...event,
-    // API's location_lat/location_long swapped
-    location_lat: event.location_long,
-    location_long: event.location_lat,
-  };
+  return response.data.data;
 }

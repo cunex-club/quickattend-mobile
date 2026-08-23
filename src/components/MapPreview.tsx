@@ -15,16 +15,22 @@ export const DEFAULT_CENTER: LocationPoint = {
   location_long: 100.5321,
 };
 
+const isValidLat = (value: number) => value >= -90 && value <= 90;
+const isValidLng = (value: number) => value >= -180 && value <= 180;
+
 const MapPreview = ({ lat, lng }: MapPreviewProps) => {
+  const safeLat = isValidLat(lat) ? lat : DEFAULT_CENTER.location_lat;
+  const safeLng = isValidLng(lng) ? lng : DEFAULT_CENTER.location_long;
+
   return (
     <div style={{ width: "100%", height: "180px" }}>
       <Map
-        center={[lng, lat]}
+        center={[safeLng, safeLat]}
         zoom={15}
         interactive={false}
         attributionControl={false}
       >
-        <MapMarker longitude={lng} latitude={lat}>
+        <MapMarker longitude={safeLng} latitude={safeLat}>
           <MarkerContent />
         </MapMarker>
       </Map>

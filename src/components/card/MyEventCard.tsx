@@ -153,9 +153,9 @@ export default function MyEventCard({
         >
           <CropFree
             sx={{ width: 20, height: 20 }}
-            className="text-neutral-white"
+            className="text-neutral-white shrink-0"
           />
-          <p>{tEvent("scanParticipants")}</p>
+          <p className="text-center">{tEvent("scanParticipants")}</p>
         </QuickAttendButton>
 
         <div className="flex gap-2 flex-1 items-center">
@@ -174,8 +174,8 @@ export default function MyEventCard({
                 );
               }}
             >
-              <TrendingUp sx={{ width: 20, height: 20 }} />
-              {tEvent("registrationStats")}
+              <TrendingUp sx={{ width: 20, height: 20 }} className="shrink-0" />
+              <p className="text-center">{tEvent("registrationStats")}</p>
             </QuickAttendButton>
 
             {/* Dummy Box */}
