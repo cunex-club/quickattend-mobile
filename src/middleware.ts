@@ -1,19 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { i18nMiddleware } from "./middleware/i18n";
 
-const PUBLIC_APP_URL = process.env.NEXT_PUBLIC_APP_URL;
-
 function redirectTo(path: string, request: NextRequest): NextResponse {
   const url = request.nextUrl.clone();
   url.pathname = path;
-
-  if (PUBLIC_APP_URL) {
-    const publicOrigin = new URL(PUBLIC_APP_URL);
-    url.protocol = publicOrigin.protocol;
-    url.hostname = publicOrigin.hostname;
-    url.port = publicOrigin.port;
-  }
-
   return NextResponse.redirect(url);
 }
 
